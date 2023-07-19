@@ -1,0 +1,38 @@
+#table-container {
+  max-height: 100vh;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+tbody {
+  overflow-y: scroll;
+}
+
+thead th,
+tbody td {
+  padding: 0.5rem;
+  text-align: center;
+}
+.brand_border .fa.fa-minus {
+  color: #fff;
+  font-size: 8px;
+  height: 2px;
+      background: #F8C01B none repeat scroll 0 0;
+  width: 100px;
+}
+.brand_border .fas.fa-handshake {
+  font-size: 14px;
+      color:#000000;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
