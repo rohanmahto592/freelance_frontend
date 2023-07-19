@@ -559,6 +559,7 @@ const AddStockSubmit=async(event)=>{
                         aria-label="Default select example"
                         name="itemName"
                       >
+                        <option disabled>Select item</option>
                         {
                           itemNames?.map((item,index)=>(
                             <option key={index} value={item._id+','+item.name}>{item.name}</option>
@@ -585,7 +586,7 @@ const AddStockSubmit=async(event)=>{
                         aria-label="Default select example"
                         name="university"
                       >
-                        <option selected>Select University</option>
+                        <option disabled selected>Select University</option>
                         <option value="SRM university">One</option>
                         <option value="Galgotia University">Two</option>
                         <option value="GL Bajaj">Three</option>
