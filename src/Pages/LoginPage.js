@@ -112,11 +112,10 @@ const LoginPage = () => {
               </div>
             </form>
 
-            <div class="pt-4 text-center">
+            <div class="pt-4 text-center" onClick={()=>navigate('/signup')} >
               Get Members Benefit.{" "}
-              <a style={{ color: "#000A99" }} href="/signup">
                 Sign Up
-              </a>
+              
             </div>
             {showToast && (
               <Toast
