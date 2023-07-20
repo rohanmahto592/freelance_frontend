@@ -5,7 +5,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <nav class="navbar navbar-expand-lg navbar-light no-gutters shadow-sm ">
+      <nav class="navbar navbar-expand-lg bg-light navbar-light no-gutters shadow-sm ">
         <div class="container-fluid">
           <div
             style={{ width: "150px", height: "80px" }}
@@ -24,34 +24,37 @@ const Navbar = () => {
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse " id="navbarText" role="navigation">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item p-1 " onClick={() => navigate("/")}>
-               
-                  HOME
-              </li>
-               
-              <li
-                class="nav-item p-1 "
+          <div
+            class="collapse navbar-collapse "
+            id="navbarText"
+            role="navigation"
+          >
+            <ul style={{fontFamily:'monospace'}} class="navbar-nav ms-auto">
+              <button
+                class="btn btn-link text-decoration-none"
+                onClick={() => navigate("/")}
+              >
+                HOME
+              </button>
+
+              <button
+                class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/admin/dashboard")}
               >
                 DASHBOARD
-              </li>
-              <li class="nav-item p-1 ">
-                
-                  ABOUT US
-                
-              </li>
-              <li class="nav-item p-1 ">
-                
-                  CONTACT
-               
-              </li>
-              <li class="nav-item p-1 " onClick={()=>navigate('/login')}>
-                
-                  LOGIN
-               
-              </li>
+              </button>
+              <button class=" btn btn-link text-decoration-none">
+                ABOUT US
+              </button>
+              <button class=" btn btn-link text-decoration-none">
+                CONTACT
+              </button>
+              <button
+                class=" btn btn-outline-primary "
+                onClick={() => navigate("/login")}
+              >
+                LOGIN
+              </button>
             </ul>
           </div>
         </div>

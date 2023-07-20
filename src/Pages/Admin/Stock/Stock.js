@@ -145,6 +145,7 @@ const Stock = () => {
   return (
     <>
       <div id="table-row" className="row m-3  ">
+        <h3 style={{textAlign:'center'}}>Stocks</h3>
         <ul
           class="nav nav-tabs mb-3"
           id="ex2"

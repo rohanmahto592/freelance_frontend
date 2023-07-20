@@ -4,7 +4,7 @@ import { login } from "../Apis/auth";
 import Toast from "../Components/Toast";
 import loginImage from "../Assets/Images/userCred.png";
 import { redirection } from "../constants";
-
+import "../css/LandingPage.css"
 const LoginPage = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setToast] = useState(false);
@@ -112,9 +112,9 @@ const LoginPage = () => {
               </div>
             </form>
 
-            <div class="pt-4 text-center" onClick={()=>navigate('/signup')} >
-              Get Members Benefit.{" "}
-                Sign Up
+            <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center'}} class="pt-4 text-center " onClick={()=>navigate('/signup')} >
+               <p>Get Members Benefit.{" "}</p>
+                <button style={{padding:'0px'}} className="btn btn-link">Sign Up</button>
               
             </div>
             {showToast && (
