@@ -105,11 +105,6 @@ export const addColleges = async (college,address) => {
 export const fetchColleges = async () => {
   return await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/getColleges`,
-    {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    }
   );
 };
 
