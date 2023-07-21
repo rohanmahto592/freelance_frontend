@@ -7,13 +7,17 @@ const College = () => {
     const [apiError, setApiError] = useState("");
     const [showToast, setShowToast] = useState(false);
     const [isError, setIsError] = useState(false);
+    const[isCollegeAdded,setCollegeAdded]=useState(false);
     const handleChange=(event)=>{
         setCollege(event.target.value);
     }
     const AddCollegeSubmit=async(event)=>{
         event.preventDefault();
-        console.log(college)
         const response= await addColleges(college);
+        if(response.data.success)
+        {
+          setCollegeAdded(true);
+        }
         setApiError(response.data.message);
         setShowToast(true);
         setIsError(false);
@@ -31,42 +35,27 @@ const College = () => {
         });
         
 
-    },[])
+    },[isCollegeAdded])
+  const deleteCollege=async(id)=>{
+
+  }
   return (
     <div>
        <form className="form-style">
        <div className="container ">
                 <div className="row">
-                  <div className="col-sm-6 my-2 ">
-                    <label className="form-label">Listed Colleges</label>
-                    <select
-                     
-                      class="form-select"
-                      aria-label="Default select example"
-                      name="itemName"
-                    >
-                      {getCollege?.map((item, index) => (
-                        <option key={index} value={item.Name}>
-                          {item.Name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="col-sm-6 my-2 ">
+                  <div className="col-sm-12 my-2 ">
                     <label className="form-label">Enter College</label>
                     <input
                       className="form-control"
                       type="text"
                       name="college"
                      
-                    
                       onChange={handleChange}
                     />
                   </div>
                   </div>
                   <div className='row'>
-
-                  
                     <div className="col-sm-12 my-2">
                       <button
                         type="submit"
@@ -76,6 +65,30 @@ const College = () => {
                         Submit
                       </button>
                    
+                  </div>
+                </div>
+                <div className='row my-2'>
+                  <div className='col-sm-12'>
+                    <table className='table table-striped table-bordered'>
+                      <thead>
+                        <tr>
+                          <th>S.NO</th>
+                          <th>COLLEGE NAME</th>
+                          <th>ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          getCollege?.map((college,index)=>(
+                            <tr key={index}>
+                              <td>{index+1}</td>
+                              <td>{college.Name}</td>
+                              <td><button onClick={()=>deleteCollege(college._id)} className='btn btn-outline-primary'>Delete</button></td>
+                            </tr>
+                          ))
+                        }
+                      </tbody>
+                    </table>
                   </div>
                 </div>
             </div>

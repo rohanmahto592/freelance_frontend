@@ -313,6 +313,7 @@ const Stock = () => {
             <form className="form-style">
               <div className="container ">
                 <div className="row">
+                    
                   <div className="col-sm-4 my-2 ">
                     <label className="form-label">Item</label>
                     <select
@@ -345,7 +346,7 @@ const Stock = () => {
                   <div className="col-sm-4 my-2">
                     <label className="form-label">University</label>
                     <select
-                      onChange={handleStockChange}
+                     onChange={handleStockChange}
                       class="form-select"
                       aria-label="Default select example"
                       name="university"
