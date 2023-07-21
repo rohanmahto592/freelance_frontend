@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import signUpIcon from "../Assets/Images/iconsignup.png";
 import { validatePassword } from "../Utils/passwordHelper";
 import { signup } from "../Apis/auth";
 import { useNavigate } from "react-router-dom";
 import Toast from "../Components/Toast";
 import signUpImage from "../Assets/Images/userCred.png";
+import { fetchColleges } from "../Apis/adminDashboard";
 const SignUpPage = () => {
   const [passwordError, setPasswordError] = useState("");
   const [apiError, setApiError] = useState("");
   const [showToast, setToast] = useState(false);
-
+  const [receivedCollege, setReceivedCollege] = useState(null);
+  const [isError, setIsError] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,7 +20,17 @@ const SignUpPage = () => {
     universityName: "",
     password: "",
   });
-
+  useEffect(() => {
+    fetchColleges().then((response) => {
+      if (response?.data?.success) {
+        setReceivedCollege(response.data.message);
+      } else {
+        setApiError(response.data.message);
+        setShowToast(true);
+        setIsError(true);
+      }
+    });
+  }, []);
   const navigate = useNavigate();
 
   const setShowToast = () => {
@@ -61,7 +73,7 @@ const SignUpPage = () => {
 
   return (
     <div class="container">
-      <div class="row m-5 no-gutters shadow-sm">
+      <div class="row m-3 no-gutters shadow-sm">
         <div class="col-md-6 d-none d-md-block">
           <img
             src={signUpImage}
@@ -123,10 +135,10 @@ const SignUpPage = () => {
                       name="userType"
                       onChange={handleInputChange}
                     >
-                      <option disabled>Select user type</option>
-                      <option selected value="SELF">
-                        SELF
+                      <option selected disabled>
+                        Select user type
                       </option>
+                      <option value="SELF">SELF</option>
                       <option value="UNIVERSITY">UNIVERSITY</option>
                       <option value="GENERIC">GENERIC</option>
                     </select>
@@ -145,10 +157,15 @@ const SignUpPage = () => {
                       onChange={handleInputChange}
                       required={formData.userType === "UNIVERSITY"}
                     >
-                      <option value={null}>Select your university</option>
-                      <option value="apple">Apple</option>
-                      <option value="banana">Banana</option>
-                      <option value="orange">Orange</option>
+                      <option disabled selected>Select university</option>
+                      {receivedCollege?.map((college, index) => (
+                        <option
+                          key={index}
+                          value={college.Name + ", " + college.Address}
+                        >
+                          {college.Name + ", " + college.Address}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -213,6 +230,7 @@ const SignUpPage = () => {
                 message={apiError}
                 setShowToast={setShowToast}
                 timer={2000}
+                isError={isError}
               />
             )}
           </div>
