@@ -17,20 +17,22 @@ const Navbar = () => {
             class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarText"
-            aria-controls="navbarText"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
           <div
-            class="collapse navbar-collapse "
-            id="navbarText"
+            class="navbar-collapse  collapse"
+            id="navbarSupportedContent"
             role="navigation"
           >
-            <ul style={{fontFamily:'monospace'}} class="navbar-nav ms-auto">
+            <ul style={{ fontFamily: "monospace" }} class="navbar-nav ms-auto">
               <button
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse.show"
                 class="btn btn-link text-decoration-none"
                 onClick={() => navigate("/")}
               >
@@ -38,18 +40,23 @@ const Navbar = () => {
               </button>
 
               <button
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse.show"
                 class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/admin/dashboard")}
               >
                 DASHBOARD
               </button>
-              <button class=" btn btn-link text-decoration-none">
-                ABOUT US
-              </button>
-              <button class=" btn btn-link text-decoration-none">
+              <button
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse.show"
+                class=" btn btn-link text-decoration-none"
+              >
                 CONTACT
               </button>
               <button
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse.show"
                 class=" btn btn-outline-primary "
                 onClick={() => navigate("/login")}
               >
