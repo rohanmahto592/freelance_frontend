@@ -68,7 +68,7 @@ const College = () => {
                   </div>
                 </div>
                 <div className='row my-2'>
-                  <div className='col-sm-12'>
+                  <div style={{maxHeight:'300px',overflowY:'auto'}} className='col-sm-12'>
                     <table className='table table-striped table-bordered'>
                       <thead>
                         <tr>

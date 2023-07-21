@@ -156,6 +156,7 @@ const ExcelHeaders = () => {
                   id="fare-tab"
                   role="tabpanel"
                   aria-labelledby="fare-tab"
+                  style={{maxHeight:'300px',overflowY:'auto'}}
                 >
                   <table className="table table-striped table-bordered">
                     <thead>

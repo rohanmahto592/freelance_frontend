@@ -57,7 +57,7 @@ const Navbar = () => {
               <button
                 data-bs-toggle="collapse"
                 data-bs-target=".navbar-collapse.show"
-                class=" btn btn-outline-primary "
+                class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/login")}
               >
                 LOGIN
