@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import cross from "../../../Assets/Images/cross.png";
 import verified from "../../../Assets/Images/check.png";
-import Pagination from "../../../Components/Pagination/Pagination";
 import {
   verifyUsers,
   getUsers,
@@ -14,15 +13,12 @@ const Users = () => {
   const [nonverifiedusers, setNonVerifiedUsers] = useState(null);
   const [selectedUserId, setUserId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [activeTab, setActiveTab] = useState("tabs-1");
-  const [postNumber] = useState(5);
   const modalRef = useRef(null);
-  const currentPageNumber = pageNumber * postNumber - postNumber;
 
   useEffect(() => {
     if (activeTab === "tabs-1") {
@@ -39,13 +35,7 @@ const Users = () => {
     setUserId(userId);
     setShowModal(true);
   };
-  const handlePrev = () => {
-    if (pageNumber === 1) return;
-    setPageNumber(pageNumber - 1);
-  };
-  const handleNext = () => {
-    setPageNumber(pageNumber + 1);
-  };
+
   const handleSelectRow = (event, rowData) => {
     if (event.target.checked) {
       setSelectedRows([...selectedRows, rowData]);
@@ -134,6 +124,7 @@ const Users = () => {
             id="tabs-1"
             role="tabpanel"
             aria-labelledby="ex1-tab-1"
+            style={{maxHeight:'400px',overflowY:'auto'}}
           >
             <table className="table table-striped table-bordered">
               <thead>
@@ -162,7 +153,7 @@ const Users = () => {
                     </td>
                     <td>
                       <button
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-danger"
                         onClick={() => handleOpenModal(user?._id)}
                       >
                         Delete
@@ -172,17 +163,13 @@ const Users = () => {
                 ))}
               </tbody>
             </table>
-            <Pagination
-              handleNext={handleNext}
-              handlePrev={handlePrev}
-              pageNumber={pageNumber}
-            />
           </div>
           <div
             class="tab-pane fade"
             id="tabs-2"
             role="tabpanel"
             aria-labelledby="ex1-tab-2"
+            style={{maxHeight:'400px',overflowY:'auto'}}
           >
             <table className="table table-striped table-bordered">
               <thead>

@@ -193,7 +193,7 @@ const Stock = () => {
             id="tabs-3"
             role="tabpanel"
             aria-labelledby="tab-3"
-            style={{maxHeight:'500px',overflowY:'auto'}}
+            style={{maxHeight:'400px',overflowY:'auto'}}
           >
             <table  className="table table-striped table-bordered">
               <thead>

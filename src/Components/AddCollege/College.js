@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import { addColleges,fetchColleges } from '../../Apis/adminDashboard';
+import { addColleges,fetchColleges,DeleteCollege } from '../../Apis/adminDashboard';
 import Toast from '../Toast';
 const College = () => {
     const[college,setCollege]=useState('');
@@ -36,7 +36,21 @@ const College = () => {
         
 
     },[isCollegeAdded])
-  const deleteCollege=async(id)=>{
+  const deleteCollege=async(event,id)=>{
+    event.preventDefault()
+    const response=await DeleteCollege(id);
+    if(response.data.success)
+    {
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(false);
+    }
+    else
+    {
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(false);
+    }
 
   }
   return (
@@ -83,7 +97,7 @@ const College = () => {
                             <tr key={index}>
                               <td>{index+1}</td>
                               <td>{college.Name}</td>
-                              <td><button onClick={()=>deleteCollege(college._id)} className='btn btn-outline-primary'>Delete</button></td>
+                              <td><button onClick={(event)=>deleteCollege(event,college._id)} className='btn btn-outline-danger'>Delete</button></td>
                             </tr>
                           ))
                         }

@@ -150,3 +150,15 @@ export const deleteExcelHeader = async (id) => {
   );
   return response;
 };
+export const DeleteCollege=async(id)=>{
+  const response= await axios.delete(
+    `${process.env.REACT_APP_BASE_URL}/admin/deletecollege`,
+    {
+      params:{id:id},
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  )
+  return response;
+}
