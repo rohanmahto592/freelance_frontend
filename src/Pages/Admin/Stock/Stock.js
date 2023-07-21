@@ -83,12 +83,6 @@ const Stock = () => {
     const response = await addStockItem(stockData);
     if (response.data.success) {
       setApiError(response.data.message);
-      setStockData({
-        itemName: "",
-        quantity: null,
-        university: "",
-        itemRef: "",
-      });
       setShowToast(true);
       setIsError(false);
     } else {
