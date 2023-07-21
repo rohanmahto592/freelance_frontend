@@ -350,7 +350,7 @@ const Stock = () => {
                         Select University
                       </option>
                       {colleges?.map((college) => (
-                        <option value={college.Name}>{college.Name}</option>
+                        <option value={college.Name+', '+college.Address}>{college.Name+","+college.Address}</option>
                       ))}
                     </select>
                   </div>

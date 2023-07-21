@@ -91,10 +91,10 @@ export const addStockItem = async (data) => {
     }
   );
 };
-export const addColleges = async (college) => {
+export const addColleges = async (college,address) => {
   return await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/addCollege`,
-    { Name: college },
+    { Name: college,Address:address },
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -160,5 +160,5 @@ export const DeleteCollege=async(id)=>{
       },
     }
   )
-  return response;
+   return response;
 }
