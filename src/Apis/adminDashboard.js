@@ -91,18 +91,18 @@ export const addStockItem = async (data) => {
     }
   );
 };
-export const addColleges=async(college)=>{
+export const addColleges = async (college) => {
   return await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/addCollege`,
-    {"Name":college},
+    { Name: college },
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
-}
-export const fetchColleges=async()=>{
+  );
+};
+export const fetchColleges = async () => {
   return await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/getColleges`,
     {
@@ -110,5 +110,43 @@ export const fetchColleges=async()=>{
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
-}
+  );
+};
+
+export const addEventHeader = async (name) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/admin/addExcelHeader`,
+    name,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+};
+
+export const fetchEventHeaders = async (orderType) => {
+  return await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/getExcelHeader`,
+    {
+      params: { orderType: orderType },
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+};
+
+export const deleteExcelHeader = async (id) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/admin/deleteExcelHeader`,
+    { id },
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+};

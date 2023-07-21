@@ -1,99 +1,94 @@
 import React, { useState, useRef, useEffect } from "react";
-import { addStockItem,addItem,fetchItemNames,fetchItems, fetchColleges } from "../../../Apis/adminDashboard";
+import {
+  addStockItem,
+  addItem,
+  fetchItemNames,
+  fetchItems,
+  fetchColleges,
+} from "../../../Apis/adminDashboard";
 import EditItemModalComponent from "../../../Components/Modal/EditItemModalComponent";
 import Toast from "../../../Components/Toast";
-import Form from '../../../Components/EditItemForm/Form'
+import Form from "../../../Components/EditItemForm/Form";
 const Stock = () => {
-    const [stockData,setStockData]=useState({
-        itemName:"",
-        quantity:null,
-        university:"",
-        itemRef:"",
-    
-      })
-      const [activeTab, setActiveTab] = useState('tabs-3');
-      const[itemNames,setItemNames]=useState(null);
-      const [ItemData, setItemData] = useState({
-        name: "",
-        description: "",
-        image: null,
-      });
-      const [items, setItems] = useState(null);
+  const [stockData, setStockData] = useState({
+    itemName: "",
+    quantity: null,
+    university: "",
+    itemRef: "",
+  });
+  const [activeTab, setActiveTab] = useState("tabs-3");
+  const [itemNames, setItemNames] = useState(null);
+  const [ItemData, setItemData] = useState({
+    name: "",
+    description: "",
+    image: null,
+  });
+  const [items, setItems] = useState(null);
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [itemShowModal, setItemShowModal] = useState(false);
   const [currentEditableItem, setCurrentEditableItem] = useState(null);
-  const[colleges,setcolleges]=useState(null);
+  const [colleges, setcolleges] = useState(null);
   const itemModalRef = useRef(null);
   const itemHandleCloseModal = () => {
     setItemShowModal(false);
   };
-    useEffect(()=>{
-        if(activeTab==='tabs-3')
-        {
-          fetchAllStockItems()
-        }
-        else if(activeTab==='tabs-4')
-        {
-    
-        }
-        else if(activeTab==='tabs-5')
-        {
-          getItemNames();
-        }
-    
-      },[activeTab])
-      const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        if (name === "image") {
-          setItemData({ ...ItemData, [name]: event.target.files[0] });
-        } else {
-          setItemData({ ...ItemData, [name]: value });
-        }
-      };
-      async function getItemNames(){
-        const response=await fetchItemNames();
-        const collegeNames=await fetchColleges();
-        console.log(response.data.message);
-        if (response.data.success) {
-          setItemNames(response.data.message);
-        } else {
-          setApiError(response.data.message);
-          setShowToast(true);
-          setIsError(true);
-        }
-        if (collegeNames.data.success) {
-            setcolleges(collegeNames.data.message);
-          } else {
-            setApiError(collegeNames.data.message);
-            setShowToast(true);
-            setIsError(true);
-          }
-      }
-      const handleStockChange=(event)=>{
-        const {name,value}=event.target
-        if(name==='itemName')
-        {
-          const [itemRef, itemName] = value.split(",");
-          setStockData({...stockData,"itemName":itemName, 'itemRef':itemRef});
-        }
-        else
-        {
-          setStockData({...stockData,[name]:value});
-        }
-      }
+  useEffect(() => {
+    if (activeTab === "tabs-3") {
+      fetchAllStockItems();
+    } else if (activeTab === "tabs-4") {
+    } else if (activeTab === "tabs-5") {
+      getItemNames();
+    }
+  }, [activeTab]);
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "image") {
+      setItemData({ ...ItemData, [name]: event.target.files[0] });
+    } else {
+      setItemData({ ...ItemData, [name]: value });
+    }
+  };
+  async function getItemNames() {
+    const response = await fetchItemNames();
+    const collegeNames = await fetchColleges();
+    console.log(response.data.message);
+    if (response.data.success) {
+      setItemNames(response.data.message);
+    } else {
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(true);
+    }
+    if (collegeNames.data.success) {
+      setcolleges(collegeNames.data.message);
+    } else {
+      setApiError(collegeNames.data.message);
+      setShowToast(true);
+      setIsError(true);
+    }
+  }
+  const handleStockChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "itemName") {
+      const [itemRef, itemName] = value.split(",");
+      setStockData({ ...stockData, itemName: itemName, itemRef: itemRef });
+    } else {
+      setStockData({ ...stockData, [name]: value });
+    }
+  };
   const AddStockSubmit = async (event) => {
     event.preventDefault();
     const response = await addStockItem(stockData);
     if (response.data.success) {
       setApiError(response.data.message);
-      setStockData( {itemName:"",
-      quantity:null,
-      university:"",
-      itemRef:"",
-  
-    })
+      setStockData({
+        itemName: "",
+        quantity: null,
+        university: "",
+        itemRef: "",
+      });
       setShowToast(true);
       setIsError(false);
     } else {
@@ -117,11 +112,11 @@ const Stock = () => {
     form.append("item", JSON.stringify(ItemData));
     const response = await addItem(form);
     if (response.data.success) {
-        setItemData({
-            name: "",
-            description: "",
-            image: null,
-          })
+      setItemData({
+        name: "",
+        description: "",
+        image: null,
+      });
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
@@ -145,7 +140,7 @@ const Stock = () => {
   return (
     <>
       <div id="table-row" className="row m-3  ">
-        <h3 style={{textAlign:'center'}}>Stocks</h3>
+        <h3 style={{ textAlign: "center" }}>Stocks</h3>
         <ul
           class="nav nav-tabs mb-3"
           id="ex2"
@@ -326,7 +321,9 @@ const Stock = () => {
                       aria-label="Default select example"
                       name="itemName"
                     >
-                      <option disabled>Select item</option>
+                      <option selected disabled>
+                        Select item
+                      </option>
                       {itemNames?.map((item, index) => (
                         <option key={index} value={item._id + "," + item.name}>
                           {item.name}
@@ -356,12 +353,9 @@ const Stock = () => {
                       <option disabled selected>
                         Select University
                       </option>
-                      {
-                        colleges?.map((college)=>(
-                            <option value={college.Name}>{college.Name}</option>
-                        ))
-                      }
-                     
+                      {colleges?.map((college) => (
+                        <option value={college.Name}>{college.Name}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -396,7 +390,7 @@ const Stock = () => {
           />
         }
       />
-       {showToast && (
+      {showToast && (
         <Toast
           message={apiError}
           setShowToast={setShowToast}

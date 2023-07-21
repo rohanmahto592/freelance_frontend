@@ -1,0 +1,15 @@
+#slider {
+  display: flex;
+  gap: 10px;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+#slider::-webkit-scrollbar {
+  display: none;
+}
+
+.slider-icon-arrow {
+  margin: "6px";
+}

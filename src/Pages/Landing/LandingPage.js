@@ -8,13 +8,14 @@ import group10 from "../../Assets/Images/group10.png";
 import instagram from "../../Assets/Images/instagram.png";
 import facebook from "../../Assets/Images/facebook.png";
 import twitter from "../../Assets/Images/twitter.png";
-
-import ReactCardSlider from "react-card-slider-component";
 import { createFeedback, getAllFeedbacks } from "../../Apis/feedback";
 import Toast from "../../Components/Toast";
 import "./landingPage.css";
+import CardSlider from "../../Components/CardSlider/CardSlider";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [feedbackData, setFeedbackData] = useState({
     name: "",
     title: "",
@@ -191,14 +192,16 @@ const LandingPage = () => {
           ))}
         </div>
       </div>
-      {feedbacks && feedbacks.length>0 &&  <div style={{ width: "90%", margin: "auto", padding: "12px 0px" }}>
-        <p style={{ textAlign: "center" }} className="heading-text fs-1">
-          What others are saying about glimpse
-        </p>
-      </div>}
+      {feedbacks && feedbacks.length > 0 && (
+        <div style={{ width: "90%", margin: "auto", padding: "12px 0px" }}>
+          <p style={{ textAlign: "center" }} className="heading-text fs-1">
+            What others are saying about glimpse
+          </p>
+        </div>
+      )}
       {/* carasol */}
       <div className="container">
-        {feedbacks && feedbacks.length>0 && <ReactCardSlider slides={feedbacks} />}
+        {feedbacks && feedbacks.length > 0 && <CardSlider slides={feedbacks} />}
       </div>
       <div style={{ width: "90%", margin: "auto", padding: "12px 0px" }}>
         <p style={{ textAlign: "center" }} className="heading-text fs-1">
@@ -324,13 +327,19 @@ const LandingPage = () => {
           <div className="row mt-2">
             <div className="col-12">
               <span className="m-3">
-                <button type="button" className="btn btn-primary">
-                  Sign up
+                <button
+                  class=" btn btn-outline-secondary"
+                  onClick={() => navigate("/login")}
+                >
+                  LOGIN
                 </button>
               </span>
               <span className="m-3">
-                <button type="button" className="btn btn-secondary">
-                  Log in
+                <button
+                  class=" btn btn-outline-secondary "
+                  onClick={() => navigate("/signup")}
+                >
+                  SIGN UP
                 </button>
               </span>
             </div>
