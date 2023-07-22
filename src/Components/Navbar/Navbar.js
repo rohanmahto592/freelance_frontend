@@ -36,7 +36,9 @@ const Navbar = () => {
                 class="btn btn-link text-decoration-none"
                 onClick={() => navigate("/")}
               >
+               
                 HOME
+                <i style={{marginLeft:'5px'}} class="bi bi-house"></i>
               </button>
 
               <button
@@ -45,14 +47,18 @@ const Navbar = () => {
                 class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/admin/dashboard")}
               >
+                
                 DASHBOARD
+                <i style={{marginLeft:'5px'}} class="bi bi-bar-chart"></i>
               </button>
               <button
                 data-bs-toggle="collapse"
                 data-bs-target=".navbar-collapse.show"
                 class=" btn btn-link text-decoration-none"
               >
+                
                 CONTACT
+                <i style={{marginLeft:'5px'}} class="bi bi-person-lines-fill"></i>
               </button>
               <button
                 data-bs-toggle="collapse"
@@ -60,7 +66,9 @@ const Navbar = () => {
                 class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/login")}
               >
+               
                 LOGIN
+                <i style={{marginLeft:'5px'}} class="bi bi-box-arrow-in-left"></i>
               </button>
             </ul>
           </div>

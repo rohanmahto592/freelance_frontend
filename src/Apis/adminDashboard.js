@@ -157,3 +157,15 @@ export const DeleteCollege=async(id)=>{
   )
    return response;
 }
+export const deleteCurrentItem=async(itemId)=>{
+  const response= await axios.delete(
+    `${process.env.REACT_APP_BASE_URL}/admin/deleteCurrentItem`,
+    {
+      params:{id:itemId},
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  )
+   return response;
+}

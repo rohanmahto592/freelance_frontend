@@ -5,10 +5,12 @@ import {
   fetchItemNames,
   fetchItems,
   fetchColleges,
+  deleteCurrentItem
 } from "../../../Apis/adminDashboard";
 import EditItemModalComponent from "../../../Components/Modal/EditItemModalComponent";
 import Toast from "../../../Components/Toast";
 import Form from "../../../Components/EditItemForm/Form";
+import ModalComponent from "../../../Components/Modal/ModalComponent";
 const Stock = () => {
   const [stockData, setStockData] = useState({
     itemName: "",
@@ -31,6 +33,9 @@ const Stock = () => {
   const [currentEditableItem, setCurrentEditableItem] = useState(null);
   const [colleges, setcolleges] = useState(null);
   const itemModalRef = useRef(null);
+  const stockModalRef=useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const[itemId,setItemId]=useState(null);
   const itemHandleCloseModal = () => {
     setItemShowModal(false);
   };
@@ -131,6 +136,26 @@ const Stock = () => {
       setIsError(true);
     }
   }
+  async function deleteCurrentStockItem(){
+    const response = await deleteCurrentItem(itemId);
+    if (response.data.success) {
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(false);
+    } else {
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(true);
+    }
+
+  }
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const handleOpenModal = (userId) => {
+    setItemId(userId);
+    setShowModal(true);
+  };
   return (
     <>
       <div id="table-row" className="row m-3  ">
@@ -220,9 +245,17 @@ const Stock = () => {
                       {" "}
                       <button
                         onClick={() => editCurrentItem(item)}
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-primary mb-2"
                       >
                         Edit
+                      </button>
+                      {" "}
+                      <button
+
+                        onClick={() => handleOpenModal(item._id)}
+                        className="btn btn-outline-primary mb-2"
+                      >
+                       Delete
                       </button>
                     </td>
                   </tr>
@@ -394,6 +427,15 @@ const Stock = () => {
           isError={isError}
         />
       )}
+      <ModalComponent
+      modalRef={stockModalRef}
+      showModal={showModal}
+      handleCloseModal={handleCloseModal}
+      handleSaveChanges={deleteCurrentStockItem}
+      title="Stock Action"
+      body="Are you really want to delete this item?"
+
+       />
     </>
   );
 };

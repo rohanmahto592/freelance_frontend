@@ -219,11 +219,11 @@ const SignUpPage = () => {
                 </div>
               </div>
             </form>
-            <div class="pt-4 text-center">
-              Already have an account?{" "}
-              <a style={{ color: "#000A99" }} href="/login">
-                Login
-              </a>
+            <div class="text-center flex justify-content-center">
+              <p>Already have an account?{" "}</p>
+              <button style={{marginTop:'-15px'}} className=" btn btn-link" onClick={()=>navigate("/login")}>
+              Login
+              </button>  
             </div>
             {showToast && (
               <Toast
