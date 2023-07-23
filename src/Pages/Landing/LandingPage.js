@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import landingimage1 from "../../Assets/Images/plant.png";
 import "../../css/LandingPage.css";
 import { serviceInfo, servicesProvider } from "../../constants";
-import group8 from "../../Assets/Images/group8.png";
-import group9 from "../../Assets/Images/group9.png";
-import group10 from "../../Assets/Images/group10.png";
 import instagram from "../../Assets/Images/instagram.png";
 import facebook from "../../Assets/Images/facebook.png";
 import twitter from "../../Assets/Images/twitter.png";
@@ -201,7 +198,11 @@ const LandingPage = () => {
       )}
       {/* carasol */}
       <div className="container">
-        {feedbacks && feedbacks.length > 0 && <CardSlider slides={feedbacks} />}
+      <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-12">
+    {feedbacks && feedbacks.length > 0 && <CardSlider slides={feedbacks} />}
+      </div> 
+      </div>
       </div>
       <div style={{ width: "90%", margin: "auto", padding: "12px 0px" }}>
         <p style={{ textAlign: "center" }} className="heading-text fs-1">

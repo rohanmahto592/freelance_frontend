@@ -253,7 +253,7 @@ const Stock = () => {
                       <button
 
                         onClick={() => handleOpenModal(item._id)}
-                        className="btn btn-outline-primary mb-2"
+                        className="btn btn-outline-danger mb-2"
                       >
                        Delete
                       </button>

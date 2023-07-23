@@ -25,6 +25,7 @@ const CardSlider = (props) => {
                 flexBasis: "250px",
               }}
             >
+              
               <img
                 class="card-img-top"
                 src={slide.image || "https://picsum.photos/200/300"}
