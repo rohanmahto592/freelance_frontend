@@ -346,7 +346,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="row mt-2">
-            <div className="col-12">
+            <div style={{display:'flex',flexWrap:'wrap'}} className="col-sm-12 justify-content-center">
               <span className="m-2">About Us</span>
               <span className="m-2">Contact us</span>
               <span className="m-2">Privacy Policy</span>
