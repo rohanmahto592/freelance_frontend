@@ -233,15 +233,17 @@ const Stock = () => {
                     <td>{item?.itemRef?.description}</td>
                     <td>{item?.quantity}</td>
                     <td>{item?.university}</td>
+                    <td>
                     {item?.itemRef?.image && (
-                      <td>
+                     
                         <img
                           style={{ width: "5vh", height: "5vh" }}
                           src={item?.itemRef?.image}
                           alt="cross"
                         />
-                      </td>
+                      
                     )}
+                    </td>
                     <td>
                       {" "}
                       <button
