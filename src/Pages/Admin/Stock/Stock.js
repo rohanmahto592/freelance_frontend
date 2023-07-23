@@ -5,7 +5,7 @@ import {
   fetchItemNames,
   fetchItems,
   fetchColleges,
-  deleteCurrentItem
+  deleteCurrentItem,
 } from "../../../Apis/adminDashboard";
 import EditItemModalComponent from "../../../Components/Modal/EditItemModalComponent";
 import Toast from "../../../Components/Toast";
@@ -33,9 +33,9 @@ const Stock = () => {
   const [currentEditableItem, setCurrentEditableItem] = useState(null);
   const [colleges, setcolleges] = useState(null);
   const itemModalRef = useRef(null);
-  const stockModalRef=useRef(null);
+  const stockModalRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const[itemId,setItemId]=useState(null);
+  const [itemId, setItemId] = useState(null);
   const itemHandleCloseModal = () => {
     setItemShowModal(false);
   };
@@ -136,7 +136,7 @@ const Stock = () => {
       setIsError(true);
     }
   }
-  async function deleteCurrentStockItem(){
+  async function deleteCurrentStockItem() {
     const response = await deleteCurrentItem(itemId);
     if (response.data.success) {
       setApiError(response.data.message);
@@ -147,7 +147,6 @@ const Stock = () => {
       setShowToast(true);
       setIsError(true);
     }
-
   }
   const handleCloseModal = () => {
     setShowModal(false);
@@ -212,9 +211,9 @@ const Stock = () => {
             id="tabs-3"
             role="tabpanel"
             aria-labelledby="tab-3"
-            style={{maxHeight:'400px',overflowY:'auto'}}
+            style={{ maxHeight: "400px", overflowY: "auto" }}
           >
-            <table  className="table table-striped table-bordered">
+            <table className="table table-striped table-bordered">
               <thead>
                 <tr>
                   <th>S.NO</th>
@@ -234,13 +233,15 @@ const Stock = () => {
                     <td>{item?.itemRef?.description}</td>
                     <td>{item?.quantity}</td>
                     <td>{item?.university}</td>
-                    <td>
-                      <img
-                        style={{ width: "5vh", height: "5vh" }}
-                        src={item?.itemRef?.image}
-                        alt="cross"
-                      />
-                    </td>
+                    {item?.itemRef?.image && (
+                      <td>
+                        <img
+                          style={{ width: "5vh", height: "5vh" }}
+                          src={item?.itemRef?.image}
+                          alt="cross"
+                        />
+                      </td>
+                    )}
                     <td>
                       {" "}
                       <button
@@ -248,14 +249,12 @@ const Stock = () => {
                         className="btn btn-outline-primary mb-2"
                       >
                         Edit
-                      </button>
-                      {" "}
+                      </button>{" "}
                       <button
-
                         onClick={() => handleOpenModal(item._id)}
                         className="btn btn-outline-danger mb-2"
                       >
-                       Delete
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -341,7 +340,6 @@ const Stock = () => {
             <form className="form-style">
               <div className="container ">
                 <div className="row">
-                    
                   <div className="col-sm-4 my-2 ">
                     <label className="form-label">Item</label>
                     <select
@@ -374,7 +372,7 @@ const Stock = () => {
                   <div className="col-sm-4 my-2">
                     <label className="form-label">University</label>
                     <select
-                     onChange={handleStockChange}
+                      onChange={handleStockChange}
                       class="form-select"
                       aria-label="Default select example"
                       name="university"
@@ -383,7 +381,9 @@ const Stock = () => {
                         Select University
                       </option>
                       {colleges?.map((college) => (
-                        <option value={college.Name+', '+college.Address}>{college.Name+","+college.Address}</option>
+                        <option value={college.Name + ", " + college.Address}>
+                          {college.Name + "," + college.Address}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -428,14 +428,13 @@ const Stock = () => {
         />
       )}
       <ModalComponent
-      modalRef={stockModalRef}
-      showModal={showModal}
-      handleCloseModal={handleCloseModal}
-      handleSaveChanges={deleteCurrentStockItem}
-      title="Stock Action"
-      body="Are you really want to delete this item?"
-
-       />
+        modalRef={stockModalRef}
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        handleSaveChanges={deleteCurrentStockItem}
+        title="Stock Action"
+        body="Are you really want to delete this item?"
+      />
     </>
   );
 };
