@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
 import College from "../../Components/AddCollege/College";
 import ExcelHeaders from "../ExcelHeaders/ExcelHeaders";
-
+import Countries from "../nonServicableCountries/Countries";
 const Popup = () => {
   const [itemShowModal, setItemShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
@@ -15,6 +15,11 @@ const Popup = () => {
     } else if (item === "excelHeaders") {
       setComponent(<ExcelHeaders />);
       setModalTitle("Manage Headers");
+    }
+    else if(item==='nonServicableCountries')
+    {
+      setComponent(<Countries/>);
+      setModalTitle("Add Non Servicable Countries")
     }
     setItemShowModal(true);
   };
@@ -50,6 +55,12 @@ const Popup = () => {
             onClick={() => handleOpenModal("excelHeaders")}
           >
             Manage Excel Headers
+          </button>
+          <button
+            className="btn btn-outline-primary mt-3"
+            onClick={() => handleOpenModal("nonServicableCountries")}
+          >
+           Non Servicable Countries
           </button>
         </div>
       </div>

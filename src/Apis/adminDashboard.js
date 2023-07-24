@@ -169,3 +169,26 @@ export const deleteCurrentItem=async(itemId)=>{
   )
    return response;
 }
+export const nonServicableCountries=async(country)=>{
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/admin/add/nonServicableCountries`,
+    { country },
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+}
+export const fetchInvalidCountries=async()=>{
+  const response=await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/get/nonServicableCountries`,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  )
+  return response;
+}
