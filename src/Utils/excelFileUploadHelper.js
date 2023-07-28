@@ -8,7 +8,7 @@ export const viewInitialExcelFile = (jsonData, name) => {
   };
 export const viewProcessedExcelFile = (jsonData, name) => {
     jsonData = JSON.parse(jsonData);
-    const { dispatched, invalid, non_servicable,duplicates,ShipRocket_Delivery } = jsonData;
+    const { dispatched, invalid, non_servicable,duplicates,ShipRocket_Delivery,IndianPost_Delivery } = jsonData;
     const workbook = XLSX.utils.book_new();
     const sheet1 = XLSX.utils.json_to_sheet(dispatched);
     XLSX.utils.book_append_sheet(workbook, sheet1, "Dispatched");
@@ -20,6 +20,8 @@ export const viewProcessedExcelFile = (jsonData, name) => {
     XLSX.utils.book_append_sheet(workbook, sheet4, "Duplicates Entry");
     const sheet5 = XLSX.utils.json_to_sheet(ShipRocket_Delivery);
     XLSX.utils.book_append_sheet(workbook, sheet5, "ShipRocket_Delivery");
+    const sheet6 = XLSX.utils.json_to_sheet(IndianPost_Delivery);
+    XLSX.utils.book_append_sheet(workbook, sheet6, "IndianPost_Delivery");
     XLSX.writeFile(workbook, `processed_${name}.xlsx`);
   };
 
