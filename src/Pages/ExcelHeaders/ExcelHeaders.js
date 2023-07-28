@@ -5,7 +5,7 @@ import {
   fetchEventHeaders,
 } from "../../Apis/adminDashboard";
 import Toast from "../../Components/Toast";
-
+import { exportToExcel } from "../../Utils/jsonToExcelDownload";
 const ExcelHeaders = () => {
   const [availableHeaders, setAvailableHeaders] = useState([]);
   const [newHeader, setNewHeader] = useState({
@@ -15,6 +15,7 @@ const ExcelHeaders = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [orderType,setOrderType]=useState('');
 
   useEffect(() => {
     fetchHeaders("FARE");
@@ -54,7 +55,6 @@ const ExcelHeaders = () => {
 
   const addNewHeader = async (event) => {
     event.preventDefault();
-    console.log(newHeader);
     if (newHeader?.name) {
       const response = await addEventHeader(newHeader);
       setApiError(response.data.message);
@@ -67,7 +67,14 @@ const ExcelHeaders = () => {
   const switchTab = async (event, orderType) => {
     event.preventDefault();
     await fetchHeaders(orderType);
+    setOrderType(orderType);
   };
+
+  const downloadHeaders=(event)=>{
+    event.preventDefault();
+    exportToExcel(availableHeaders,`${orderType}Headers.xlsx`)
+
+  }
 
   return (
     <div>
@@ -158,6 +165,7 @@ const ExcelHeaders = () => {
                   aria-labelledby="fare-tab"
                   style={{maxHeight:'300px',overflowY:'auto'}}
                 >
+                  <button style={{float:'right'}} className="btn btn-outline-success m-1" onClick={(event)=>downloadHeaders(event)} >Download</button>
                   <table className="table table-striped table-bordered">
                     <thead>
                       <tr>
