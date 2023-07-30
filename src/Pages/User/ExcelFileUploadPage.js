@@ -221,23 +221,23 @@ const ExcelFileUploadPage = () => {
               style={{ width: "100%",border:'5px solid #f2f2f2',borderRadius:'5px' }}
               class="table table-bordered border border-3"
             >
-              <thead   style={{ fontFamily:'monospace',letterSpacing:'.2vw' }}>
+              <thead   style={{ fontFamily:'monospace', }}>
                 <tr >
-                  <th rowspan="2">S.NO</th>
-                  <th rowspan="2">FILE NAME</th>
-                  <th rowspan="2">CREATED AT</th>
-                  <th colspan="3">INITIAL FILE</th>
-                  <th colspan="3">PROCESSED FILE</th>
-                  <th rowspan="2">DOC FILE</th>
-                  <th rowSpan="2">DELETE FILE</th>
+                  <th rowspan="2">S.No</th>
+                  <th rowspan="2">File Name</th>
+                  <th rowspan="2">Created At</th>
+                  <th colspan="3">Initial File</th>
+                  <th colspan="3">Processed File</th>
+                  <th rowspan="2">Doc File</th>
+                  <th rowSpan="2">Action</th>
                 </tr>
                 <tr>
-                  <th style={{ color: "GrayText" }}>SIZE</th>
-                  <th style={{ color: "GrayText" }}>FILE COUNT</th>
-                  <th style={{ color: "GrayText" }}>VIEW</th>
-                  <th style={{ color: "GrayText" }}>SIZE</th>
-                  <th style={{ color: "GrayText" }}> DISPATCHED FILE COUNT</th>
-                  <th style={{ color: "GrayText" }}>VIEW</th>
+                  <th style={{ color: "GrayText" }}>Size</th>
+                  <th style={{ color: "GrayText" }}>File Count</th>
+                  <th style={{ color: "GrayText" }}>View</th>
+                  <th style={{ color: "GrayText" }}>Size</th>
+                  <th style={{ color: "GrayText" }}> Dispatched File Count</th>
+                  <th style={{ color: "GrayText" }}>View</th>
                 </tr>
               </thead>
               <tbody>
@@ -316,18 +316,11 @@ const ExcelFileUploadPage = () => {
                       </td>
                       <td>
                         <button
+                        className="btn btn-outline-danger"
                           onClick={() => DeleteExcelFileData(row._id)}
-                          style={{
-                            outline: "none",
-                            border: "none",
-                            backgroundColor: "white",
-                          }}
+                          
                         >
-                          <img
-                            style={{ height: "2.8vh", width: "2.8vh" }}
-                            src={deleteIcon}
-                            alt="delete file"
-                          />
+                         Delete 
                         </button>
                       </td>
                     </tr>
