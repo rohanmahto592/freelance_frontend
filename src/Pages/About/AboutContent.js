@@ -9,7 +9,7 @@ export const AboutContent=[
     },
     {
         title:"Tailored solutions",
-        desc:" They offer tailored solutions for designing, printing, and distributing promotional materials that cater to the unique requirements of each client."
+        desc:" We offer tailored solutions for designing, printing, and distributing promotional materials that cater to the unique requirements of each client."
     },
     {
         title:"Customized merchandise",
@@ -23,7 +23,7 @@ export const AboutContent=[
     },
     {
         title:"Value",
-        desc:" They value professionalism, innovation, and client satisfaction above all else and have forged strong partnerships with globally renowned organizations such as Globally Recruit, Globalshala, and Excelerate."
+        desc:" We value professionalism, innovation, and client satisfaction above all else and have forged strong partnerships with globally renowned organizations such as Globally Recruit, Globalshala, and Excelerate."
     },
     {
 
