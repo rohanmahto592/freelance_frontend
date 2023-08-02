@@ -10,6 +10,7 @@ import PrivateDeliveryRoute from "./Components/PrivateDeliveryRoute";
 import UploadDeliveryFile from "./Pages/Delivery/UploadDeliveryFile";
 import PrivateAdminRoute from "./Components/PrivateAdminRoute";
 import { Adminroutes, UserRoutes } from "./RoutesPath/DirectedRoutes";
+import About from "./Pages/About/About";
 function App() {
   return (
     <Routes>
@@ -51,6 +52,7 @@ function App() {
           <Route key={index} path={admin.path} element={admin.element} />
         ))}
       </Route>
+      <Route path="/about" element={<About/>}/>
       <Route path="*" element={<Error404Page />} />
     </Routes>
   );

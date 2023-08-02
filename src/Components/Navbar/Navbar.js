@@ -58,6 +58,16 @@ const Navbar = () => {
               >
                 
                 CONTACT
+                <i style={{marginLeft:'5px'}} class="bi bi-person-bounding-box"></i>
+              </button>
+              <button
+                data-bs-toggle="collapse"
+                data-bs-target=".navbar-collapse.show"
+                class=" btn btn-link text-decoration-none"
+                onClick={() => navigate("/about")}
+              >
+                
+                ABOUT US
                 <i style={{marginLeft:'5px'}} class="bi bi-person-lines-fill"></i>
               </button>
               <button
