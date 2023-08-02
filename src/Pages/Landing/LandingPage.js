@@ -104,8 +104,9 @@ const LandingPage = () => {
                     margin: "2vh",
                   }}
                   class="btn btn-primary"
+                  onClick={()=>navigate("/about")}
                 >
-                  Get Started
+                  Know More
                 </button>
               </div>
             </div>
