@@ -157,7 +157,7 @@ const SignUpPage = () => {
                       onChange={handleInputChange}
                       required={formData.userType === "UNIVERSITY"}
                     >
-                      <option disabled selected>Select university</option>
+                      <option  selected>Select university</option>
                       {receivedCollege?.map((college, index) => (
                         <option
                           key={index}

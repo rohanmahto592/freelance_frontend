@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../Apis/auth";
 import Toast from "../Components/Toast";
@@ -19,7 +19,6 @@ const LoginPage = () => {
   const setShowToast = () => {
     setToast(!showToast);
   };
-
   const handleLogin = async (event) => {
     event.preventDefault();
     const response = await login(formData);
@@ -33,6 +32,7 @@ const LoginPage = () => {
       sessionStorage.setItem("isAuthenticated", true);
       sessionStorage.setItem("userType", userType);
       sessionStorage.setItem("token", token);
+      sessionStorage.setItem("isLoggedIn",true);
       response?.data?.userId && sessionStorage.setItem("userDeliveryId",response.data.userId);
       const redirect = redirection[userType]
       navigate(redirect);
@@ -48,7 +48,6 @@ const LoginPage = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
-
   return (
     <div class="container">
       <div class="row m-3  no-gutters shadow-sm ">

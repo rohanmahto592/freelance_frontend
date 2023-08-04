@@ -16,6 +16,7 @@ import folder from "../../Assets/Images/folder.png";
 import Toast from "../../Components/Toast";
 import deleteIcon from "../../Assets/Images/delete.png";
 import docIcon from "../../Assets/Images/doc.png";
+import { fetchColleges } from "../../Apis/adminDashboard";
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
@@ -32,6 +33,7 @@ const ExcelFileUploadPage = () => {
   const [showToast, setShowToast] = useState(false);
   const [apiError, setApiError] = useState("");
   const [isError, setIsError] = useState(true);
+  const[receivedCollege,setReceivedCollege]=useState(null);
   const fileInputRef = useRef(null);
   function handlePageChange(page, data = excelFileData) {
     setCurrentPage(page);
@@ -40,6 +42,17 @@ const ExcelFileUploadPage = () => {
     const newData = data?.slice(startIndex, endIndex);
     setcurrentData(newData);
   }
+  useEffect(() => {
+    fetchColleges().then((response) => {
+      if (response?.data?.success) {
+        setReceivedCollege(response.data.message);
+      } else {
+        setApiError(response.data.message);
+        setShowToast(true);
+        setIsError(true);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     try {
@@ -77,7 +90,7 @@ const ExcelFileUploadPage = () => {
     } else if (name === "docFile") {
       setFormData({ ...formData, docfile: event.target.files[0] });
     } else if (name === "university") {
-      setFormData({ ...formData, university: event.target.files[0] });
+      setFormData({ ...formData, university:value});
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -193,7 +206,15 @@ const ExcelFileUploadPage = () => {
                 name="university"
                 onChange={handleInputChange}
               >
-                <option disabled>Select University</option>
+                <option selected>Select University</option>
+                {receivedCollege?.map((college, index) => (
+                        <option
+                          key={index}
+                          value={college.Name + ", " + college.Address}
+                        >
+                          {college.Name + ", " + college.Address}
+                        </option>
+                      ))}
               </select>
             </div>
           </div>
