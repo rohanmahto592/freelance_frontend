@@ -299,7 +299,7 @@ const Stock = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <label className="form-label">Item Image</label>
+                  <label className="form-label">Item Image <strong>(.img, .jpeg, .jpg, .png)</strong></label>
                   <div
                     style={{
                       borderRadius: "10px",
