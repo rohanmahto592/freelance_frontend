@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   addEventHeader,
   deleteExcelHeader,
@@ -15,15 +15,15 @@ const ExcelHeaders = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [orderType,setOrderType]=useState('');
-
+  const [orderType, setOrderType] = useState(null);
+  const [isHeaderAdded, setHeaderAdded] = useState(false);
   useEffect(() => {
-    fetchHeaders("FARE");
-  }, []);
+    fetchHeaders(orderType ? orderType : "FARE");
+  }, [isHeaderAdded, orderType]);
 
   const fetchHeaders = async (orderType) => {
-    console.log(orderType);
     const response = await fetchEventHeaders(orderType);
+    localStorage.setItem(orderType, JSON.stringify(response.data.message));
     if (response?.data?.success) {
       setAvailableHeaders(response.data.message);
     } else {
@@ -52,11 +52,32 @@ const ExcelHeaders = () => {
       setIsError(true);
     }
   };
+  const checkIfExcelHeaderExist = (newHeader) => {
+    const exsistingHeaders = JSON.parse(
+      localStorage.getItem(newHeader.orderType)
+    );
+    return exsistingHeaders.some((item) => item.name === newHeader.name.toLowerCase().trim());
+  };
 
   const addNewHeader = async (event) => {
     event.preventDefault();
+    
+   if(checkIfExcelHeaderExist(newHeader))
+   {
+      setApiError(
+        `${newHeader.name} is already present in ${newHeader.orderType}`
+      );
+      setShowToast(true);
+      setIsError(true);
+
+      return;
+    
+      }
     if (newHeader?.name) {
       const response = await addEventHeader(newHeader);
+      if (response.data.success) {
+        setHeaderAdded(true);
+      }
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
@@ -69,11 +90,10 @@ const ExcelHeaders = () => {
     setOrderType(orderType);
   };
 
-  const downloadHeaders=(event)=>{
+  const downloadHeaders = (event) => {
     event.preventDefault();
-    exportToExcel(availableHeaders,`${orderType}Headers.xlsx`)
-
-  }
+    exportToExcel(availableHeaders, `${orderType}Headers.xlsx`);
+  };
 
   return (
     <div>
@@ -163,9 +183,15 @@ const ExcelHeaders = () => {
                   id="fare-tab"
                   role="tabpanel"
                   aria-labelledby="fare-tab"
-                  style={{maxHeight:'300px',overflowY:'auto'}}
+                  style={{ maxHeight: "300px", overflowY: "auto" }}
                 >
-                  <button style={{float:'right'}} className="btn btn-outline-success m-1" onClick={(event)=>downloadHeaders(event)} >Download</button>
+                  <button
+                    style={{ float: "right" }}
+                    className="btn btn-outline-success m-1"
+                    onClick={(event) => downloadHeaders(event)}
+                  >
+                    Download
+                  </button>
                   <table className="table table-striped table-bordered">
                     <thead>
                       <tr>
