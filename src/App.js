@@ -11,10 +11,9 @@ import UploadDeliveryFile from "./Pages/Delivery/UploadDeliveryFile";
 import PrivateAdminRoute from "./Components/PrivateAdminRoute";
 import { Adminroutes, UserRoutes } from "./RoutesPath/DirectedRoutes";
 import About from "./Pages/About/About";
-import { createContext,useState } from "react";
 function App() {
-  const [type,setType]=useState('');
   return (
+    
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/signup" element={<SignUpPage />} />
