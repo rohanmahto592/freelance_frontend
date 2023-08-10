@@ -60,7 +60,6 @@ const ExcelHeaders = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
-      setNewHeader(null);
     }
   };
 
@@ -98,6 +97,7 @@ const ExcelHeaders = () => {
                 aria-label="Default select example"
                 name="orderType"
                 onChange={handleInputChange}
+                value={newHeader.orderType}
               >
                 <option selected value="FARE">
                   FARE

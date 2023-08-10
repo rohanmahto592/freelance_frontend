@@ -36,6 +36,7 @@ const Stock = () => {
   const stockModalRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [itemId, setItemId] = useState(null);
+  const addItemRef=useRef(null);
   const itemHandleCloseModal = () => {
     setItemShowModal(false);
   };
@@ -51,6 +52,7 @@ const Stock = () => {
     const { name, value } = event.target;
     if (name === "image") {
       setItemData({ ...ItemData, [name]: event.target.files[0] });
+
     } else {
       setItemData({ ...ItemData, [name]: value });
     }
@@ -58,7 +60,6 @@ const Stock = () => {
   async function getItemNames() {
     const response = await fetchItemNames();
     const collegeNames = await fetchColleges();
-    console.log(response.data.message);
     if (response.data.success) {
       setItemNames(response.data.message);
     } else {
@@ -116,6 +117,7 @@ const Stock = () => {
         description: "",
         image: null,
       });
+      addItemRef.current.reset();
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
@@ -127,7 +129,6 @@ const Stock = () => {
   };
   async function fetchAllStockItems() {
     const response = await fetchItems();
-    console.log(response.data);
     if (response.data.success) {
       setItems(response.data.message);
     } else {
@@ -270,7 +271,7 @@ const Stock = () => {
             role="tabpanel"
             aria-labelledby="tab-4"
           >
-            <form className="form-style">
+            <form ref={addItemRef} className="form-style">
               <div className="container ">
                 <div className="row">
                   <div className="col-sm-6 my-2 ">
@@ -314,6 +315,7 @@ const Stock = () => {
                         accept=".img,.jpeg,.jpg,.png"
                         name="image"
                         onChange={handleInputChange}
+                       
                       />
                     </div>
                   </div>
