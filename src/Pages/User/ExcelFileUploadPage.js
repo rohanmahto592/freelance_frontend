@@ -16,13 +16,16 @@ import folder from "../../Assets/Images/folder.png";
 import Toast from "../../Components/Toast";
 import deleteIcon from "../../Assets/Images/delete.png";
 import docIcon from "../../Assets/Images/doc.png";
-import { fetchColleges } from "../../Apis/adminDashboard";
+import { fetchColleges, fetchItems } from "../../Apis/adminDashboard";
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
     excelfile: null,
     docfile: null,
     university: null,
+    items: [],
+    currentItemQuantity: 0,
+    currentItem: null,
   });
   const [excelFileData, setExcelFileData] = useState(null);
   const [isProcessing, setProcessing] = useState(false);
@@ -33,7 +36,9 @@ const ExcelFileUploadPage = () => {
   const [showToast, setShowToast] = useState(false);
   const [apiError, setApiError] = useState("");
   const [isError, setIsError] = useState(true);
-  const[receivedCollege,setReceivedCollege]=useState(null);
+  const [items, setItems] = useState([]);
+  const [universityItems, setUniversityItems] = useState([]);
+  const [receivedCollege, setReceivedCollege] = useState(null);
   const fileInputRef = useRef(null);
   function handlePageChange(page, data = excelFileData) {
     setCurrentPage(page);
@@ -75,9 +80,34 @@ const ExcelFileUploadPage = () => {
   }, []);
 
   const userType = sessionStorage.getItem("userType");
+
+  const handleRequiredFieldsOnSubmit = () => {
+    if (formData.orderType === "ADMIT/DEPOST" || formData.orderType === "DPM") {
+      if (!formData.excelfile) {
+        setShowToast(true);
+        setApiError("Excel file Required");
+        return false;
+      }
+    } else if (formData.orderType === "FARE") {
+      if (!formData.university) {
+        setShowToast(true);
+        setApiError("University is Required in case of FARE");
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleInputChange = async (event) => {
     event.preventDefault();
     const { name, value } = event.target;
+    console.log(name, value);
+    if (value === "FARE") {
+      if (items.length === 0) {
+        await fetchAllStockItems();
+      }
+    }
+
     if (name === "excelFile") {
       const response = await ExcelWorkbookSheetCount(event.target.files[0]);
       if (!response.success) {
@@ -89,22 +119,26 @@ const ExcelFileUploadPage = () => {
       }
     } else if (name === "docFile") {
       setFormData({ ...formData, docfile: event.target.files[0] });
-    } else if (name === "university") {
-      setFormData({ ...formData, university:value});
     } else {
       setFormData({ ...formData, [name]: value });
+      if (name === "university") {
+        renderItemsForUniversity(value);
+      }
     }
   };
 
   const handleSubmit = async (event) => {
-    setProcessing(true);
     event.preventDefault();
+    const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
+    if (!isRequiredFieldsPresent) return;
+    setProcessing(true);
     const form = new FormData();
     form.append("files", formData.excelfile);
     form.append("files", formData.docfile);
     form.append("orderType", formData.orderType);
-    if (userType === "UNIVERSITY") {
+    if (formData.orderType === "FARE") {
       form.append("university", formData.university);
+      form.append("items", formData.items);
     }
 
     const response = await uploadExcelFile(form);
@@ -129,6 +163,62 @@ const ExcelFileUploadPage = () => {
       setShowToast(true);
       setIsError(false);
     }
+  };
+
+  async function fetchAllStockItems() {
+    const response = await fetchItems();
+    if (response.data.success) {
+      setItems(response.data.message);
+    } else {
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(true);
+    }
+  }
+
+  const renderItemsForUniversity = (university) => {
+    const uniItems = items.filter((item) => item.university === university);
+    setUniversityItems(uniItems);
+  };
+
+  const addItem = () => {
+    if (!formData.currentItem || !formData.currentItemQuantity) return;
+
+    const isCurrentItemAlreadyPresent = formData.items.filter((item) => {
+      const name = item.split("-")[0];
+      if (name === formData.currentItem) {
+        return true;
+      }
+      return false;
+    });
+
+    const isQuantityAboveStockLimit = universityItems.filter((item) => {
+      if (
+        item.itemName === formData.currentItem &&
+        JSON.parse(item.quantity) < formData.currentItemQuantity
+      )
+        return true;
+      return false;
+    });
+
+    if (isQuantityAboveStockLimit && isQuantityAboveStockLimit.length > 0)
+      return;
+
+    if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length > 0)
+      return;
+
+    const newItemsArray = formData.items;
+    newItemsArray.push(
+      `${formData.currentItem}-${formData.currentItemQuantity}`
+    );
+    setFormData({ ...formData, items: newItemsArray });
+  };
+
+  const removeItem = (selectedItem) => {
+    const newItemsArray = formData.items.filter(
+      (item) => selectedItem !== item
+    );
+    setFormData({ ...formData, items: newItemsArray });
   };
 
   return (
@@ -164,6 +254,7 @@ const ExcelFileUploadPage = () => {
             </label>
             <div className="col-sm-12  mb-4">
               <input
+                disabled={formData.orderType === "FARE"}
                 ref={fileInputRef}
                 type="file"
                 aria-label="Browse"
@@ -171,7 +262,7 @@ const ExcelFileUploadPage = () => {
                 id="inputGroupFile02"
                 name="excelFile"
                 accept=".xlsx"
-                required
+                required={formData.orderType !== "FARE"}
                 onChange={handleInputChange}
               />
             </div>
@@ -187,9 +278,9 @@ const ExcelFileUploadPage = () => {
                 className="form-control"
                 id="inputGroupFile03"
                 name="docFile"
-                required
                 accept=".doc,.docx,.pdf"
                 onChange={handleInputChange}
+                disabled={formData.orderType !== "DPM"}
               />
             </div>
           </div>
@@ -199,25 +290,102 @@ const ExcelFileUploadPage = () => {
             </label>
             <div class="dropdown mb-4">
               <select
-                disabled={userType === "UNIVERSITY" ? false : true}
+                disabled={formData.orderType !== "FARE"}
                 class="form-select"
                 aria-label="Select university"
                 value={formData.university}
                 name="university"
                 onChange={handleInputChange}
+                required={formData.orderType === "FARE"}
               >
                 <option selected>Select University</option>
                 {receivedCollege?.map((college, index) => (
-                        <option
-                          key={index}
-                          value={college.Name + ", " + college.Address}
-                        >
-                          {college.Name + ", " + college.Address}
-                        </option>
-                      ))}
+                  <option key={index} value={college.Name}>
+                    {college.Name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
+          {universityItems && universityItems.length > 0 && (
+            <>
+              <div className="col-sm-4  mt-2 mb-4">
+                <label className="form-label">Items</label>
+                <div class="dropdown">
+                  <select
+                    class="form-select"
+                    aria-label="Select order type"
+                    value={formData.currentItem}
+                    name="currentItem"
+                    onChange={handleInputChange}
+                  >
+                    <option disabled selected>
+                      Select item
+                    </option>
+                    {universityItems.map((item) => (
+                      <option value={item.itemName}>
+                        {item.itemName.toUpperCase()} ({item.quantity})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="col-sm-4 mt-2 mb-4">
+                <label className="form-label">Quantity</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  name="currentItemQuantity"
+                  value={formData.currentItemQuantity}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div
+                className="col-sm-4"
+                style={{ marginTop: "auto", marginBottom: "24px" }}
+              >
+                <input
+                  style={{ background: "#000A99" }}
+                  className="form-control btn btn-primary"
+                  type="button"
+                  onClick={addItem}
+                  value="Add Item"
+                />
+              </div>
+            </>
+          )}
+          {formData && formData.items && formData.items.length > 0 && (
+            <div className="col-sm-12 mb-4 mt-2 ml-2">
+              <div className="row" style={{ marginLeft: "2px" }}>
+                {formData.items.map((item) => (
+                  <div
+                    className="col-sm-2"
+                    style={{
+                      backgroundColor: "#82EEFD",
+                      borderRadius: "4px",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      paddingRight: "0px",
+                      margin: "2px 4px",
+                    }}
+                  >
+                    <span>{item.toUpperCase()}</span>
+                    <span
+                      style={{
+                        marginLeft: "auto",
+                        backgroundColor: "gray",
+                        cursor: "pointer",
+                        padding: "0px 4px",
+                      }}
+                      onClick={() => removeItem(item)}
+                    >
+                      x
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="col-sm-12 ">
             <div className="col-sm-12 ">
               <input
@@ -231,19 +399,22 @@ const ExcelFileUploadPage = () => {
           </div>
         </form>
         {isProcessing && <ProcessingLoader />}
-        
+
         <div
           style={{ backgroundColor: "#f2f2f2" }}
           className="row mt-3 rounded"
         >
-
           <div id="table-container" className="col-sm-12 mt-3">
             <table
-              style={{ width: "100%",border:'5px solid #f2f2f2',borderRadius:'5px' }}
+              style={{
+                width: "100%",
+                border: "5px solid #f2f2f2",
+                borderRadius: "5px",
+              }}
               class="table table-bordered border border-3"
             >
-              <thead   style={{ fontFamily:'monospace', }}>
-                <tr >
+              <thead style={{ fontFamily: "monospace" }}>
+                <tr>
                   <th rowspan="2">S.No</th>
                   <th rowspan="2">File Name</th>
                   <th rowspan="2">Created At</th>
@@ -337,11 +508,10 @@ const ExcelFileUploadPage = () => {
                       </td>
                       <td>
                         <button
-                        className="btn btn-outline-danger"
+                          className="btn btn-outline-danger"
                           onClick={() => DeleteExcelFileData(row._id)}
-                          
                         >
-                         Delete 
+                          Delete
                         </button>
                       </td>
                     </tr>
