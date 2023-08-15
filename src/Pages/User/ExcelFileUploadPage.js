@@ -40,6 +40,7 @@ const ExcelFileUploadPage = () => {
   const [universityItems, setUniversityItems] = useState([]);
   const [receivedCollege, setReceivedCollege] = useState(null);
   const fileInputRef = useRef(null);
+  const orderTypeRef=useRef(null);
   function handlePageChange(page, data = excelFileData) {
     setCurrentPage(page);
     const startIndex = (page - 1) * perPage;
@@ -50,6 +51,7 @@ const ExcelFileUploadPage = () => {
   useEffect(() => {
     fetchColleges().then((response) => {
       if (response?.data?.success) {
+        console.log(response)
         setReceivedCollege(response.data.message);
       } else {
         setApiError(response.data.message);
@@ -58,7 +60,6 @@ const ExcelFileUploadPage = () => {
       }
     });
   }, []);
-
   useEffect(() => {
     try {
       getExcelFile().then((response) => {
@@ -78,8 +79,6 @@ const ExcelFileUploadPage = () => {
       setProcessing(false);
     }
   }, []);
-
-  const userType = sessionStorage.getItem("userType");
 
   const handleRequiredFieldsOnSubmit = () => {
     if (formData.orderType === "ADMIT/DEPOST" || formData.orderType === "DPM") {
@@ -101,9 +100,9 @@ const ExcelFileUploadPage = () => {
   const handleInputChange = async (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    console.log(name, value);
     if (value === "FARE") {
       if (items.length === 0) {
+
         await fetchAllStockItems();
       }
     }
@@ -128,19 +127,24 @@ const ExcelFileUploadPage = () => {
   };
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
-    setProcessing(true);
     const form = new FormData();
     form.append("files", formData.excelfile);
     form.append("files", formData.docfile);
     form.append("orderType", formData.orderType);
     if (formData.orderType === "FARE") {
+     
+      if(formData.items.length===0)
+      {
+        return;
+      }
       form.append("university", formData.university);
       form.append("items", formData.items);
     }
-
+    setProcessing(true);
     const response = await uploadExcelFile(form);
     if (!response.data.success) {
       setApiError(response.data.message);
@@ -233,6 +237,7 @@ const ExcelFileUploadPage = () => {
             <label className="form-label">Order Type</label>
             <div class="dropdown">
               <select
+               ref={orderTypeRef}
                 class="form-select"
                 aria-label="Select order type"
                 value={formData.orderType}
@@ -300,14 +305,17 @@ const ExcelFileUploadPage = () => {
               >
                 <option selected>Select University</option>
                 {receivedCollege?.map((college, index) => (
-                  <option key={index} value={college.Name}>
-                    {college.Name}
-                  </option>
-                ))}
+                        <option
+                          key={index}
+                          value={college.Name + ", " + college.Address}
+                        >
+                          {college.Name + ", " + college.Address}
+                        </option>
+                      ))}
               </select>
             </div>
           </div>
-          {universityItems && universityItems.length > 0 && (
+          {  orderTypeRef?.current?.value==='FARE' && universityItems && universityItems.length > 0 && (
             <>
               <div className="col-sm-4  mt-2 mb-4">
                 <label className="form-label">Items</label>
@@ -354,15 +362,16 @@ const ExcelFileUploadPage = () => {
               </div>
             </>
           )}
-          {formData && formData.items && formData.items.length > 0 && (
+          {  orderTypeRef?.current?.value==='FARE' && formData && formData?.items && formData?.items?.length > 0 && (
             <div className="col-sm-12 mb-4 mt-2 ml-2">
               <div className="row" style={{ marginLeft: "2px" }}>
                 {formData.items.map((item) => (
                   <div
                     className="col-sm-2"
                     style={{
-                      backgroundColor: "#82EEFD",
+                      backgroundColor: "slateblue",
                       borderRadius: "4px",
+                      color:'white',
                       display: "flex",
                       justifyContent: "flex-end",
                       paddingRight: "0px",
@@ -437,7 +446,13 @@ const ExcelFileUploadPage = () => {
                   return (
                     <tr style={{ textAlign: "center" }}>
                       <td>{index + 1}</td>
-                      <td>{row.name}</td>
+                      <td>{row.name?row.name:`FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                        })}`}</td>
                       <td>
                         {new Date(row.createdAt).toLocaleDateString("en-US", {
                           year: "numeric",
@@ -452,7 +467,13 @@ const ExcelFileUploadPage = () => {
                       <td>
                         <button
                           onClick={() =>
-                            viewInitialExcelFile(row.initialExcelFile, row.name)
+                            viewInitialExcelFile(row.initialExcelFile, row.name?row.name:`FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "numeric",
+                              minute: "numeric",
+                            })}`)
                           }
                           style={{
                             outline: "none",
@@ -474,7 +495,13 @@ const ExcelFileUploadPage = () => {
                           onClick={() =>
                             viewProcessedExcelFile(
                               row.processedExcelFile,
-                              row.name
+                              row.name?row.name:`FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "numeric",
+                              })}`
                             )
                           }
                           style={{
