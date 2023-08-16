@@ -14,7 +14,6 @@ import ProcessingLoader from "../../Components/ProcessingLoader/ProcessingLoader
 import "../../css/ExcelFile.css";
 import folder from "../../Assets/Images/folder.png";
 import Toast from "../../Components/Toast";
-import deleteIcon from "../../Assets/Images/delete.png";
 import docIcon from "../../Assets/Images/doc.png";
 import { fetchColleges, fetchItems } from "../../Apis/adminDashboard";
 const ExcelFileUploadPage = () => {
@@ -40,7 +39,7 @@ const ExcelFileUploadPage = () => {
   const [universityItems, setUniversityItems] = useState([]);
   const [receivedCollege, setReceivedCollege] = useState(null);
   const fileInputRef = useRef(null);
-  const orderTypeRef=useRef(null);
+  const orderTypeRef = useRef(null);
   function handlePageChange(page, data = excelFileData) {
     setCurrentPage(page);
     const startIndex = (page - 1) * perPage;
@@ -51,7 +50,7 @@ const ExcelFileUploadPage = () => {
   useEffect(() => {
     fetchColleges().then((response) => {
       if (response?.data?.success) {
-        console.log(response)
+        console.log(response);
         setReceivedCollege(response.data.message);
       } else {
         setApiError(response.data.message);
@@ -102,7 +101,6 @@ const ExcelFileUploadPage = () => {
     const { name, value } = event.target;
     if (value === "FARE") {
       if (items.length === 0) {
-
         await fetchAllStockItems();
       }
     }
@@ -127,7 +125,6 @@ const ExcelFileUploadPage = () => {
   };
 
   const handleSubmit = async (event) => {
-
     event.preventDefault();
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
@@ -136,9 +133,7 @@ const ExcelFileUploadPage = () => {
     form.append("files", formData.docfile);
     form.append("orderType", formData.orderType);
     if (formData.orderType === "FARE") {
-     
-      if(formData.items.length===0)
-      {
+      if (formData.items.length === 0) {
         return;
       }
       form.append("university", formData.university);
@@ -154,7 +149,7 @@ const ExcelFileUploadPage = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setProcessing(false);
-      setIsError(false);
+      setIsError(true);
     }
   };
   const DeleteExcelFileData = async (id) => {
@@ -237,7 +232,7 @@ const ExcelFileUploadPage = () => {
             <label className="form-label">Order Type</label>
             <div class="dropdown">
               <select
-               ref={orderTypeRef}
+                ref={orderTypeRef}
                 class="form-select"
                 aria-label="Select order type"
                 value={formData.orderType}
@@ -305,96 +300,101 @@ const ExcelFileUploadPage = () => {
               >
                 <option selected>Select University</option>
                 {receivedCollege?.map((college, index) => (
-                        <option
-                          key={index}
-                          value={college.Name + ", " + college.Address}
-                        >
-                          {college.Name + ", " + college.Address}
-                        </option>
-                      ))}
+                  <option
+                    key={index}
+                    value={college.Name + ", " + college.Address}
+                  >
+                    {college.Name + ", " + college.Address}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
-          {  orderTypeRef?.current?.value==='FARE' && universityItems && universityItems.length > 0 && (
-            <>
-              <div className="col-sm-4  mt-2 mb-4">
-                <label className="form-label">Items</label>
-                <div class="dropdown">
-                  <select
-                    class="form-select"
-                    aria-label="Select order type"
-                    value={formData.currentItem}
-                    name="currentItem"
-                    onChange={handleInputChange}
-                  >
-                    <option disabled selected>
-                      Select item
-                    </option>
-                    {universityItems.map((item) => (
-                      <option value={item.itemName}>
-                        {item.itemName.toUpperCase()} ({item.quantity})
+          {orderTypeRef?.current?.value === "FARE" &&
+            universityItems &&
+            universityItems.length > 0 && (
+              <>
+                <div className="col-sm-4  mt-2 mb-4">
+                  <label className="form-label">Items</label>
+                  <div class="dropdown">
+                    <select
+                      class="form-select"
+                      aria-label="Select order type"
+                      value={formData.currentItem}
+                      name="currentItem"
+                      onChange={handleInputChange}
+                    >
+                      <option disabled selected>
+                        Select item
                       </option>
-                    ))}
-                  </select>
+                      {universityItems.map((item) => (
+                        <option value={item.itemName}>
+                          {item.itemName.toUpperCase()} ({item.quantity})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-sm-4 mt-2 mb-4">
+                  <label className="form-label">Quantity</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    name="currentItemQuantity"
+                    value={formData.currentItemQuantity}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div
+                  className="col-sm-4"
+                  style={{ marginTop: "auto", marginBottom: "24px" }}
+                >
+                  <input
+                    style={{ background: "#000A99" }}
+                    className="form-control btn btn-primary"
+                    type="button"
+                    onClick={addItem}
+                    value="Add Item"
+                  />
+                </div>
+              </>
+            )}
+          {orderTypeRef?.current?.value === "FARE" &&
+            formData &&
+            formData?.items &&
+            formData?.items?.length > 0 && (
+              <div className="col-sm-12 mb-4 mt-2 ml-2">
+                <div className="row" style={{ marginLeft: "2px" }}>
+                  {formData.items.map((item) => (
+                    <div
+                      className="col-sm-2"
+                      style={{
+                        backgroundColor: "slateblue",
+                        borderRadius: "4px",
+                        color: "white",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        paddingRight: "0px",
+                        margin: "2px 4px",
+                      }}
+                    >
+                      <span>{item.toUpperCase()}</span>
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                          backgroundColor: "gray",
+                          cursor: "pointer",
+                          padding: "0px 4px",
+                        }}
+                        onClick={() => removeItem(item)}
+                      >
+                        x
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="col-sm-4 mt-2 mb-4">
-                <label className="form-label">Quantity</label>
-                <input
-                  className="form-control"
-                  type="number"
-                  name="currentItemQuantity"
-                  value={formData.currentItemQuantity}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div
-                className="col-sm-4"
-                style={{ marginTop: "auto", marginBottom: "24px" }}
-              >
-                <input
-                  style={{ background: "#000A99" }}
-                  className="form-control btn btn-primary"
-                  type="button"
-                  onClick={addItem}
-                  value="Add Item"
-                />
-              </div>
-            </>
-          )}
-          {  orderTypeRef?.current?.value==='FARE' && formData && formData?.items && formData?.items?.length > 0 && (
-            <div className="col-sm-12 mb-4 mt-2 ml-2">
-              <div className="row" style={{ marginLeft: "2px" }}>
-                {formData.items.map((item) => (
-                  <div
-                    className="col-sm-2"
-                    style={{
-                      backgroundColor: "slateblue",
-                      borderRadius: "4px",
-                      color:'white',
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      paddingRight: "0px",
-                      margin: "2px 4px",
-                    }}
-                  >
-                    <span>{item.toUpperCase()}</span>
-                    <span
-                      style={{
-                        marginLeft: "auto",
-                        backgroundColor: "gray",
-                        cursor: "pointer",
-                        padding: "0px 4px",
-                      }}
-                      onClick={() => removeItem(item)}
-                    >
-                      x
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+            )}
           <div className="col-sm-12 ">
             <div className="col-sm-12 ">
               <input
@@ -446,13 +446,20 @@ const ExcelFileUploadPage = () => {
                   return (
                     <tr style={{ textAlign: "center" }}>
                       <td>{index + 1}</td>
-                      <td>{row.name?row.name:`FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
-                        })}`}</td>
+                      <td>
+                        {row.name
+                          ? row.name
+                          : `FARE ${new Date(row.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "numeric",
+                                minute: "numeric",
+                              }
+                            )}`}
+                      </td>
                       <td>
                         {new Date(row.createdAt).toLocaleDateString("en-US", {
                           year: "numeric",
@@ -467,13 +474,20 @@ const ExcelFileUploadPage = () => {
                       <td>
                         <button
                           onClick={() =>
-                            viewInitialExcelFile(row.initialExcelFile, row.name?row.name:`FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                              hour: "numeric",
-                              minute: "numeric",
-                            })}`)
+                            viewInitialExcelFile(
+                              row.initialExcelFile,
+                              row.name
+                                ? row.name
+                                : `FARE ${new Date(
+                                    row.createdAt
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                  })}`
+                            )
                           }
                           style={{
                             outline: "none",
@@ -495,13 +509,17 @@ const ExcelFileUploadPage = () => {
                           onClick={() =>
                             viewProcessedExcelFile(
                               row.processedExcelFile,
-                              row.name?row.name:`FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                                hour: "numeric",
-                                minute: "numeric",
-                              })}`
+                              row.name
+                                ? row.name
+                                : `FARE ${new Date(
+                                    row.createdAt
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                  })}`
                             )
                           }
                           style={{
@@ -518,21 +536,24 @@ const ExcelFileUploadPage = () => {
                         </button>
                       </td>
                       <td>
-                        <button
-                          onClick={() => ViewDocFile(row.docFile)}
-                          style={{
-                            outline: "none",
-                            border: "none",
-                            backgroundColor: "white",
-                          }}
-                        >
-                          <img
-                            style={{ height: "2.8vh", width: "2.8vh" }}
-                            src={docIcon}
-                            alt="delete file"
-                          />
-                        </button>
+                        {row.docFile && (
+                          <button
+                            onClick={() => ViewDocFile(row.docFile)}
+                            style={{
+                              outline: "none",
+                              border: "none",
+                              backgroundColor: "white",
+                            }}
+                          >
+                            <img
+                              style={{ height: "2.8vh", width: "2.8vh" }}
+                              src={docIcon}
+                              alt="delete file"
+                            />
+                          </button>
+                        )}
                       </td>
+
                       <td>
                         <button
                           className="btn btn-outline-danger"

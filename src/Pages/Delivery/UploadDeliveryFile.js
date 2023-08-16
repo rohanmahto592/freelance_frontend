@@ -14,18 +14,7 @@ const [showToast, setShowToast] = useState(false);
   const [isProcessing,setProcessing]=useState(false);
       const handleInputChange = async (event) => {
         event.preventDefault();
-        const { name, value } = event.target;
-        if (name === "excelFile") {
-          const response = await ExcelWorkbookSheetCount(event.target.files[0]);
-          if (!response.success) {
-            setApiError(response.message);
-            setShowToast(true);
-            setIsError(false);
-            fileInputRef.current.value = "";
-          } else {
             setFormData({ ...formData, excelfile: event.target.files[0] });
-          }
-        }
     }
   const handleSubmit = async (event) => {
     setProcessing(true);
@@ -34,7 +23,20 @@ const [showToast, setShowToast] = useState(false);
     form.append("file", formData.excelfile);
     form.append("userDeliveryId",sessionStorage.getItem("userDeliveryId"))
     const response=await deliveryExcelFile(form);
-    console.log(response);
+    if(response.data.success)
+    {
+      setProcessing(false);
+      setApiError(response.data.message);
+      setIsError(false);
+      setShowToast(true);
+    }
+    else
+    {
+      setProcessing(false);
+      setApiError(response.data.message);
+      setIsError(true);
+      setShowToast(true);
+    }
 
   };
 
