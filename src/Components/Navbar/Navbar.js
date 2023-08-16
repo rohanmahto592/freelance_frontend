@@ -59,7 +59,7 @@ const Navbar = () => {
                   onClick={() => navigate(navItem.link)}
                 >
                   {navItem.title}
-                  <i style={{ marginLeft: "5px" }} class="bi bi-bar-chart"></i>
+                  <i style={{ marginLeft: "5px" }} class={navItem?.class}></i>
                 </button>
               ))}
 

@@ -82,7 +82,7 @@ const [showToast, setShowToast] = useState(false);
         <Toast
           message={apiError}
           setShowToast={setShowToast}
-          timer={2000}
+          timer={4000}
           isError={isError}
         />
       )}

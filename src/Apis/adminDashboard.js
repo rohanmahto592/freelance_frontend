@@ -192,3 +192,26 @@ export const fetchInvalidCountries=async()=>{
   )
   return response;
 }
+export const fetchExcelSheet=async()=>{
+  const response=await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/get/excelsheetinfo`,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  )
+  return response;
+}
+export const fetchOrders=async(id)=>{
+  const response=await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/get/fetchOrders`,
+    {
+      params:{id:id},
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  )
+  return response;
+}
