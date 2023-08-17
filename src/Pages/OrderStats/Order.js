@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { fetchExcelSheet, fetchAllUsers } from "../../Apis/adminDashboard";
 import OrderTable from "./OrderTable";
+import Error404Page from "../Error404Page";
+import NotFoundOrder from "../NotFoundOrder";
 const Order = () => {
   const type = sessionStorage.getItem("userType");
   const [userType, setUserType] = useState("");
@@ -43,7 +45,7 @@ const Order = () => {
           <form onSubmit={fetchExcelSheetData}>
              
             <div className="row m-4">
-              <div className="col-sm-10">
+              <div className="col-sm-10 mt-2">
                 <input placeholder="Search user by id or name" onChange={(event)=>setuserId(event.target.value)} list="userlist" class="form-control" required />
                <datalist id="userlist">
                 {users?.map((user,index)=>(
@@ -51,7 +53,7 @@ const Order = () => {
                 ))}
                </datalist>
               </div>
-              <div className="col-sm-2">
+              <div className="col-sm-2 mt-2">
                 <input
                   type="submit"
                   className="btn btn-outline-primary w-100"
@@ -60,7 +62,7 @@ const Order = () => {
             </div>
           </form>
         )}
-        <div
+       {excelSheetInfo && excelSheetInfo?.length>0?<div
           style={{ maxHeight: "100vh", overflowY: "scroll" }}
           className="row"
         >
@@ -100,7 +102,7 @@ const Order = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div>:<NotFoundOrder/>}
       </div>
     </>
   );
