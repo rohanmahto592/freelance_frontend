@@ -44,13 +44,11 @@ const LandingPage = () => {
       setShowToast(true);
     } else {
       setFeedbacks(response.data.feedbacks);
-      console.log(feedbacks);
     }
   };
 
   const sendFeedback = async (event) => {
     event.preventDefault();
-    console.log("here");
     const form = new FormData();
     form.append("file", feedbackData.image);
     form.append("feedback", JSON.stringify(feedbackData));

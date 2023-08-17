@@ -189,11 +189,18 @@ export const fetchInvalidCountries = async () => {
     }
   );
   return response;
+<<<<<<< Updated upstream
 };
 export const fetchExcelSheet = async () => {
   const response = await axios.get(
+=======
+}
+export const fetchExcelSheet=async(id)=>{
+  const response=await axios.get(
+>>>>>>> Stashed changes
     `${process.env.REACT_APP_BASE_URL}/admin/get/excelsheetinfo`,
     {
+      params:{id:id},
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
@@ -212,6 +219,7 @@ export const fetchOrders = async (id) => {
     }
   );
   return response;
+<<<<<<< Updated upstream
 };
 
 export const deleteNonServicableCountry = async (id) => {
@@ -219,10 +227,23 @@ export const deleteNonServicableCountry = async (id) => {
     `${process.env.REACT_APP_BASE_URL}/admin/deleteCountry`,
     {
       params: { id },
+=======
+}
+export const fetchAllUsers=async()=>{
+  const response=await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/get/fetchAllUsers`,
+    {
+>>>>>>> Stashed changes
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
+<<<<<<< Updated upstream
   );
   return response;
 };
+=======
+  )
+  return response;
+}
+>>>>>>> Stashed changes
