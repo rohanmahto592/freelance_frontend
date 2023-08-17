@@ -91,10 +91,10 @@ export const addStockItem = async (data) => {
     }
   );
 };
-export const addColleges = async (college,address) => {
+export const addColleges = async (college, address) => {
   return await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/addCollege`,
-    { Name: college,Address:address },
+    { Name: college, Address: address },
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -103,9 +103,7 @@ export const addColleges = async (college,address) => {
   );
 };
 export const fetchColleges = async () => {
-  return await axios.get(
-    `${process.env.REACT_APP_BASE_URL}/admin/getColleges`,
-  );
+  return await axios.get(`${process.env.REACT_APP_BASE_URL}/admin/getColleges`);
 };
 
 export const addEventHeader = async (name) => {
@@ -145,31 +143,31 @@ export const deleteExcelHeader = async (id) => {
   );
   return response;
 };
-export const DeleteCollege=async(id)=>{
-  const response= await axios.delete(
+export const DeleteCollege = async (id) => {
+  const response = await axios.delete(
     `${process.env.REACT_APP_BASE_URL}/admin/deletecollege`,
     {
-      params:{id:id},
+      params: { id: id },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
-   return response;
-}
-export const deleteCurrentItem=async(itemId)=>{
-  const response= await axios.delete(
+  );
+  return response;
+};
+export const deleteCurrentItem = async (itemId) => {
+  const response = await axios.delete(
     `${process.env.REACT_APP_BASE_URL}/admin/deleteCurrentItem`,
     {
-      params:{id:itemId},
+      params: { id: itemId },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
-   return response;
-}
-export const nonServicableCountries=async(country)=>{
+  );
+  return response;
+};
+export const nonServicableCountries = async (country) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/add/nonServicableCountries`,
     { country },
@@ -180,38 +178,51 @@ export const nonServicableCountries=async(country)=>{
     }
   );
   return response;
-}
-export const fetchInvalidCountries=async()=>{
-  const response=await axios.get(
+};
+export const fetchInvalidCountries = async () => {
+  const response = await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/get/nonServicableCountries`,
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
+  );
   return response;
-}
-export const fetchExcelSheet=async()=>{
-  const response=await axios.get(
+};
+export const fetchExcelSheet = async () => {
+  const response = await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/get/excelsheetinfo`,
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
+  );
   return response;
-}
-export const fetchOrders=async(id)=>{
-  const response=await axios.get(
+};
+export const fetchOrders = async (id) => {
+  const response = await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/get/fetchOrders`,
     {
-      params:{id:id},
+      params: { id: id },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
-  )
+  );
   return response;
-}
+};
+
+export const deleteNonServicableCountry = async (id) => {
+  const response = await axios.delete(
+    `${process.env.REACT_APP_BASE_URL}/admin/deleteCountry`,
+    {
+      params: { id },
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+};

@@ -1,19 +1,22 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { CountriesList } from "../../Utils/countries";
-import { nonServicableCountries,fetchInvalidCountries } from "../../Apis/adminDashboard";
+import {
+  nonServicableCountries,
+  fetchInvalidCountries,
+  deleteNonServicableCountry,
+} from "../../Apis/adminDashboard";
 import Toast from "../../Components/Toast";
 const Countries = () => {
   const [country, setCountry] = useState(null);
   const [apiError, setApiError] = useState("");
   const [showToast, setToast] = useState(false);
   const [isError, setIsError] = useState(false);
-  const[countryList,setCountryList]=useState(null);
-  useEffect(()=>{
-    fetchInvalidCountries().then((response)=>{
-        setCountryList(response.data.message)
-
-    })
-  },[isError])
+  const [countryList, setCountryList] = useState(null);
+  useEffect(() => {
+    fetchInvalidCountries().then((response) => {
+      setCountryList(response.data.message);
+    });
+  }, [isError]);
   const handleCountrySubmit = async (event) => {
     event.preventDefault();
     if (!country) {
@@ -24,6 +27,15 @@ const Countries = () => {
     setToast(true);
     response?.data?.success ? setIsError(false) : setIsError(true);
   };
+
+  const deleteCountry = async (event, id) => {
+    event.preventDefault();
+    const response = await deleteNonServicableCountry(id);
+    setApiError(response.data.message);
+    setToast(true);
+    response?.data?.success ? setIsError(false) : setIsError(true);
+  };
+
   return (
     <div className="container">
       <div className="row my-2">
@@ -52,27 +64,31 @@ const Countries = () => {
       </div>
       <div className="row">
         <div className="col-sm-12">
-        <table className="table table-bordered">
+          <table className="table table-bordered">
             <thead>
-                <tr>
-                    <th>S.NO</th>
-                    <th>NAME</th>
-                    <th>Action</th>
-
-                </tr>
+              <tr>
+                <th>S.NO</th>
+                <th>NAME</th>
+                <th>Action</th>
+              </tr>
             </thead>
             <tbody>
-                {
-                    countryList?.map((country,index)=>(
-                        <tr key={index}>
-                            <td>{index+1}</td>
-                            <td>{country.name}</td>
-                            <td><button className="btn btn-outline-danger">Delete</button></td>
-                        </tr>
-                    ))
-                }
+              {countryList?.map((country, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{country.name}</td>
+                  <td>
+                    <button
+                      className="btn btn-outline-danger"
+                      onClick={(e) => deleteCountry(e, country._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
-        </table>
+          </table>
         </div>
       </div>
       {showToast && (
