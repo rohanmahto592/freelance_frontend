@@ -3,17 +3,31 @@ import { fetchOrders } from "../../Apis/adminDashboard";
 import { Dna } from "react-loader-spinner";
 const OrderTable = (props) => {
   const { excelRef } = props;
-  const [orders, setOrders] = useState(null);
+  const [OriginalOrders, setOriginalOrders] = useState(null);
+  const [CopyOrders,setCopyOrders]=useState(null);
   const [isLoading, setLoading] = useState(false);
+  const[searchValue,setSearchValue]=useState('');
   useEffect(() => {
     setLoading(true);
     fetchOrders(excelRef).then((response) => {
       if (response.data.success) {
+        console.log(response.data.message)
         setLoading(false);
-        setOrders(response.data.message);
+        setOriginalOrders(response.data.message);
+        setCopyOrders(response.data.message)
       }
     });
   }, []);
+  useEffect(()=>{
+    const copyDuplicates=OriginalOrders;
+    const filteredData = copyDuplicates?.filter((row) =>
+    Object.values(row).some((value) =>
+      value.toString().toLowerCase().includes(searchValue.toLowerCase())
+    )
+  );
+  setCopyOrders(filteredData);
+
+  },[searchValue])
 
   return (
     <>
@@ -29,7 +43,13 @@ const OrderTable = (props) => {
 />
         </div>
       ) : (
+        <>
+        <div style={{margin:'auto',position:'sticky'}} className="col-sm-6">
+          <input onChange={(event)=>setSearchValue(event.target.value)} placeholder="Search on any column" className="form-control mt-2 mb-4"/>
+          </div>
         <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+          
+         
           <table className="table table-striped table-bordered">
             <thead>
               <tr>
@@ -43,7 +63,7 @@ const OrderTable = (props) => {
               </tr>
             </thead>
             <tbody>
-              {orders?.map((item, index) => (
+              {CopyOrders?.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item?.applicationId}</td>
@@ -75,6 +95,7 @@ const OrderTable = (props) => {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </>
   );

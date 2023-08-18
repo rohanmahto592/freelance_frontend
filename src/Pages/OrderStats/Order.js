@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchExcelSheet, fetchAllUsers } from "../../Apis/adminDashboard";
 import OrderTable from "./OrderTable";
-import Error404Page from "../Error404Page";
 import NotFoundOrder from "../NotFoundOrder";
 const Order = () => {
   const type = sessionStorage.getItem("userType");
@@ -14,7 +13,10 @@ const Order = () => {
   }, [type]);
   const fetchExcelSheetData = async(event) => {
     event.preventDefault();
-   const response= await  fetchExcelSheet(userId);
+    console.log(userId);
+    let Id=userId.split("  ")[1];
+    Id=Id.replace(/[()]/g, '');
+   const response= await  fetchExcelSheet(Id);
       setExcelSheetInfo(response.data.message);
 
   };
@@ -46,18 +48,21 @@ const Order = () => {
              
             <div className="row m-4">
               <div className="col-sm-10 mt-2">
-                <input placeholder="Search user by id or name" onChange={(event)=>setuserId(event.target.value)} list="userlist" class="form-control" required />
+                <input placeholder="Search order status by userId or username" onChange={(event)=>setuserId(event.target.value)} list="userlist" class="form-control" required />
                <datalist id="userlist">
                 {users?.map((user,index)=>(
-                  <option key={index} value={user._id}>{user.firstName+" "+user.lastName}</option>
+                  <option key={index} value={user.firstName+" "+user.lastName+"  ("+user._id+")"}/>
                 ))}
                </datalist>
               </div>
               <div className="col-sm-2 mt-2">
-                <input
+                <button
                   type="submit"
-                  className="btn btn-outline-primary w-100"
-                />
+                  className="btn btn-primary w-100"
+                >
+                 <i class="bi bi-search"></i>
+
+                </button>
               </div>
             </div>
           </form>
