@@ -7,13 +7,15 @@ const OrderTable = (props) => {
   const [CopyOrders,setCopyOrders]=useState(null);
   const [isLoading, setLoading] = useState(false);
   const[searchValue,setSearchValue]=useState('');
+  const[isInitialData,setInitialData]=useState(false);
   useEffect(() => {
     setLoading(true);
     fetchOrders(excelRef).then((response) => {
       if (response.data.success) {
-        console.log(response.data.message)
+      
         setLoading(false);
         setOriginalOrders(response.data.message);
+        setInitialData(response.data.isOne);
         setCopyOrders(response.data.message)
       }
     });
@@ -64,10 +66,10 @@ const OrderTable = (props) => {
             </thead>
             <tbody>
               {CopyOrders?.map((item, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
+               !isInitialData?<tr key={index}>
+                 <td>{index + 1}</td>
                   <td>{item?.applicationId}</td>
-                  <td>{item.trackingId[0]}</td>
+                  <td>{item?.trackingId}</td>
                   <td>{item?.orderStatus}</td>
                   <td>{item?.orderType}</td>
                   <td>
@@ -89,6 +91,18 @@ const OrderTable = (props) => {
                         hour: "numeric",
                         minute: "numeric",
                       })}
+                  </td>
+                </tr>: <tr key={index}>
+                 <td>{index + 1}</td>
+                  <td>{item["Application ID"] || item["application id"]}</td>
+                  <td>NA</td>
+                  <td>Pending</td>
+                  <td>{item["Admissions Status"]}</td>
+                  <td>
+                    NA
+                  </td>
+                  <td>
+                    NA
                   </td>
                 </tr>
               ))}
