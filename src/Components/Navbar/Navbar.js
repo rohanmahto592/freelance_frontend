@@ -7,10 +7,11 @@ const Navbar = () => {
   const [navHeaders, setHeaders] = useState(null);
   const type = sessionStorage.getItem("userType");
   const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-  useEffect(()=>{
+  const userName = sessionStorage.getItem("userName");
+  useEffect(() => {
     setHeaders(navConfig[type]);
-  },[type])
- 
+  }, [type]);
+
   const logout = () => {
     sessionStorage.clear();
     navigate("/login");
@@ -74,6 +75,7 @@ const Navbar = () => {
                   class="bi bi-person-bounding-box"
                 ></i>
               </button>
+
               <button
                 data-bs-toggle="collapse"
                 data-bs-target=".navbar-collapse.show"
@@ -87,32 +89,45 @@ const Navbar = () => {
                 ></i>
               </button>
               {!isLoggedIn && (
-                <button
-                  data-bs-toggle="collapse"
-                  data-bs-target=".navbar-collapse.show"
-                  class=" btn btn-link text-decoration-none"
-                  onClick={() => navigate("/login")}
-                >
-                  LOGIN
-                  <i
-                    style={{ marginLeft: "5px" }}
-                    class="bi bi-box-arrow-in-left"
-                  ></i>
-                </button>
+                <>
+                  <button
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse.show"
+                    class=" btn btn-link text-decoration-none"
+                    onClick={() => navigate("/login")}
+                  >
+                    LOGIN
+                    <i
+                      style={{ marginLeft: "5px" }}
+                      class="bi bi-box-arrow-in-left"
+                    ></i>
+                  </button>
+                </>
               )}
               {isLoggedIn && (
-                <button
-                  data-bs-toggle="collapse"
-                  data-bs-target=".navbar-collapse.show"
-                  class=" btn btn-link text-decoration-none"
-                  onClick={() => logout()}
-                >
-                  LOGOUT
-                  <i
-                    style={{ marginLeft: "5px" }}
-                    class="bi bi-box-arrow-in-left"
-                  ></i>
-                </button>
+                <>
+                  <button
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse.show"
+                    class=" btn btn-link text-decoration-none"
+                    onClick={() => logout()}
+                  >
+                    LOGOUT
+                    <i
+                      style={{ marginLeft: "5px" }}
+                      class="bi bi-box-arrow-in-left"
+                    ></i>
+                  </button>
+                  <button
+                   style={{border:'none'}}
+                    className="btn btn-outline-primary"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    title={userName}
+                  >
+                  <i class="bi bi-person-square"></i>
+                  </button>
+                </>
               )}
             </ul>
           </div>

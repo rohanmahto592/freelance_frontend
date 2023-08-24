@@ -22,7 +22,6 @@ const LoginPage = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     const response = await login(formData);
-    console.log(response.data)
     if (response.data.success) {
       setFormData({
         email: "",
@@ -35,6 +34,8 @@ const LoginPage = () => {
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("id",response.data.id);
       sessionStorage.setItem("isLoggedIn",true);
+      sessionStorage.setItem("universityName",response.data.universityName);
+      sessionStorage.setItem("userName",response.data.firstName+" "+response.data.lastName);
       response?.data?.userId && sessionStorage.setItem("userDeliveryId",response.data.userId);
       const redirect = redirection[userType]
       navigate(redirect);

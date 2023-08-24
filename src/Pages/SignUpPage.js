@@ -32,14 +32,12 @@ const SignUpPage = () => {
     });
   }, []);
   const navigate = useNavigate();
-
   const setShowToast = () => {
     setToast(!showToast);
   };
 
   const handleSignup = async (event) => {
     event.preventDefault();
-
     if (formData.userType === "UNIVERSITY" && !formData.universityName) {
       return;
     }
@@ -155,9 +153,10 @@ const SignUpPage = () => {
                       name="universityName"
                       value={formData.universityName}
                       onChange={handleInputChange}
+                      disabled={formData.userType === "SELF"}
                       required={formData.userType === "UNIVERSITY"}
                     >
-                      <option  selected>Select university</option>
+                      <option selected>Select university</option>
                       {receivedCollege?.map((college, index) => (
                         <option
                           key={index}
@@ -220,10 +219,14 @@ const SignUpPage = () => {
               </div>
             </form>
             <div class="text-center flex justify-content-center">
-              <p>Already have an account?{" "}</p>
-              <button style={{marginTop:'-15px'}} className=" btn btn-link" onClick={()=>navigate("/login")}>
-              Login
-              </button>  
+              <p>Already have an account? </p>
+              <button
+                style={{ marginTop: "-15px" }}
+                className=" btn btn-link"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </button>
             </div>
             {showToast && (
               <Toast
