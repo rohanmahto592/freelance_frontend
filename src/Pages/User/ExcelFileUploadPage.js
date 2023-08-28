@@ -445,7 +445,7 @@ const ExcelFileUploadPage = () => {
                   <th rowspan="2">File Name</th>
                   <th rowspan="2">Created At</th>
                   <th colspan="3">Initial File</th>
-                  <th colspan="3">Processed File</th>
+                  <th colspan="5">Processed File</th>
                   <th rowspan="2">Doc File</th>
                   <th rowSpan="2">Action</th>
                 </tr>
@@ -454,7 +454,9 @@ const ExcelFileUploadPage = () => {
                   <th style={{ color: "GrayText" }}>File Count</th>
                   <th style={{ color: "GrayText" }}>View</th>
                   <th style={{ color: "GrayText" }}>Size</th>
-                  <th style={{ color: "GrayText" }}> Dispatched File Count</th>
+                  <th style={{ color: "GrayText" }}> Dispatched Count</th>
+                  <th style={{ color: "GrayText" }}> ShipRocket_Delivery Count</th>
+                  <th style={{ color: "GrayText" }}> IndianPost_Delivery Count</th>
                   <th style={{ color: "GrayText" }}>View</th>
                 </tr>
               </thead>
@@ -521,6 +523,8 @@ const ExcelFileUploadPage = () => {
                       </td>
                       <td>{row.processedFileSize}</td>
                       <td>{row.processedExcelFileDispatchedCount}</td>
+                      <td>{row.processedExcelFileShipRocketDeliveryCount}</td>
+                      <td>{row.processedExcelFileIndianPostDeliveryCount}</td>
                       <td>
                         <button
                           onClick={() =>
