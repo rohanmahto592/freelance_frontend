@@ -12,7 +12,6 @@ const OrderTable = (props) => {
     setLoading(true);
     fetchOrders(excelRef).then((response) => {
       if (response.data.success) {
-      
         setLoading(false);
         setOriginalOrders(response.data.message);
         setInitialData(response.data.isOne);

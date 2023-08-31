@@ -115,7 +115,7 @@ const Order = () => {
                           fontFamily: "sans-serif",
                         }}
                       >
-                        {excelSheet?.name}
+                        {excelSheet.name??"FARE"}
                       </button>
                     </h2>
                     <div
