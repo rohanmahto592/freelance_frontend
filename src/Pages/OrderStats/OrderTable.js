@@ -18,7 +18,7 @@ const OrderTable = (props) => {
         setCopyOrders(response.data.message)
       }
     });
-  }, []);
+  }, [excelRef]);
   useEffect(()=>{
     const copyDuplicates=OriginalOrders;
     const filteredData = copyDuplicates?.filter((row) =>
