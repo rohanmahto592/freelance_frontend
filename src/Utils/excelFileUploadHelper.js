@@ -1,4 +1,5 @@
 import XLSX from 'xlsx'
+import { rearrangeObjectKeysAlphabetically } from './rearrangeAlphabeticalOrder';
 export const viewInitialExcelFile = (jsonData, name) => {
     jsonData = JSON.parse(jsonData);
     const worksheet = XLSX.utils.json_to_sheet(jsonData);
@@ -8,7 +9,13 @@ export const viewInitialExcelFile = (jsonData, name) => {
   };
 export const viewProcessedExcelFile = (jsonData, name) => {
     jsonData = JSON.parse(jsonData);
-    const { dispatched, invalid, non_servicable,duplicates,ShipRocket_Delivery,IndianPost_Delivery } = jsonData;
+    let { dispatched, invalid, non_servicable,duplicates,ShipRocket_Delivery,IndianPost_Delivery } = jsonData;
+     dispatched=dispatched.map(obj => rearrangeObjectKeysAlphabetically(obj));
+     invalid=invalid?.map(obj => rearrangeObjectKeysAlphabetically(obj)); 
+     non_servicable=non_servicable?.map(obj => rearrangeObjectKeysAlphabetically(obj));
+     duplicates=duplicates?.map(obj => rearrangeObjectKeysAlphabetically(obj));
+    ShipRocket_Delivery= ShipRocket_Delivery?.map(obj => rearrangeObjectKeysAlphabetically(obj));
+    IndianPost_Delivery= IndianPost_Delivery?.map(obj => rearrangeObjectKeysAlphabetically(obj));
     const workbook = XLSX.utils.book_new();
     const sheet1 = XLSX.utils.json_to_sheet(dispatched);
     XLSX.utils.book_append_sheet(workbook, sheet1, "Dispatched");

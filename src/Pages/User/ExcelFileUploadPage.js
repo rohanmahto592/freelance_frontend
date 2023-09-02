@@ -40,6 +40,17 @@ const ExcelFileUploadPage = () => {
   const [receivedCollege, setReceivedCollege] = useState(null);
   const fileInputRef = useRef(null);
   const orderTypeRef = useRef(null);
+  function checkIsUniversity(university) {
+    let universityName = sessionStorage.getItem("universityName");
+    console.log(universityName);
+    const response = university.filter((name) => {
+      const Name = name.Name + ", " + name.Address;
+      if (Name === universityName) {
+        return name;
+      }
+    });
+    return response;
+  }
   function handlePageChange(page, data = excelFileData) {
     setCurrentPage(page);
     const startIndex = (page - 1) * perPage;
@@ -50,8 +61,11 @@ const ExcelFileUploadPage = () => {
   useEffect(() => {
     fetchColleges().then((response) => {
       if (response?.data?.success) {
-        console.log(response);
-        setReceivedCollege(response.data.message);
+        if (sessionStorage.getItem("userType") === "UNIVERSITY") {
+          setReceivedCollege(checkIsUniversity(response.data.message));
+        } else {
+          setReceivedCollege(response.data.message);
+        }
       } else {
         setApiError(response.data.message);
         setShowToast(true);
@@ -141,15 +155,17 @@ const ExcelFileUploadPage = () => {
     }
     setProcessing(true);
     const response = await uploadExcelFile(form);
+    console.log(response);
     if (!response.data.success) {
       setApiError(response.data.message);
       setShowToast(true);
       setProcessing(false);
+      setIsError(true);
     } else {
       setApiError(response.data.message);
       setShowToast(true);
       setProcessing(false);
-      setIsError(true);
+      setIsError(false);
     }
   };
   const DeleteExcelFileData = async (id) => {
@@ -327,8 +343,8 @@ const ExcelFileUploadPage = () => {
                       <option disabled selected>
                         Select item
                       </option>
-                      {universityItems.map((item) => (
-                        <option value={item.itemName}>
+                      {universityItems.map((item,index) => (
+                        <option key={index} value={item.itemName}>
                           {item.itemName.toUpperCase()} ({item.quantity})
                         </option>
                       ))}
@@ -365,8 +381,9 @@ const ExcelFileUploadPage = () => {
             formData?.items?.length > 0 && (
               <div className="col-sm-12 mb-4 mt-2 ml-2">
                 <div className="row" style={{ marginLeft: "2px" }}>
-                  {formData.items.map((item) => (
+                  {formData.items.map((item,index) => (
                     <div
+                     key={index}
                       className="col-sm-2"
                       style={{
                         backgroundColor: "slateblue",
@@ -428,7 +445,7 @@ const ExcelFileUploadPage = () => {
                   <th rowspan="2">File Name</th>
                   <th rowspan="2">Created At</th>
                   <th colspan="3">Initial File</th>
-                  <th colspan="3">Processed File</th>
+                  <th colspan="5">Processed File</th>
                   <th rowspan="2">Doc File</th>
                   <th rowSpan="2">Action</th>
                 </tr>
@@ -437,14 +454,16 @@ const ExcelFileUploadPage = () => {
                   <th style={{ color: "GrayText" }}>File Count</th>
                   <th style={{ color: "GrayText" }}>View</th>
                   <th style={{ color: "GrayText" }}>Size</th>
-                  <th style={{ color: "GrayText" }}> Dispatched File Count</th>
+                  <th style={{ color: "GrayText" }}> Dispatched Count</th>
+                  <th style={{ color: "GrayText" }}> ShipRocket_Delivery Count</th>
+                  <th style={{ color: "GrayText" }}> IndianPost_Delivery Count</th>
                   <th style={{ color: "GrayText" }}>View</th>
                 </tr>
               </thead>
               <tbody>
                 {currentData?.map((row, index) => {
                   return (
-                    <tr style={{ textAlign: "center" }}>
+                    <tr key={index} style={{ textAlign: "center" }}>
                       <td>{index + 1}</td>
                       <td>
                         {row.name
@@ -504,6 +523,8 @@ const ExcelFileUploadPage = () => {
                       </td>
                       <td>{row.processedFileSize}</td>
                       <td>{row.processedExcelFileDispatchedCount}</td>
+                      <td>{row.processedExcelFileShipRocketDeliveryCount}</td>
+                      <td>{row.processedExcelFileIndianPostDeliveryCount}</td>
                       <td>
                         <button
                           onClick={() =>

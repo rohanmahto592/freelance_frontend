@@ -3,17 +3,32 @@ import { fetchOrders } from "../../Apis/adminDashboard";
 import { Dna } from "react-loader-spinner";
 const OrderTable = (props) => {
   const { excelRef } = props;
-  const [orders, setOrders] = useState(null);
+  const [OriginalOrders, setOriginalOrders] = useState(null);
+  const [CopyOrders,setCopyOrders]=useState(null);
   const [isLoading, setLoading] = useState(false);
+  const[searchValue,setSearchValue]=useState('');
+  const[isInitialData,setInitialData]=useState(false);
   useEffect(() => {
     setLoading(true);
     fetchOrders(excelRef).then((response) => {
       if (response.data.success) {
         setLoading(false);
-        setOrders(response.data.message);
+        setOriginalOrders(response.data.message);
+        setInitialData(response.data.isOne);
+        setCopyOrders(response.data.message)
       }
     });
-  }, []);
+  }, [excelRef]);
+  useEffect(()=>{
+    const copyDuplicates=OriginalOrders;
+    const filteredData = copyDuplicates?.filter((row) =>
+    Object.values(row).some((value) =>
+      value.toString().toLowerCase().includes(searchValue.toLowerCase())
+    )
+  );
+  setCopyOrders(filteredData);
+
+  },[searchValue])
 
   return (
     <>
@@ -29,7 +44,13 @@ const OrderTable = (props) => {
 />
         </div>
       ) : (
+        <>
+        <div style={{margin:'auto',position:'sticky'}} className="col-sm-6">
+          <input onChange={(event)=>setSearchValue(event.target.value)} placeholder="Search on any column" className="form-control mt-2 mb-4"/>
+          </div>
         <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+          
+         
           <table className="table table-striped table-bordered">
             <thead>
               <tr>
@@ -43,11 +64,11 @@ const OrderTable = (props) => {
               </tr>
             </thead>
             <tbody>
-              {orders?.map((item, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
+              {CopyOrders?.map((item, index) => (
+               !isInitialData?<tr key={index}>
+                 <td>{index + 1}</td>
                   <td>{item?.applicationId}</td>
-                  <td>{item.trackingId[0]}</td>
+                  <td>{item?.trackingId}</td>
                   <td>{item?.orderStatus}</td>
                   <td>{item?.orderType}</td>
                   <td>
@@ -70,11 +91,24 @@ const OrderTable = (props) => {
                         minute: "numeric",
                       })}
                   </td>
+                </tr>: <tr key={index}>
+                 <td>{index + 1}</td>
+                  <td>{item["Application ID"] || item["application id"]}</td>
+                  <td>NA</td>
+                  <td>Pending</td>
+                  <td>{item["Admissions Status"]}</td>
+                  <td>
+                    NA
+                  </td>
+                  <td>
+                    NA
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        </>
       )}
     </>
   );
