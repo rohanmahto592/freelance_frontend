@@ -11,9 +11,9 @@ import UploadDeliveryFile from "./Pages/Delivery/UploadDeliveryFile";
 import PrivateAdminRoute from "./Components/PrivateAdminRoute";
 import { Adminroutes, UserRoutes } from "./RoutesPath/DirectedRoutes";
 import About from "./Pages/About/About";
+import { ContactUs } from "./Pages/ContactUs";
 function App() {
   return (
-    
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/signup" element={<SignUpPage />} />
@@ -53,7 +53,8 @@ function App() {
           <Route key={index} path={admin.path} element={admin.element} />
         ))}
       </Route>
-      <Route path="/about" element={<About/>}/>
+      <Route path="/about" element={<About />} />
+      <Route path="/contactus" element={<ContactUs />} />
       <Route path="*" element={<Error404Page />} />
     </Routes>
   );

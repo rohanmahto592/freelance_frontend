@@ -7,10 +7,10 @@ const Navbar = () => {
   const [navHeaders, setHeaders] = useState(null);
   const type = sessionStorage.getItem("userType");
   const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-  useEffect(()=>{
+  useEffect(() => {
     setHeaders(navConfig[type]);
-  },[type])
- 
+  }, [type]);
+
   const logout = () => {
     sessionStorage.clear();
     navigate("/login");
@@ -67,6 +67,7 @@ const Navbar = () => {
                 data-bs-toggle="collapse"
                 data-bs-target=".navbar-collapse.show"
                 class=" btn btn-link text-decoration-none"
+                onClick={() => navigate("/contactus")}
               >
                 CONTACT
                 <i
