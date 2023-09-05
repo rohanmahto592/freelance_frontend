@@ -22,7 +22,6 @@ const ExcelFileUploadPage = () => {
     excelfile: null,
     docfile: null,
     university: null,
-    items: [],
     currentItemQuantity: 0,
     currentItem: null,
   });
@@ -40,6 +39,8 @@ const ExcelFileUploadPage = () => {
   const [receivedCollege, setReceivedCollege] = useState(null);
   const fileInputRef = useRef(null);
   const orderTypeRef = useRef(null);
+  const [itemsWithUniversity, setItemWithUniversity] = useState({});
+
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
     console.log(universityName);
@@ -147,11 +148,10 @@ const ExcelFileUploadPage = () => {
     form.append("files", formData.docfile);
     form.append("orderType", formData.orderType);
     if (formData.orderType === "FARE") {
-      if (formData.items.length === 0) {
+      if (Object.keys(itemsWithUniversity).length === 0) {
         return;
       }
-      form.append("university", formData.university);
-      form.append("items", formData.items);
+      form.append("items", JSON.stringify(itemsWithUniversity));
     }
     setProcessing(true);
     const response = await uploadExcelFile(form);
@@ -197,15 +197,10 @@ const ExcelFileUploadPage = () => {
   };
 
   const addItem = () => {
+    // const itemWithUni = `${formData.currentItem} (${
+    //   formData.university.split(",")[0]
+    // })`;
     if (!formData.currentItem || !formData.currentItemQuantity) return;
-
-    const isCurrentItemAlreadyPresent = formData.items.filter((item) => {
-      const name = item.split("-")[0];
-      if (name === formData.currentItem) {
-        return true;
-      }
-      return false;
-    });
 
     const isQuantityAboveStockLimit = universityItems.filter((item) => {
       if (
@@ -219,21 +214,48 @@ const ExcelFileUploadPage = () => {
     if (isQuantityAboveStockLimit && isQuantityAboveStockLimit.length > 0)
       return;
 
-    if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length > 0)
-      return;
+    const currentItemWithUni = itemsWithUniversity[formData.university];
 
-    const newItemsArray = formData.items;
+    if (currentItemWithUni) {
+      const isCurrentItemAlreadyPresent = currentItemWithUni.filter((item) => {
+        const name = item.split("-")[0];
+        if (name === formData.currentItem) {
+          return true;
+        }
+        return false;
+      });
+
+      if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length > 0)
+        return;
+    }
+
+    const newItemsArray = currentItemWithUni || [];
     newItemsArray.push(
       `${formData.currentItem}-${formData.currentItemQuantity}`
     );
-    setFormData({ ...formData, items: newItemsArray });
+
+    setItemWithUniversity({
+      ...itemsWithUniversity,
+      [formData.university]: newItemsArray,
+    });
   };
 
-  const removeItem = (selectedItem) => {
-    const newItemsArray = formData.items.filter(
+  const removeItem = (selectedItem, selectedUni) => {
+    let newItemsArray = itemsWithUniversity[selectedUni].filter(
       (item) => selectedItem !== item
     );
-    setFormData({ ...formData, items: newItemsArray });
+    if (newItemsArray.length === 0) {
+      const newItemsWithUniversity = itemsWithUniversity;
+      delete newItemsWithUniversity[selectedUni];
+      setItemWithUniversity({
+        ...itemsWithUniversity,
+      });
+      return;
+    }
+    setItemWithUniversity({
+      ...itemsWithUniversity,
+      [formData.university]: newItemsArray,
+    });
   };
 
   return (
@@ -343,7 +365,7 @@ const ExcelFileUploadPage = () => {
                       <option disabled selected>
                         Select item
                       </option>
-                      {universityItems.map((item,index) => (
+                      {universityItems.map((item, index) => (
                         <option key={index} value={item.itemName}>
                           {item.itemName.toUpperCase()} ({item.quantity})
                         </option>
@@ -375,43 +397,59 @@ const ExcelFileUploadPage = () => {
                 </div>
               </>
             )}
-          {orderTypeRef?.current?.value === "FARE" &&
-            formData &&
-            formData?.items &&
-            formData?.items?.length > 0 && (
-              <div className="col-sm-12 mb-4 mt-2 ml-2">
-                <div className="row" style={{ marginLeft: "2px" }}>
-                  {formData.items.map((item,index) => (
-                    <div
-                     key={index}
-                      className="col-sm-2"
-                      style={{
-                        backgroundColor: "slateblue",
-                        borderRadius: "4px",
-                        color: "white",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        paddingRight: "0px",
-                        margin: "2px 4px",
-                      }}
-                    >
-                      <span>{item.toUpperCase()}</span>
-                      <span
-                        style={{
-                          marginLeft: "auto",
-                          backgroundColor: "gray",
-                          cursor: "pointer",
-                          padding: "0px 4px",
-                        }}
-                        onClick={() => removeItem(item)}
-                      >
-                        x
-                      </span>
-                    </div>
+          {orderTypeRef?.current?.value === "FARE" && (
+            <div className="col-sm-12 mb-4 mt-2 ml-2">
+              <table
+                style={{
+                  width: "100%",
+                  border: "5px solid #f2f2f2",
+                  borderRadius: "5px",
+                }}
+                class="table table-bordered border border-3"
+              >
+                <thead style={{ fontFamily: "monospace" }}>
+                  <tr>
+                    <th>College</th>
+                    <th>Items</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(itemsWithUniversity).map((uni) => (
+                    <tr>
+                      <td className="col-sm-4">{uni}</td>
+                      {itemsWithUniversity[uni].map((item, index) => (
+                        <td
+                          key={index}
+                          className="col-sm-2"
+                          style={{
+                            borderRadius: "4px",
+                            display: "inline-block",
+                            paddingRight: "0px",
+                            margin: "2px 4px",
+                          }}
+                        >
+                          <span>{item.toUpperCase()}</span>
+                          <span
+                            style={{
+                              float: "right",
+                              color: "slateblue",
+                              borderLeft: "1px solid black",
+                              cursor: "pointer",
+                              padding: "0px 6px",
+                              fontWeight: "bold",
+                            }}
+                            onClick={() => removeItem(item, uni)}
+                          >
+                            x
+                          </span>
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </div>
-              </div>
-            )}
+                </tbody>
+              </table>
+            </div>
+          )}
           <div className="col-sm-12 ">
             <div className="col-sm-12 ">
               <input
@@ -455,8 +493,14 @@ const ExcelFileUploadPage = () => {
                   <th style={{ color: "GrayText" }}>View</th>
                   <th style={{ color: "GrayText" }}>Size</th>
                   <th style={{ color: "GrayText" }}> Dispatched Count</th>
-                  <th style={{ color: "GrayText" }}> ShipRocket_Delivery Count</th>
-                  <th style={{ color: "GrayText" }}> IndianPost_Delivery Count</th>
+                  <th style={{ color: "GrayText" }}>
+                    {" "}
+                    ShipRocket_Delivery Count
+                  </th>
+                  <th style={{ color: "GrayText" }}>
+                    {" "}
+                    IndianPost_Delivery Count
+                  </th>
                   <th style={{ color: "GrayText" }}>View</th>
                 </tr>
               </thead>
