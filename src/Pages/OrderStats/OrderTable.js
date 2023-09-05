@@ -11,6 +11,7 @@ const OrderTable = (props) => {
   useEffect(() => {
     setLoading(true);
     fetchOrders(excelRef).then((response) => {
+      console.log(response.data)
       if (response.data.success) {
         setLoading(false);
         setOriginalOrders(response.data.message);
@@ -96,7 +97,7 @@ const OrderTable = (props) => {
                   <td>{item["Application ID"] || item["application id"]}</td>
                   <td>NA</td>
                   <td>Pending</td>
-                  <td>{item["Admissions Status"]}</td>
+                  <td>{item["Admissions Status"] || item["orderType"] || item["admissions status"]}</td>
                   <td>
                     NA
                   </td>
