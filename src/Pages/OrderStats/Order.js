@@ -89,7 +89,7 @@ const Order = () => {
           </div>
         )}
         {excelSheetInfo && excelSheetInfo?.length > 0?
-          <div className="col-sm-9 shadow-sm bg-white ">
+          <div className= {userType === "ADMIN"?"col-sm-9 shadow-sm bg-white ":"col-sm-12 shadow-sm bg-white "}>
             {" "}
             <div
               style={{ maxHeight: "100vh", overflowY: "scroll" }}
