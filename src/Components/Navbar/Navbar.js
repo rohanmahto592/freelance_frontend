@@ -7,7 +7,6 @@ const Navbar = () => {
   const [navHeaders, setHeaders] = useState(null);
   const type = sessionStorage.getItem("userType");
   const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-  const userName = sessionStorage.getItem("userName");
   useEffect(() => {
     setHeaders(navConfig[type]);
   }, [type]);
@@ -119,15 +118,7 @@ const Navbar = () => {
                       class="bi bi-box-arrow-in-left"
                     ></i>
                   </button>
-                  <button
-                    style={{ border: "none" }}
-                    className="btn btn-outline-primary"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="bottom"
-                    title={userName}
-                  >
-                    <i class="bi bi-person-square"></i>
-                  </button>
+                  
                 </>
               )}
             </ul>

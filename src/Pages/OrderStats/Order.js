@@ -8,11 +8,11 @@ const Order = () => {
   const [excelSheetInfo, setExcelSheetInfo] = useState(null);
   // const [userId, setuserId] = useState(0);
   const [users, setUsers] = useState(null);
-  const [UserInfo,setUserInfo]=useState(null);
+  const [UserInfo, setUserInfo] = useState(null);
   useEffect(() => {
     setUserType(type);
   }, [type]);
-  const fetchExcelSheetData = async (event,id) => {
+  const fetchExcelSheetData = async (event, id) => {
     event.preventDefault();
     const response = await fetchExcelSheet(id);
     setExcelSheetInfo(response.data.message);
@@ -26,7 +26,7 @@ const Order = () => {
       fetchAllUsers().then((response) => {
         console.log(response.data);
         if (response?.data?.success) {
-          setUserInfo(response?.data?.message)
+          setUserInfo(response?.data?.message);
           setUsers(response?.data?.message);
         }
       });
@@ -34,15 +34,18 @@ const Order = () => {
       fetchUserExcelData(sessionStorage.getItem("id"));
   }, []);
 
-  function filterUser(username){
-    const users=UserInfo;
-    const filterUsers=users.filter((user)=>{
-      let word=user.firstName+user.lastName;
-      let email=user.email;
-      word=word.toLowerCase();
-     return word.includes(username.toLowerCase().trim()) || email.toLowerCase().includes(user);
-    })
-     
+  function filterUser(username) {
+    const users = UserInfo;
+    const filterUsers = users.filter((user) => {
+      let word = user.firstName + user.lastName;
+      let email = user.email;
+      word = word.toLowerCase();
+      return (
+        word.includes(username.toLowerCase().trim()) ||
+        email.toLowerCase().includes(user)
+      );
+    });
+
     setUsers(filterUsers);
   }
 
@@ -56,40 +59,48 @@ const Order = () => {
             <div className="shadow-sm bg-white p-2">
               <form>
                 <input
-                 onChange={(event)=>filterUser(event.target.value)}
+                  onChange={(event) => filterUser(event.target.value)}
                   placeholder="Search user"
                   list="userlist"
                   class="form-control"
                   required
                 />
-                
               </form>
             </div>
             <hr />
-            <div style={{ maxHeight: "400px",overflow:'auto' }}>
+            <div style={{ maxHeight: "400px", overflow: "auto" }}>
               <ul class="list-group list-group mb-2">
                 {users?.map((user, index) => (
-                  <li
-                    key={index}
-                    class="list-group-item d-flex justify-content-between align-items-start "
-                  >
-                    <div class="ms-2 me-auto" onClick={(event)=>fetchExcelSheetData(event,user?._id)}>
-                      <div style={{fontFamily:'monospace'}} class="fw-bold">
-                        {user?.firstName + " " + user?.lastName}
+                  <div class="col-sm-12">
+                    <div onClick={(event)=>fetchExcelSheetData(event,user?._id)} class="card">
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <i class="icon-user success font-large-1 float-right"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h5>{user?.firstName + " " + user?.lastName}</h5>
+                              <span>{user?.email}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-
-                      <ul >
-                        <li style={{listStyleType:'none',fontFamily:'comic sans ms'}}> ⏩ {user?.email}</li>
-                      </ul>
                     </div>
-                  </li>
+                  </div>
                 ))}
               </ul>
             </div>
           </div>
         )}
-        {excelSheetInfo && excelSheetInfo?.length > 0?
-          <div className= {userType === "ADMIN"?"col-sm-9 shadow-sm bg-white ":"col-sm-12 shadow-sm bg-white "}>
+        {excelSheetInfo && excelSheetInfo?.length > 0 ? (
+          <div
+            className={
+              userType === "ADMIN"
+                ? "col-sm-9 shadow-sm bg-white "
+                : "col-sm-12 shadow-sm bg-white "
+            }
+          >
             {" "}
             <div
               style={{ maxHeight: "100vh", overflowY: "scroll" }}
@@ -115,7 +126,7 @@ const Order = () => {
                           fontFamily: "sans-serif",
                         }}
                       >
-                        {excelSheet.name??"FARE"}
+                        {excelSheet.name ?? "FARE"}
                       </button>
                     </h2>
                     <div
@@ -134,8 +145,12 @@ const Order = () => {
                 ))}
               </div>
             </div>
-          </div>:  <div className="col-sm-9 shadow-sm bg-white "><NotFoundOrder/></div>}
-      
+          </div>
+        ) : (
+          <div className="col-sm-9 shadow-sm bg-white ">
+            <NotFoundOrder />
+          </div>
+        )}
       </div>
     </div>
   );
