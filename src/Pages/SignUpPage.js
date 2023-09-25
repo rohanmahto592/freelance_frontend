@@ -218,15 +218,25 @@ const SignUpPage = () => {
                 </div>
               </div>
             </form>
-            <div class="text-center flex justify-content-center">
-              <p>Already have an account? </p>
-              <button
-                style={{ marginTop: "-15px" }}
+            
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "0px",
+              }}
+              class="text-center "
+            >
+               <p>Have an account? </p>
+               <p
+                style={{textAlign:'center'}}
                 className=" btn btn-link"
                 onClick={() => navigate("/login")}
               >
                 Login
-              </button>
+              </p>
             </div>
             {showToast && (
               <Toast
