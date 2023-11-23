@@ -192,6 +192,7 @@ const ExcelFileUploadPage = () => {
   }
 
   const renderItemsForUniversity = (university) => {
+    console.log(university);
     const uniItems = items.filter((item) => item.university === university);
     setUniversityItems(uniItems);
   };
@@ -309,8 +310,9 @@ const ExcelFileUploadPage = () => {
             <label for="type" class="form-label">
               Upload doc file
             </label>
-            <div className="col-sm-12  mb-4">
+            <div style={{paddingLeft:'0px',paddingRight:'0px'}} className="col-sm-12  mb-4">
               <input
+              
                 type="file"
                 aria-label="Browse"
                 className="form-control"
@@ -336,7 +338,7 @@ const ExcelFileUploadPage = () => {
                 onChange={handleInputChange}
                 required={formData.orderType === "FARE"}
               >
-                <option selected>Select University</option>
+                <option selected disabled>Select University</option>
                 {receivedCollege?.map((college, index) => (
                   <option
                     key={index}
@@ -348,6 +350,17 @@ const ExcelFileUploadPage = () => {
               </select>
             </div>
           </div>
+          {orderTypeRef?.current?.value === "FARE" &&
+            universityItems &&
+            universityItems.length === 0 && (
+              <div class="col-sm-12">
+                <div class=" col-sm-12">
+                  <div class="alert alert-danger" role="alert">
+                    No Item is present in the bucket for the selected university.
+                  </div>
+                </div>
+              </div>
+            )}
           {orderTypeRef?.current?.value === "FARE" &&
             universityItems &&
             universityItems.length > 0 && (
@@ -397,59 +410,61 @@ const ExcelFileUploadPage = () => {
                 </div>
               </>
             )}
-          {orderTypeRef?.current?.value === "FARE" && (
-            <div className="col-sm-12 mb-4 mt-2 ml-2">
-              <table
-                style={{
-                  width: "100%",
-                  border: "5px solid #f2f2f2",
-                  borderRadius: "5px",
-                }}
-                class="table table-bordered border border-3"
-              >
-                <thead style={{ fontFamily: "monospace" }}>
-                  <tr>
-                    <th>College</th>
-                    <th>Items</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(itemsWithUniversity).map((uni) => (
+          {orderTypeRef?.current?.value === "FARE" &&
+            universityItems &&
+            universityItems.length > 0 && (
+              <div className="col-sm-12 mb-4 mt-2 ml-2">
+                <table
+                  style={{
+                    width: "100%",
+                    border: "5px solid #f2f2f2",
+                    borderRadius: "5px",
+                  }}
+                  class="table table-bordered border border-3"
+                >
+                  <thead style={{ fontFamily: "monospace" }}>
                     <tr>
-                      <td className="col-sm-4">{uni}</td>
-                      {itemsWithUniversity[uni].map((item, index) => (
-                        <td
-                          key={index}
-                          className="col-sm-2"
-                          style={{
-                            borderRadius: "4px",
-                            display: "inline-block",
-                            paddingRight: "0px",
-                            margin: "2px 4px",
-                          }}
-                        >
-                          <span>{item.toUpperCase()}</span>
-                          <span
-                            style={{
-                              float: "right",
-                              color: "slateblue",
-                              borderLeft: "1px solid black",
-                              cursor: "pointer",
-                              padding: "0px 6px",
-                              fontWeight: "bold",
-                            }}
-                            onClick={() => removeItem(item, uni)}
-                          >
-                            x
-                          </span>
-                        </td>
-                      ))}
+                      <th>College</th>
+                      <th>Items</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {Object.keys(itemsWithUniversity).map((uni) => (
+                      <tr>
+                        <td className="col-sm-4">{uni}</td>
+                        {itemsWithUniversity[uni].map((item, index) => (
+                          <td
+                            key={index}
+                            className="col-sm-2"
+                            style={{
+                              borderRadius: "4px",
+                              display: "inline-block",
+                              paddingRight: "0px",
+                              margin: "2px 4px",
+                            }}
+                          >
+                            <span>{item.toUpperCase()}</span>
+                            <span
+                              style={{
+                                float: "right",
+                                color: "slateblue",
+                                borderLeft: "1px solid black",
+                                cursor: "pointer",
+                                padding: "0px 6px",
+                                fontWeight: "bold",
+                              }}
+                              onClick={() => removeItem(item, uni)}
+                            >
+                              x
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           <div className="col-sm-12 ">
             <div className="col-sm-12 ">
               <input
