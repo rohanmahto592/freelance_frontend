@@ -24,6 +24,7 @@ const ExcelFileUploadPage = () => {
     university: null,
     currentItemQuantity: 0,
     currentItem: null,
+    currentItemId: null,
   });
   const [excelFileData, setExcelFileData] = useState(null);
   const [isProcessing, setProcessing] = useState(false);
@@ -131,11 +132,23 @@ const ExcelFileUploadPage = () => {
       }
     } else if (name === "docFile") {
       setFormData({ ...formData, docfile: event.target.files[0] });
+    } else if (name === "currentItem") {
+      const itemName = value.split("$")[1];
+      const itemId = value.split("$")[0];
+      console.log(itemName, itemId);
+      setFormData({
+        ...formData,
+        currentItem: itemName,
+        currentItemId: itemId,
+      });
+    } else if (name === "university") {
+      setFormData({
+        ...formData,
+        university: value,
+      });
+      renderItemsForUniversity(value);
     } else {
       setFormData({ ...formData, [name]: value });
-      if (name === "university") {
-        renderItemsForUniversity(value);
-      }
     }
   };
 
@@ -201,6 +214,7 @@ const ExcelFileUploadPage = () => {
     // const itemWithUni = `${formData.currentItem} (${
     //   formData.university.split(",")[0]
     // })`;
+    console.log(formData.currentItem);
     if (!formData.currentItem || !formData.currentItemQuantity) return;
 
     const isQuantityAboveStockLimit = universityItems.filter((item) => {
@@ -232,7 +246,7 @@ const ExcelFileUploadPage = () => {
 
     const newItemsArray = currentItemWithUni || [];
     newItemsArray.push(
-      `${formData.currentItem}-${formData.currentItemQuantity}`
+      `${formData.currentItemId}$${formData.currentItem}-${formData.currentItemQuantity}`
     );
 
     setItemWithUniversity({
@@ -310,9 +324,11 @@ const ExcelFileUploadPage = () => {
             <label for="type" class="form-label">
               Upload doc file
             </label>
-            <div style={{paddingLeft:'0px',paddingRight:'0px'}} className="col-sm-12  mb-4">
+            <div
+              style={{ paddingLeft: "0px", paddingRight: "0px" }}
+              className="col-sm-12  mb-4"
+            >
               <input
-              
                 type="file"
                 aria-label="Browse"
                 className="form-control"
@@ -338,7 +354,9 @@ const ExcelFileUploadPage = () => {
                 onChange={handleInputChange}
                 required={formData.orderType === "FARE"}
               >
-                <option selected disabled>Select University</option>
+                <option selected disabled>
+                  Select University
+                </option>
                 {receivedCollege?.map((college, index) => (
                   <option
                     key={index}
@@ -356,7 +374,8 @@ const ExcelFileUploadPage = () => {
               <div class="col-sm-12">
                 <div class=" col-sm-12">
                   <div class="alert alert-danger" role="alert">
-                    No Item is present in the bucket for the selected university.
+                    No Item is present in the bucket for the selected
+                    university.
                   </div>
                 </div>
               </div>
@@ -371,15 +390,22 @@ const ExcelFileUploadPage = () => {
                     <select
                       class="form-select"
                       aria-label="Select order type"
-                      value={formData.currentItem}
+                      value={
+                        formData.currentItem && formData.currentItemId
+                          ? `${formData.currentItemId}$${formData.currentItem}`
+                          : null
+                      }
                       name="currentItem"
                       onChange={handleInputChange}
                     >
-                      <option disabled selected>
+                      <option selected disabled>
                         Select item
                       </option>
                       {universityItems.map((item, index) => (
-                        <option key={index} value={item.itemName}>
+                        <option
+                          key={index}
+                          value={`${item._id}$${item.itemName}`}
+                        >
                           {item.itemName.toUpperCase()} ({item.quantity})
                         </option>
                       ))}
@@ -443,7 +469,7 @@ const ExcelFileUploadPage = () => {
                               margin: "2px 4px",
                             }}
                           >
-                            <span>{item.toUpperCase()}</span>
+                            <span>{item.split("$")[1].toUpperCase()}</span>
                             <span
                               style={{
                                 float: "right",
