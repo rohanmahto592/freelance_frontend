@@ -115,6 +115,7 @@ const ExcelFileUploadPage = () => {
   const handleInputChange = async (event) => {
     event.preventDefault();
     const { name, value } = event.target;
+    console.log("name",name,"value",value,items)
     if (value === "FARE") {
       if (items.length === 0) {
         await fetchAllStockItems();
@@ -180,6 +181,7 @@ const ExcelFileUploadPage = () => {
       setProcessing(false);
       setIsError(false);
     }
+    window.location.reload();
   };
   const DeleteExcelFileData = async (id) => {
     const response = await DeleteExcelFile(id);
@@ -226,7 +228,7 @@ const ExcelFileUploadPage = () => {
       return false;
     });
 
-    if (isQuantityAboveStockLimit && isQuantityAboveStockLimit.length > 0)
+    if (isQuantityAboveStockLimit && isQuantityAboveStockLimit.length >= 0)
       return;
 
     const currentItemWithUni = itemsWithUniversity[formData.university];
@@ -240,7 +242,7 @@ const ExcelFileUploadPage = () => {
         return false;
       });
 
-      if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length > 0)
+      if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length >= 0)
         return;
     }
 
@@ -398,10 +400,10 @@ const ExcelFileUploadPage = () => {
                       name="currentItem"
                       onChange={handleInputChange}
                     >
-                      <option selected disabled>
+                      <option selected>
                         Select item
                       </option>
-                      {universityItems.map((item, index) => (
+                      {universityItems?.map((item, index) => (
                         <option
                           key={index}
                           value={`${item._id}$${item.itemName}`}
