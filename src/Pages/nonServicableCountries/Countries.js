@@ -12,36 +12,17 @@ const Countries = () => {
   const [showToast, setToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [countryList, setCountryList] = useState(null);
-  const [isCountryAdded, setisCountryAdded] = useState(false);
   useEffect(() => {
     fetchInvalidCountries().then((response) => {
       setCountryList(response.data.message);
     });
-  }, [isCountryAdded]);
+  }, [isError]);
   const handleCountrySubmit = async (event) => {
     event.preventDefault();
     if (!country) {
       return;
     }
-    if(country)
-    {
-      for(let item of countryList)
-      {
-         if(item.name.toLowerCase()===country.toLowerCase())
-         {
-          setApiError('Duplicate entry found');
-          setToast(true);
-          setIsError(true);
-           return;
-         }
-      }
-      
-    }
     const response = await nonServicableCountries(country);
-    if(response.data.success)
-    {
-      setisCountryAdded(true);
-    }
     setApiError(response.data.message);
     setToast(true);
     response?.data?.success ? setIsError(false) : setIsError(true);

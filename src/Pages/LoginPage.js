@@ -4,11 +4,11 @@ import { login } from "../Apis/auth";
 import Toast from "../Components/Toast";
 import loginImage from "../Assets/Images/userCred.png";
 import { redirection } from "../constants";
-import "../css/LandingPage.css";
+import "../css/LandingPage.css"
 const LoginPage = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setToast] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isError,setIsError]=useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,16 +32,12 @@ const LoginPage = () => {
       sessionStorage.setItem("isAuthenticated", true);
       sessionStorage.setItem("userType", userType);
       sessionStorage.setItem("token", token);
-      sessionStorage.setItem("id", response.data.id);
-      sessionStorage.setItem("isLoggedIn", true);
-      sessionStorage.setItem("universityName", response.data.universityName);
-      sessionStorage.setItem(
-        "userName",
-        response.data.firstName + " " + response.data.lastName
-      );
-      response?.data?.userId &&
-        sessionStorage.setItem("userDeliveryId", response.data.userId);
-      const redirect = redirection[userType];
+      sessionStorage.setItem("id",response.data.id);
+      sessionStorage.setItem("isLoggedIn",true);
+      sessionStorage.setItem("universityName",response.data.universityName);
+      sessionStorage.setItem("userName",response.data.firstName+" "+response.data.lastName);
+      response?.data?.userId && sessionStorage.setItem("userDeliveryId",response.data.userId);
+      const redirect = redirection[userType]
       navigate(redirect);
     } else {
       setApiError(response.data.message);
@@ -117,43 +113,11 @@ const LoginPage = () => {
                 </div>
               </div>
             </form>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                margin: "0px",
-              }}
-              class="text-center "
-            >
-              <p>Forgot Password?{"  "}</p>
-              <p
-                onClick={() => navigate("/signup")}
-                style={{ padding: "0px" }}
-                className="btn btn-link"
-              >
-                Click Here
-              </p>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                margin: "0px",
-              }}
-              class=" text-center "
-            >
-              <p>Get Members Benefit.{"  "}</p>
-              <p
-                onClick={() => navigate("/signup")}
-                style={{ padding: "0px" }}
-                className="btn btn-link"
-              >
-                Sign Up
-              </p>
+
+            <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center'}} class="pt-4 text-center " onClick={()=>navigate('/signup')} >
+               <p>Get Members Benefit.{" "}</p>
+                <button style={{padding:'0px'}} className="btn btn-link">Sign Up</button>
+              
             </div>
             {showToast && (
               <Toast
