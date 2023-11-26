@@ -135,8 +135,6 @@ const ExcelFileUploadPage = () => {
     } else if (name === "currentItem") {
       const itemName = value.split("$")[1];
       const itemId = value.split("$")[0];
-      console.log(itemName, itemId);
-      console.log(formData)
       setFormData({
         ...formData,
         currentItem: itemName,
@@ -166,6 +164,8 @@ const ExcelFileUploadPage = () => {
         return;
       }
       form.append("items", JSON.stringify(itemsWithUniversity));
+    } else if (formData.orderType === "DPM") {
+      form.append("university", formData.university);
     }
     setProcessing(true);
     const response = await uploadExcelFile(form);
@@ -235,7 +235,7 @@ const ExcelFileUploadPage = () => {
     if (currentItemWithUni) {
       const isCurrentItemAlreadyPresent = currentItemWithUni.filter((item) => {
         let name = item.split("-")[0];
-        name=name.split('$')[1];
+        name = name.split("$")[1];
         if (name === formData.currentItem) {
           return true;
         }
@@ -247,7 +247,7 @@ const ExcelFileUploadPage = () => {
     }
 
     const newItemsArray = currentItemWithUni || [];
-    
+
     newItemsArray.push(
       `${formData.currentItemId}$${formData.currentItem}-${formData.currentItemQuantity}`
     );
@@ -349,13 +349,15 @@ const ExcelFileUploadPage = () => {
             </label>
             <div class="dropdown mb-4">
               <select
-                disabled={formData.orderType !== "FARE"}
+                disabled={formData.orderType === "ADMIT/DEPOSIT"}
                 class="form-select"
                 aria-label="Select university"
                 value={formData.university}
                 name="university"
                 onChange={handleInputChange}
-                required={formData.orderType === "FARE"}
+                required={
+                  formData.orderType === "FARE" || formData.orderType === "DPM"
+                }
               >
                 <option selected disabled>
                   Select University
@@ -401,9 +403,7 @@ const ExcelFileUploadPage = () => {
                       name="currentItem"
                       onChange={handleInputChange}
                     >
-                      <option selected>
-                        Select item
-                      </option>
+                      <option selected>Select item</option>
                       {universityItems?.map((item, index) => (
                         <option
                           key={index}
