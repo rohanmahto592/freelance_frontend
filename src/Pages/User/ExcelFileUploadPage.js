@@ -115,7 +115,6 @@ const ExcelFileUploadPage = () => {
   const handleInputChange = async (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    console.log("name",name,"value",value,items)
     if (value === "FARE") {
       if (items.length === 0) {
         await fetchAllStockItems();
@@ -137,6 +136,7 @@ const ExcelFileUploadPage = () => {
       const itemName = value.split("$")[1];
       const itemId = value.split("$")[0];
       console.log(itemName, itemId);
+      console.log(formData)
       setFormData({
         ...formData,
         currentItem: itemName,
@@ -216,7 +216,7 @@ const ExcelFileUploadPage = () => {
     // const itemWithUni = `${formData.currentItem} (${
     //   formData.university.split(",")[0]
     // })`;
-    console.log(formData.currentItem);
+    console.log(formData);
     if (!formData.currentItem || !formData.currentItemQuantity) return;
 
     const isQuantityAboveStockLimit = universityItems.filter((item) => {
@@ -228,25 +228,26 @@ const ExcelFileUploadPage = () => {
       return false;
     });
 
-    if (isQuantityAboveStockLimit && isQuantityAboveStockLimit.length >= 0)
+    if (isQuantityAboveStockLimit && isQuantityAboveStockLimit.length > 0)
       return;
 
     const currentItemWithUni = itemsWithUniversity[formData.university];
-
     if (currentItemWithUni) {
       const isCurrentItemAlreadyPresent = currentItemWithUni.filter((item) => {
-        const name = item.split("-")[0];
+        let name = item.split("-")[0];
+        name=name.split('$')[1];
         if (name === formData.currentItem) {
           return true;
         }
         return false;
       });
 
-      if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length >= 0)
+      if (isCurrentItemAlreadyPresent && isCurrentItemAlreadyPresent.length > 0)
         return;
     }
 
     const newItemsArray = currentItemWithUni || [];
+    
     newItemsArray.push(
       `${formData.currentItemId}$${formData.currentItem}-${formData.currentItemQuantity}`
     );
