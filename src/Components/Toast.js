@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 
-const Toast = ({ message, setShowToast, timer,isError }) => {
+const Toast = ({ message, setShowToast, timer, isError }) => {
   useEffect(() => {
+    console.log("triggered");
     setTimeout(() => {
       setShowToast(false);
     }, timer);
@@ -15,7 +16,12 @@ const Toast = ({ message, setShowToast, timer,isError }) => {
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div  className= { isError? "alert alert-danger m-0":"alert alert-success m-0"} role="alert">
+        <div
+          className={
+            isError ? "alert alert-danger m-0" : "alert alert-success m-0"
+          }
+          role="alert"
+        >
           {message}
         </div>
       </div>

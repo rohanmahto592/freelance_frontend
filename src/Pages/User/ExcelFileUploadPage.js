@@ -46,7 +46,7 @@ const ExcelFileUploadPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const itemModalRef = useRef(null);
-  const [component,setComponent]=useState(null);
+  const [component, setComponent] = useState(null);
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
     console.log(universityName);
@@ -156,18 +156,52 @@ const ExcelFileUploadPage = () => {
     }
   };
   const createExcelHeaderComponent = (Headers, orderType) => {
-    return (<table style={{width:'100%'}}>
-      <tr>
-        <th style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>S.NO</th>
-        <th style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>Title</th>
-      </tr>
-         { Headers.map((item,index) =>(
+    return (
+      <table style={{ width: "100%" }}>
+        <tr>
+          <th
+            style={{
+              padding: "5px",
+              border: "2px solid #dddddd",
+              textAlign: "center",
+            }}
+          >
+            S.NO
+          </th>
+          <th
+            style={{
+              padding: "5px",
+              border: "2px solid #dddddd",
+              textAlign: "center",
+            }}
+          >
+            Title
+          </th>
+        </tr>
+        {Headers.map((item, index) => (
           <tr key={index}>
-            <td style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>{index+1}</td>
-            <td style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>{item.name}</td>
+            <td
+              style={{
+                padding: "5px",
+                border: "2px solid #dddddd",
+                textAlign: "center",
+              }}
+            >
+              {index + 1}
+            </td>
+            <td
+              style={{
+                padding: "5px",
+                border: "2px solid #dddddd",
+                textAlign: "center",
+              }}
+            >
+              {item.name}
+            </td>
           </tr>
-         ))}
-        </table>)
+        ))}
+      </table>
+    );
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -193,14 +227,25 @@ const ExcelFileUploadPage = () => {
       setShowToast(true);
       setProcessing(false);
       setIsError(true);
-      setShowModal(true);
-      setComponent(createExcelHeaderComponent(
-        response.data.Headers,
-        response.data.orderType
-      ));
-      setModalTitle(<div style={{fontSize:'15px',letterSpacing:'1px'}} class="alert alert-danger" role="alert">
-      Required Headers are not present for { response.data.orderType},check from the given list.
-    </div>)
+      if (response.data.headerInvalid) {
+        setShowModal(true);
+        setComponent(
+          createExcelHeaderComponent(
+            response.data.Headers,
+            response.data.orderType
+          )
+        );
+        setModalTitle(
+          <div
+            style={{ fontSize: "15px", letterSpacing: "1px" }}
+            class="alert alert-danger"
+            role="alert"
+          >
+            Required Headers are not present for {response.data.orderType},check
+            from the given list.
+          </div>
+        );
+      }
     } else {
       setApiError(response.data.message);
       setShowToast(true);
@@ -741,7 +786,7 @@ const ExcelFileUploadPage = () => {
         <Toast
           message={apiError}
           setShowToast={setShowToast}
-          timer={2000}
+          timer={200000}
           isError={isError}
         />
       )}
