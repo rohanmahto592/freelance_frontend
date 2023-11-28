@@ -786,7 +786,7 @@ const ExcelFileUploadPage = () => {
         <Toast
           message={apiError}
           setShowToast={setShowToast}
-          timer={200000}
+          timer={2000}
           isError={isError}
         />
       )}
