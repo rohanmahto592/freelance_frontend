@@ -56,6 +56,7 @@ const OrderTable = (props) => {
             <thead>
               <tr>
                 <th>S.NO</th>
+                <th>Email</th>
                 <th>Application ID</th>
                 <th>Tracking ID</th>
                 <th>Order Status</th>
@@ -68,6 +69,7 @@ const OrderTable = (props) => {
               {CopyOrders?.map((item, index) => (
                !isInitialData?<tr key={index}>
                  <td>{index + 1}</td>
+                 <td>{item?.email}</td>
                   <td>{item?.applicationId}</td>
                   <td>{item?.trackingId}</td>
                   <td>{item?.orderStatus}</td>
@@ -94,7 +96,8 @@ const OrderTable = (props) => {
                   </td>
                 </tr>: <tr key={index}>
                  <td>{index + 1}</td>
-                  <td>{item["Application ID"] || item["application id"]}</td>
+                 <td>{item["email"]|| item["Email"]}</td>
+                  <td>{item["Application ID"] || item["application id"] || item[" application id"] || item["STUDENT_ID"]}</td>
                   <td>NA</td>
                   <td>Pending</td>
                   <td>{item["Admissions Status"] || item["orderType"] || item["admissions status"]}</td>

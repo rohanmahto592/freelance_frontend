@@ -16,6 +16,8 @@ import folder from "../../Assets/Images/folder.png";
 import Toast from "../../Components/Toast";
 import docIcon from "../../Assets/Images/doc.png";
 import { fetchColleges, fetchItems } from "../../Apis/adminDashboard";
+import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
+import { Alert } from "react-bootstrap";
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
@@ -41,7 +43,10 @@ const ExcelFileUploadPage = () => {
   const fileInputRef = useRef(null);
   const orderTypeRef = useRef(null);
   const [itemsWithUniversity, setItemWithUniversity] = useState({});
-
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const itemModalRef = useRef(null);
+  const [component,setComponent]=useState(null);
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
     console.log(universityName);
@@ -150,7 +155,20 @@ const ExcelFileUploadPage = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-
+  const createExcelHeaderComponent = (Headers, orderType) => {
+    return (<table style={{width:'100%'}}>
+      <tr>
+        <th style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>S.NO</th>
+        <th style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>Title</th>
+      </tr>
+         { Headers.map((item,index) =>(
+          <tr key={index}>
+            <td style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>{index+1}</td>
+            <td style={{padding:'5px',border:'2px solid #dddddd',textAlign:'center'}}>{item.name}</td>
+          </tr>
+         ))}
+        </table>)
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
@@ -175,13 +193,21 @@ const ExcelFileUploadPage = () => {
       setShowToast(true);
       setProcessing(false);
       setIsError(true);
+      setShowModal(true);
+      setComponent(createExcelHeaderComponent(
+        response.data.Headers,
+        response.data.orderType
+      ));
+      setModalTitle(<div style={{fontSize:'15px',letterSpacing:'1px'}} class="alert alert-danger" role="alert">
+      Required Headers are not present for { response.data.orderType},check from the given list.
+    </div>)
     } else {
       setApiError(response.data.message);
       setShowToast(true);
       setProcessing(false);
       setIsError(false);
+      window.location.reload();
     }
-    window.location.reload();
   };
   const DeleteExcelFileData = async (id) => {
     const response = await DeleteExcelFile(id);
@@ -274,6 +300,11 @@ const ExcelFileUploadPage = () => {
       ...itemsWithUniversity,
       [formData.university]: newItemsArray,
     });
+  };
+  const closeModal = () => {
+    setShowModal(false);
+    //setComponent(null);
+    setModalTitle(null);
   };
 
   return (
@@ -529,7 +560,7 @@ const ExcelFileUploadPage = () => {
                   <th colspan="3">Initial File</th>
                   <th colspan="5">Processed File</th>
                   <th rowspan="2">Doc File</th>
-                  <th rowSpan="2">Action</th>
+                  {/* <th rowSpan="2">Action</th> */}
                 </tr>
                 <tr>
                   <th style={{ color: "GrayText" }}>Size</th>
@@ -663,14 +694,14 @@ const ExcelFileUploadPage = () => {
                         )}
                       </td>
 
-                      <td>
+                      {/* <td>
                         <button
                           className="btn btn-outline-danger"
                           onClick={() => DeleteExcelFileData(row._id)}
                         >
                           Delete
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 })}
@@ -714,6 +745,13 @@ const ExcelFileUploadPage = () => {
           isError={isError}
         />
       )}
+      <EditItemModalComponent
+        children={component}
+        itemmodalRef={itemModalRef}
+        itemShowModal={showModal}
+        itemHandleCloseModal={closeModal}
+        itemTitle={modalTitle}
+      />
     </main>
   );
 };
