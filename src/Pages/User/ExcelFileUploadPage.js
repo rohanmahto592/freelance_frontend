@@ -356,8 +356,8 @@ const ExcelFileUploadPage = () => {
     <main class="d-flex justify-content-center align-items-center m-4  ">
       <div className="container ">
         <form
-          className="row border-3 rounded p-4"
-          style={{ backgroundColor: "#f2f2f2" }}
+          className="row border border-1 rounded p-4"
+          
           onSubmit={handleSubmit}
         >
           <div className="col-sm-6  mb-4">
@@ -570,10 +570,9 @@ const ExcelFileUploadPage = () => {
                 </table>
               </div>
             )}
-          <div className="col-sm-12 ">
+          <div className="col-sm-12 d-flex justify-content-center">
             <div className="col-sm-12 ">
               <input
-                style={{ background: "#000A99" }}
                 className="form-control btn btn-primary"
                 type="submit"
                 value="Upload"
@@ -585,20 +584,20 @@ const ExcelFileUploadPage = () => {
         {isProcessing && <ProcessingLoader />}
 
         <div
-          style={{ backgroundColor: "#f2f2f2" }}
+         
           className="row mt-3 rounded"
         >
           <div id="table-container" className="col-sm-12 mt-3">
             <table
               style={{
                 width: "100%",
-                border: "5px solid #f2f2f2",
+                fontFamily:'initial',
                 borderRadius: "5px",
               }}
-              class="table table-bordered border border-3"
+              class="table table-bordered table-striped border border-1 rounded"
             >
-              <thead style={{ fontFamily: "monospace" }}>
-                <tr>
+              <thead>
+                <tr >
                   <th rowspan="2">S.No</th>
                   <th rowspan="2">File Name</th>
                   <th rowspan="2">Created At</th>
@@ -607,21 +606,21 @@ const ExcelFileUploadPage = () => {
                   <th rowspan="2">Doc File</th>
                   {/* <th rowSpan="2">Action</th> */}
                 </tr>
-                <tr>
-                  <th style={{ color: "GrayText" }}>Size</th>
-                  <th style={{ color: "GrayText" }}>File Count</th>
-                  <th style={{ color: "GrayText" }}>View</th>
-                  <th style={{ color: "GrayText" }}>Size</th>
-                  <th style={{ color: "GrayText" }}> Dispatched Count</th>
-                  <th style={{ color: "GrayText" }}>
+                <tr >
+                  <th >Size</th>
+                  <th >File Count</th>
+                  <th >View</th>
+                  <th >Size</th>
+                  <th > Dispatched Count</th>
+                  <th >
                     {" "}
                     ShipRocket_Delivery Count
                   </th>
-                  <th style={{ color: "GrayText" }}>
+                  <th>
                     {" "}
                     IndianPost_Delivery Count
                   </th>
-                  <th style={{ color: "GrayText" }}>View</th>
+                  <th>View</th>
                 </tr>
               </thead>
               <tbody>
@@ -678,11 +677,12 @@ const ExcelFileUploadPage = () => {
                             backgroundColor: "white",
                           }}
                         >
-                          <img
-                            style={{ height: "2.8vh", width: "2.8vh" }}
-                            src={folder}
-                            alt="download file"
-                          />
+                          
+                          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"></path><path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"></path>
+                            </svg>
+                           
+                        
                         </button>
                       </td>
                       <td>{row.processedFileSize}</td>
@@ -713,11 +713,9 @@ const ExcelFileUploadPage = () => {
                             backgroundColor: "white",
                           }}
                         >
-                          <img
-                            style={{ height: "2.8vh", width: "2.8vh" }}
-                            src={folder}
-                            alt="download file"
-                          />
+                          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"></path><path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"></path>
+                            </svg>
                         </button>
                       </td>
                       <td>
@@ -730,11 +728,9 @@ const ExcelFileUploadPage = () => {
                               backgroundColor: "white",
                             }}
                           >
-                            <img
-                              style={{ height: "2.8vh", width: "2.8vh" }}
-                              src={docIcon}
-                              alt="delete file"
-                            />
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"></path><path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"></path>
+                            </svg>
                           </button>
                         )}
                       </td>
