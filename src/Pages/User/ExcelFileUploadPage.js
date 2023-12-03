@@ -450,7 +450,7 @@ const ExcelFileUploadPage = () => {
             </div>
           </div>
           {orderTypeRef?.current?.value === "FARE" &&
-            universityItems &&
+           formData.university && formData.university.length>0 && universityItems &&
             universityItems.length === 0 && (
               <div class="col-sm-12">
                 <div class=" col-sm-12">

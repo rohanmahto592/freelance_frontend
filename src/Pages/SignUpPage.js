@@ -43,7 +43,7 @@ const SignUpPage = () => {
     }
 
     const response = await signup(formData);
-
+    console.log(response);
     if (response.data.success) {
       setFormData({
         firstName: "",
@@ -53,10 +53,17 @@ const SignUpPage = () => {
         universityName: "",
         password: "",
       });
-      navigate("/login");
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(false);
+      setTimeout(()=>{
+        navigate("/login");
+      },2000)
+
     } else {
       setApiError(response.data.message);
-      setShowToast();
+      setShowToast(true);
+      setIsError(true);
     }
   };
 
@@ -151,7 +158,7 @@ const SignUpPage = () => {
                       class="form-select"
                       aria-label="Select your university"
                       name="universityName"
-                      value={formData.universityName}
+                      value={formData.userType==='SELF'? "": formData.universityName}
                       onChange={handleInputChange}
                       disabled={formData.userType === "SELF"}
                       required={formData.userType === "UNIVERSITY"}
@@ -218,11 +225,12 @@ const SignUpPage = () => {
                 </div>
               </div>
             </form>
-            <div class="text-center flex justify-content-center">
-              <p>Already have an account? </p>
+            <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center'}} class="pt-4 text-center ">
+            <p style={{fontFamily:'sans-serif',letterSpacing:'1px'}}>Already have an account? </p>
               <button
-                style={{ marginTop: "-15px" }}
-                className=" btn btn-link"
+              style={{ background: "#000A99",marginTop: "-15px" }}
+               
+                className=" btn btn-primary"
                 onClick={() => navigate("/login")}
               >
                 Login

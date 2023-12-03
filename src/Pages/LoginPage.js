@@ -38,7 +38,12 @@ const LoginPage = () => {
       sessionStorage.setItem("userName",response.data.firstName+" "+response.data.lastName);
       response?.data?.userId && sessionStorage.setItem("userDeliveryId",response.data.userId);
       const redirect = redirection[userType]
-      navigate(redirect);
+      setApiError(response.data.message);
+      setShowToast(true);
+      setIsError(false);
+      setTimeout(()=>{
+        navigate(redirect);
+      },2000)
     } else {
       setApiError(response.data.message);
       setShowToast(true);
@@ -115,8 +120,8 @@ const LoginPage = () => {
             </form>
 
             <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center'}} class="pt-4 text-center " onClick={()=>navigate('/signup')} >
-               <p>Get Members Benefit.{" "}</p>
-                <button style={{padding:'0px'}} className="btn btn-link">Sign Up</button>
+               <p style={{marginBottom:'0px',fontFamily:'sans-serif',letterSpacing:'1px'}}>Get Members Benefit.{" "}</p>
+                <button style={{ background: "#000A99" }}  className="btn btn-primary">Sign Up</button>
               
             </div>
             {showToast && (

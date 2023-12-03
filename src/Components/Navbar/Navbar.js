@@ -48,7 +48,7 @@ const Navbar = () => {
                 class="btn btn-link text-decoration-none"
                 onClick={() => navigate("/")}
               >
-                HOME
+                Home
                 <i style={{ marginLeft: "5px" }} class="bi bi-house"></i>
               </button>
               {navHeaders?.map((navItem) => (
@@ -69,7 +69,7 @@ const Navbar = () => {
                 class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/contactus")}
               >
-                CONTACT
+                Contact
                 <i
                   style={{ marginLeft: "5px" }}
                   class="bi bi-person-bounding-box"
@@ -82,7 +82,7 @@ const Navbar = () => {
                 class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/about")}
               >
-                ABOUT US
+                About Us
                 <i
                   style={{ marginLeft: "5px" }}
                   class="bi bi-person-lines-fill"
@@ -96,7 +96,7 @@ const Navbar = () => {
                     class=" btn btn-link text-decoration-none"
                     onClick={() => navigate("/login")}
                   >
-                    LOGIN
+                    Login
                     <i
                       style={{ marginLeft: "5px" }}
                       class="bi bi-box-arrow-in-left"
@@ -112,7 +112,7 @@ const Navbar = () => {
                     class=" btn btn-link text-decoration-none"
                     onClick={() => logout()}
                   >
-                    LOGOUT
+                    Logout
                     <i
                       style={{ marginLeft: "5px" }}
                       class="bi bi-box-arrow-in-left"

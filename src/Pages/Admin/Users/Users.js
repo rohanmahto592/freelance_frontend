@@ -46,11 +46,13 @@ const Users = () => {
   const verifyUser = async () => {
     if (selectedRows.length > 0) {
       const response = await verifyUsers(selectedRows);
-      console.log(response);
       if (response.data.success) {
         setApiError(response.data.message);
         setShowToast(true);
         setIsError(false);
+      setTimeout(()=>{
+        window.location.reload()
+      },1500)
       } else {
         setApiError(response.data.message);
         setShowToast(true);
@@ -198,6 +200,7 @@ const Users = () => {
                     </td>
                     <th>
                       <input
+                        style={{marginLeft:'50%'}}
                         type="checkbox"
                         onChange={(event) => handleSelectRow(event, user._id)}
                       />

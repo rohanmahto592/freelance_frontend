@@ -9,7 +9,7 @@ import { createFeedback, getAllFeedbacks } from "../../Apis/feedback";
 import Toast from "../../Components/Toast";
 import "./landingPage.css";
 import CardSlider from "../../Components/CardSlider/CardSlider";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -346,26 +346,30 @@ const LandingPage = () => {
           </div>
           <div className="row mt-2">
             <div style={{display:'flex',flexWrap:'wrap'}} className="col-sm-12 justify-content-center">
+              <Link  style={{textDecoration:'none'}}to="/about">
               <span className="m-2">About Us</span>
-              <span className="m-2">Contact us</span>
-              <span className="m-2">Privacy Policy</span>
+              </Link>
+              <Link style={{textDecoration:'none'}} to="/contactus">
+              <span className="m-2">Contact Us</span>
+              </Link>
+              {/* <span className="m-2">Privacy Policy</span>
               <span className="m-2">Terms and Conditions</span>
-              <span className="m-2">FAQ</span>
+              <span className="m-2">FAQ</span> */}
             </div>
           </div>
           <div className="row mt-2">
-            <div className="col-12">© 2021 All Rights Reserved</div>
+            <div className="col-12">© 2023 All Rights Reserved</div>
           </div>
         </div>
       </div>
-      {showToast && (
+      {/* {showToast && (
         <Toast
           message={apiError}
           setShowToast={setShowToast}
           timer={2000}
           isError={isError}
         />
-      )}
+      )} */}
     </>
   );
 };

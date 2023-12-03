@@ -1,48 +1,48 @@
 export const navConfig = {
   ADMIN: [
     {
-      title: "DASHBOARD",
+      title: "Dashboard",
       link: "/admin/dashboard",
       class:'bi bi-bar-chart'
     },
     {
-      title:"ORDERS",
+      title:"Orders",
       link:'/admin/order',
       class:'bi bi-activity'
     }
   ],
   USER: [
     {
-      title: "PLACE ORDER",
+      title: "Place Order",
       link: "/user/uploadfile",
       class:'bi bi-arrow-90deg-right'
     },
     {
-      title: "MY ORDER",
+      title: "My Order",
       link: "/user/order",
       class:'bi bi-activity'
     },
   ],
   SELF: [
     {
-      title: "PLACE ORDER",
+      title: "Place Order",
       link: "/user/uploadfile",
       class:'bi bi-arrow-90deg-right'
     },
     {
-      title: "MY ORDER",
+      title: "My Order",
       link: "/user/order",
       class:'bi bi-activity'
     },
   ],
   UNIVERSITY: [
     {
-      title: "PLACE ORDER",
+      title: "Place Order",
       link: "/user/uploadfile",
       class:'bi bi-arrow-90deg-right'
     },
     {
-      title: "MY ORDER",
+      title: "My Order",
       link: "/user/order",
       class:'bi bi-activity'
     },
