@@ -13,6 +13,7 @@ const College = () => {
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isCollegeAdded, setCollegeAdded] = useState(false);
+  const[isCollegeDeleted,setCollegeDeleted]=useState(false);
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "address") {
@@ -42,7 +43,7 @@ const College = () => {
         setIsError(true);
       }
     });
-  }, [isCollegeAdded]);
+  }, [isCollegeAdded,isCollegeDeleted]);
   const deleteCollege = async (event, id) => {
     event.preventDefault();
     const response = await DeleteCollege(id);
@@ -50,6 +51,7 @@ const College = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
+      setCollegeDeleted(true);
     } else {
       setApiError(response.data.message);
       setShowToast(true);

@@ -11,12 +11,13 @@ const Countries = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setToast] = useState(false);
   const [isError, setIsError] = useState(false);
+  const[isCountryDeleted,setCountryDeleted]=useState(false);
   const [countryList, setCountryList] = useState(null);
   useEffect(() => {
     fetchInvalidCountries().then((response) => {
       setCountryList(response.data.message);
     });
-  }, [isError]);
+  }, [isError,isCountryDeleted]);
   const handleCountrySubmit = async (event) => {
     event.preventDefault();
     if (!country) {
@@ -33,6 +34,10 @@ const Countries = () => {
     const response = await deleteNonServicableCountry(id);
     setApiError(response.data.message);
     setToast(true);
+    if(response.data.success)
+    {
+      setCountryDeleted(true);
+    }
     response?.data?.success ? setIsError(false) : setIsError(true);
   };
 
