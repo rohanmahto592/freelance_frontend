@@ -14,6 +14,21 @@ const College = () => {
   const [isError, setIsError] = useState(false);
   const [isCollegeAdded, setCollegeAdded] = useState(false);
   const[isCollegeDeleted,setCollegeDeleted]=useState(false);
+
+  const checkIfCollegeAlreadyExsisted=(collegeList,college="",address="")=>{
+    for(let i=0;i<collegeList?.length;i++)
+    {
+      const CollegeAddress=(collegeList[i].Name+collegeList[i].Address).toLowerCase().trim();
+      const currentCollegeAddress=(college+address).toLowerCase().trim();
+      if(CollegeAddress.includes(currentCollegeAddress))
+      {
+        return {state:true,collegeAddress:`${college} ${address} already present`}
+       
+      }
+    }
+    return {state:false,collegeAddress:''}
+
+  }
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "address") {
@@ -25,6 +40,14 @@ const College = () => {
   };
   const AddCollegeSubmit = async (event) => {
     event.preventDefault();
+    const isCollegeAlreadyPresent=checkIfCollegeAlreadyExsisted(getCollege,college,address);
+    if(isCollegeAlreadyPresent.state)
+    {
+      setApiError(`${isCollegeAlreadyPresent.collegeAddress}`);
+      setShowToast(true);
+      setIsError(true);
+    return;
+    }
     const response = await addColleges(college,address);
     if (response.data.success) {
       setCollegeAdded(true);
