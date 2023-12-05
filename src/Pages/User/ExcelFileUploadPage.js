@@ -88,9 +88,9 @@ const ExcelFileUploadPage = () => {
           setShowToast(true);
           setProcessing(false);
         } else {
-          setExcelFileData(response.data.message);
-          handlePageChange(1, response.data.message);
-          settotalPages(Math.ceil(response.data.message.length / perPage));
+          setExcelFileData(JSON.parse(response.data.message));
+          handlePageChange(1, JSON.parse(response.data.message));
+          settotalPages(Math.ceil(JSON.parse(response.data.message).length / perPage));
         }
       });
     } catch (err) {
