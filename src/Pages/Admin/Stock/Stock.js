@@ -341,7 +341,7 @@ const Stock = () => {
             role="tabpanel"
             aria-labelledby="tab-5"
           >
-            <form className="form-style">
+            <form className="form-style" onSubmit={AddStockSubmit}>
               <div className="container ">
                 <div className="row">
                   <div className="col-sm-4 my-2 ">
@@ -365,6 +365,7 @@ const Stock = () => {
                   <div className="col-sm-4 my-2 ">
                     <label className="form-label">Quantity</label>
                     <input
+                     required={true}
                       className="form-control"
                       type="number"
                       name="quantity"
@@ -380,10 +381,9 @@ const Stock = () => {
                       class="form-select"
                       aria-label="Default select example"
                       name="university"
+                      required={true}
                     >
-                      <option disabled selected>
-                        Select University
-                      </option>
+                       <option selected="true" style={{display:'none'}}></option>
                       {colleges?.map((college) => (
                         <option value={college.Name + ", " + college.Address}>
                           {college.Name + "," + college.Address}
@@ -398,7 +398,6 @@ const Stock = () => {
                     <button
                       type="submit"
                       className="btn btn-primary w-100"
-                      onClick={AddStockSubmit}
                     >
                       Submit
                     </button>
