@@ -72,7 +72,10 @@ const Order = () => {
               <ul class="list-group list-group mb-2">
                 {users?.map((user, index) => (
                   <div class="col-sm-12">
-                    <div onClick={(event)=>fetchExcelSheetData(event,user?._id)} class="card">
+                    <div
+                      onClick={(event) => fetchExcelSheetData(event, user?._id)}
+                      class="card"
+                    >
                       <div class="card-content">
                         <div class="card-body">
                           <div class="media d-flex">
@@ -126,7 +129,13 @@ const Order = () => {
                           fontFamily: "sans-serif",
                         }}
                       >
-                        {excelSheet.name ?? "FARE"}
+                        {excelSheet.name ?? "FARE"}  {new Date(excelSheet.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                      })}
                       </button>
                     </h2>
                     <div
@@ -147,7 +156,13 @@ const Order = () => {
             </div>
           </div>
         ) : (
-          <div className="col-sm-9 shadow-sm bg-white ">
+          <div
+            className={
+              userType === "ADMIN"
+                ? "col-sm-9 shadow-sm bg-white "
+                : "col-sm-12 shadow-sm bg-white "
+            }
+          >
             <NotFoundOrder />
           </div>
         )}

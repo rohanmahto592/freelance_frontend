@@ -11,7 +11,6 @@ const OrderTable = (props) => {
   useEffect(() => {
     setLoading(true);
     fetchOrders(excelRef).then((response) => {
-      console.log(response.data)
       if (response.data.success) {
         setLoading(false);
         setOriginalOrders(response.data.message);

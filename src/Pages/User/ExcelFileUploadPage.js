@@ -463,7 +463,7 @@ const ExcelFileUploadPage = () => {
                 disabled={formData.orderType === "ADMIT/DEPOSIT"}
                 class="form-select"
                 aria-label="Select university"
-                value={formData.university}
+                value={formData.orderType === "ADMIT/DEPOSIT"?"":formData.university}
                 name="university"
                 onChange={handleInputChange}
                 required={
