@@ -4,6 +4,7 @@ import {
   getExcelFile,
   DeleteExcelFile,
   ViewDocFile,
+  fetchFile,
 } from "../../Apis/excel";
 import {
   viewInitialExcelFile,
@@ -83,14 +84,15 @@ const ExcelFileUploadPage = () => {
   useEffect(() => {
     try {
       getExcelFile().then((response) => {
+        console.log(response);
         if (!response.data.success) {
           setApiError(response.data.message);
           setShowToast(true);
           setProcessing(false);
         } else {
-          setExcelFileData(JSON.parse(response.data.message));
-          handlePageChange(1, JSON.parse(response.data.message));
-          settotalPages(Math.ceil(JSON.parse(response.data.message).length / perPage));
+          setExcelFileData(response.data.message);
+          handlePageChange(1, response.data.message);
+          settotalPages(Math.ceil(response.data.message.length / perPage));
         }
       });
     } catch (err) {
@@ -351,13 +353,46 @@ const ExcelFileUploadPage = () => {
     //setComponent(null);
     setModalTitle(null);
   };
-
+  const fetchFileData = async (excelId, type) => {
+    const response = await fetchFile({ _id: excelId, type: type });
+    if (response.data.success) {
+      const row = response.data.message[0];
+      if (type === "docFile") {
+        ViewDocFile(row.docFile);
+      } else if (type === "initialExcelFile") {
+        viewInitialExcelFile(
+          row?.initialExcelFile,
+          row.name
+            ? row.name
+            : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}`
+        );
+      } else {
+        viewProcessedExcelFile(
+          row.processedExcelFile,
+          row.name
+            ? row.name
+            : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}`
+        );
+      }
+    }
+  };
   return (
     <main class="d-flex justify-content-center align-items-center m-4  ">
       <div className="container ">
         <form
           className="row border border-1 rounded p-4"
-          
           onSubmit={handleSubmit}
         >
           <div className="col-sm-6  mb-4">
@@ -413,7 +448,7 @@ const ExcelFileUploadPage = () => {
                 className="form-control"
                 id="inputGroupFile03"
                 name="docFile"
-                accept=".doc,.docx,.pdf"
+                accept=".doc,.docx"
                 onChange={handleInputChange}
                 disabled={formData.orderType !== "DPM"}
               />
@@ -435,9 +470,7 @@ const ExcelFileUploadPage = () => {
                   formData.orderType === "FARE" || formData.orderType === "DPM"
                 }
               >
-                <option selected disabled>
-                  Select University
-                </option>
+                <option selected="true" style={{display:'none'}}></option>
                 {receivedCollege?.map((college, index) => (
                   <option
                     key={index}
@@ -450,7 +483,9 @@ const ExcelFileUploadPage = () => {
             </div>
           </div>
           {orderTypeRef?.current?.value === "FARE" &&
-           formData.university && formData.university.length>0 && universityItems &&
+            formData.university &&
+            formData.university.length > 0 &&
+            universityItems &&
             universityItems.length === 0 && (
               <div class="col-sm-12">
                 <div class=" col-sm-12">
@@ -583,21 +618,18 @@ const ExcelFileUploadPage = () => {
         </form>
         {isProcessing && <ProcessingLoader />}
 
-        <div
-         
-          className="row mt-3 rounded"
-        >
+        <div className="row mt-3 rounded">
           <div id="table-container" className="col-sm-12 mt-3">
             <table
               style={{
                 width: "100%",
-                fontFamily:'initial',
+                fontFamily: "initial",
                 borderRadius: "5px",
               }}
               class="table table-bordered table-striped border border-1 rounded"
             >
               <thead>
-                <tr >
+                <tr>
                   <th rowspan="2">S.No</th>
                   <th rowspan="2">File Name</th>
                   <th rowspan="2">Created At</th>
@@ -606,20 +638,14 @@ const ExcelFileUploadPage = () => {
                   <th rowspan="2">Doc File</th>
                   {/* <th rowSpan="2">Action</th> */}
                 </tr>
-                <tr >
-                  <th >Size</th>
-                  <th >File Count</th>
-                  <th >View</th>
-                  <th >Size</th>
-                  <th > Dispatched Count</th>
-                  <th >
-                    {" "}
-                    ShipRocket_Delivery Count
-                  </th>
-                  <th>
-                    {" "}
-                    IndianPost_Delivery Count
-                  </th>
+                <tr>
+                  <th>Size</th>
+                  <th>File Count</th>
+                  <th>View</th>
+                  <th>Size</th>
+                  <th> Dispatched Count</th>
+                  <th> ShipRocket_Delivery Count</th>
+                  <th> IndianPost_Delivery Count</th>
                   <th>View</th>
                 </tr>
               </thead>
@@ -656,20 +682,7 @@ const ExcelFileUploadPage = () => {
                       <td>
                         <button
                           onClick={() =>
-                            viewInitialExcelFile(
-                              row.initialExcelFile,
-                              row.name
-                                ? row.name
-                                : `FARE ${new Date(
-                                    row.createdAt
-                                  ).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                  })}`
-                            )
+                            fetchFileData(row._id, "initialExcelFile")
                           }
                           style={{
                             outline: "none",
@@ -677,12 +690,23 @@ const ExcelFileUploadPage = () => {
                             backgroundColor: "white",
                           }}
                         >
-                          
-                          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
-                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"></path><path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"></path>
-                            </svg>
-                           
-                        
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            x="0px"
+                            y="0px"
+                            width="25"
+                            height="25"
+                            viewBox="0 0 48 48"
+                          >
+                            <path
+                              fill="#FFA000"
+                              d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"
+                            ></path>
+                            <path
+                              fill="#FFCA28"
+                              d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"
+                            ></path>
+                          </svg>
                         </button>
                       </td>
                       <td>{row.processedFileSize}</td>
@@ -692,20 +716,7 @@ const ExcelFileUploadPage = () => {
                       <td>
                         <button
                           onClick={() =>
-                            viewProcessedExcelFile(
-                              row.processedExcelFile,
-                              row.name
-                                ? row.name
-                                : `FARE ${new Date(
-                                    row.createdAt
-                                  ).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                  })}`
-                            )
+                            fetchFileData(row._id, "processedExcelFile")
                           }
                           style={{
                             outline: "none",
@@ -713,23 +724,51 @@ const ExcelFileUploadPage = () => {
                             backgroundColor: "white",
                           }}
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
-                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"></path><path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"></path>
-                            </svg>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            x="0px"
+                            y="0px"
+                            width="25"
+                            height="25"
+                            viewBox="0 0 48 48"
+                          >
+                            <path
+                              fill="#FFA000"
+                              d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"
+                            ></path>
+                            <path
+                              fill="#FFCA28"
+                              d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"
+                            ></path>
+                          </svg>
                         </button>
                       </td>
                       <td>
-                        {row.docFile && (
+                        {row.isDocPresent && (
                           <button
-                            onClick={() => ViewDocFile(row.docFile)}
+                            onClick={() => fetchFileData(row._id, "docFile")}
                             style={{
                               outline: "none",
                               border: "none",
                               backgroundColor: "white",
                             }}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
-                            <path fill="#FFA000" d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"></path><path fill="#FFCA28" d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"></path>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              x="0px"
+                              y="0px"
+                              width="25"
+                              height="25"
+                              viewBox="0 0 48 48"
+                            >
+                              <path
+                                fill="#FFA000"
+                                d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"
+                              ></path>
+                              <path
+                                fill="#FFCA28"
+                                d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"
+                              ></path>
                             </svg>
                           </button>
                         )}

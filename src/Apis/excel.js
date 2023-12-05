@@ -58,3 +58,17 @@ export const deliveryExcelFile = async (data) => {
     return response;
   } catch (err) {}
 };
+export const fetchFile=async(data)=>{
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/file/getFile`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (err) {}
+}
