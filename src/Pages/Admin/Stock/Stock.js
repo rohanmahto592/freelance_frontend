@@ -271,7 +271,7 @@ const Stock = () => {
             role="tabpanel"
             aria-labelledby="tab-4"
           >
-            <form ref={addItemRef} className="form-style">
+            <form ref={addItemRef} className="form-style" onSubmit={AddItemSubmit}>
               <div className="container ">
                 <div className="row">
                   <div className="col-sm-6 my-2 ">
@@ -326,7 +326,6 @@ const Stock = () => {
                     <button
                       type="submit"
                       className="btn btn-primary w-100"
-                      onClick={AddItemSubmit}
                     >
                       Submit
                     </button>
