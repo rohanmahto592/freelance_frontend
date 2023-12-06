@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../Apis/auth";
 import Toast from "../Components/Toast";
@@ -15,6 +15,14 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
+  useEffect(()=>{
+    const loginData=localStorage.getItem("loginFormData");
+    if(loginData)
+    {
+      setFormData(JSON.parse(loginData))
+    }
+
+  },[])
 
   const setShowToast = () => {
     setToast(!showToast);
@@ -41,6 +49,7 @@ const LoginPage = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
+      localStorage.removeItem("loginFormData");
       setTimeout(()=>{
         navigate(redirect);
       },2000)
@@ -54,7 +63,11 @@ const LoginPage = () => {
   const handleInputChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => {
+      const updatedFormData = { ...prev, [name]: value };
+      localStorage.setItem("loginFormData", JSON.stringify(updatedFormData));
+      return updatedFormData; // Return the updated state
+    });
   };
   return (
     <div class="container">

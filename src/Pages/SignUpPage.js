@@ -30,6 +30,10 @@ const SignUpPage = () => {
         setIsError(true);
       }
     });
+    const storedData = localStorage.getItem('signUpformData');
+    if (storedData) {
+      setFormData(JSON.parse(storedData));
+    }
   }, []);
   const navigate = useNavigate();
   const setShowToast = () => {
@@ -56,6 +60,7 @@ const SignUpPage = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
+      localStorage.removeItem("signUpformData")
       setTimeout(()=>{
         navigate("/login");
       },2000)
@@ -73,7 +78,11 @@ const SignUpPage = () => {
     if (name === "password") {
       setPasswordError(validatePassword(value));
     }
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => {
+      const updatedFormData = { ...prev, [name]: value };
+      localStorage.setItem("signUpformData", JSON.stringify(updatedFormData));
+      return updatedFormData; // Return the updated state
+    });
   };
 
   return (
