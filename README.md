@@ -1,8 +1,9 @@
 # Glimpse
   ## Features
-  1. **Comprehensive Inventory Management System:**
+1. **Comprehensive Inventory Management System:**
    - Facilitates Indian and international order placements with three distinct types: ADMIT/DEPOST, FARE, DPM.
-   - Implements data preprocessing for Excel files, including cleaning, filtering, and location-based mapping via Google API. It seamlessly integrates with various shipment services like Shiprocket, Indian Post, etc.
+   - Implements data preprocessing for Excel files, including cleaning, filtering, and location-based mapping via Google API. It seamlessly integrates with various shipment services like Shiprocket, Indian Post, 
+      etc.
    - Incorporates validation checks for email, phone number, address, pincode, and city for both national and international orders to ensure accuracy and consistency.
    - Manages transactions to handle data inconsistencies and includes a rate limiter mechanism to prevent excessive API hits.
 
