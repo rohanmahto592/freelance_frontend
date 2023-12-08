@@ -3,6 +3,7 @@ import EditItemModalComponent from "../../Components/Modal/EditItemModalComponen
 import College from "../../Components/AddCollege/College";
 import ExcelHeaders from "../ExcelHeaders/ExcelHeaders";
 import Countries from "../nonServicableCountries/Countries";
+import CustomizeEmail from "../../Components/CustomizeEmail";
 const Popup = () => {
   const [itemShowModal, setItemShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
@@ -20,6 +21,11 @@ const Popup = () => {
     {
       setComponent(<Countries/>);
       setModalTitle("Add Non Servicable Countries")
+    }
+    else if(item==='customizeEmail')
+    {
+      setComponent(<CustomizeEmail/>);
+      setModalTitle("Customize Emails")
     }
     setItemShowModal(true);
   };
@@ -61,6 +67,12 @@ const Popup = () => {
             onClick={() => handleOpenModal("nonServicableCountries")}
           >
            Non Servicable Countries
+          </button>
+          <button
+            className="btn btn-outline-primary mt-3"
+            onClick={() => handleOpenModal("customizeEmail")}
+          >
+           Customize Emails
           </button>
         </div>
       </div>

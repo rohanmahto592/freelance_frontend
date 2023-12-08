@@ -237,3 +237,41 @@ export const fetchAllUsers=async()=>{
   );
   return response;
 };
+export const fetchUserEmails=async(type)=>{
+  const response=await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/getUserEmails`,
+    {
+      params:{type},
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+
+}
+export const addUserEmail=async(userData)=>{
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/admin/addUserEmail`,
+    { userData },
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+
+}
+export const deleteUserEmail=async(id)=>{
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/admin/deleteUserEmail`,
+    { id },
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+}
