@@ -6,14 +6,16 @@ const Order = () => {
   const type = sessionStorage.getItem("userType");
   const [userType, setUserType] = useState("");
   const [excelSheetInfo, setExcelSheetInfo] = useState(null);
-  // const [userId, setuserId] = useState(0);
+  const [selectedUserId, setselectedUserId] = useState(-1);
   const [users, setUsers] = useState(null);
   const [UserInfo, setUserInfo] = useState(null);
   useEffect(() => {
     setUserType(type);
   }, [type]);
   const fetchExcelSheetData = async (event, id) => {
+
     event.preventDefault();
+    setselectedUserId(id);
     const response = await fetchExcelSheet(id);
     setExcelSheetInfo(response.data.message);
   };
@@ -71,10 +73,15 @@ const Order = () => {
             <div style={{ maxHeight: "400px", overflow: "auto" }}>
               <ul class="list-group list-group mb-2">
                 {users?.map((user, index) => (
-                  <div class="col-sm-12">
+                  <div class="col-sm-12 mb-2">
                     <div
                       onClick={(event) => fetchExcelSheetData(event, user?._id)}
                       class="card"
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: user._id === selectedUserId ? "slateblue" : "white",
+                        color:user._id === selectedUserId ? "white" : "black"
+                      }}
                     >
                       <div class="card-content">
                         <div class="card-body">
