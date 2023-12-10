@@ -45,12 +45,10 @@ const OrderTable = (props) => {
         </div>
       ) : (
         <>
-        <div style={{margin:'auto',position:'sticky'}} className="col-sm-6">
-          <input onChange={(event)=>setSearchValue(event.target.value)} placeholder="Search on any column" className="form-control mt-2 mb-4"/>
+        <div style={{position:'sticky'}} className="col-sm-12">
+          <input  onChange={(event)=>setSearchValue(event.target.value)} placeholder="Search on the given data" className="form-control mt-2 mb-4"/>
           </div>
         <div style={{ maxHeight: "400px", overflowY: "auto" }}>
-          
-         
           <table className="table table-striped table-bordered">
             <thead>
               <tr>

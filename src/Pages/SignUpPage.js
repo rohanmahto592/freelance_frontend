@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import signUpIcon from "../Assets/Images/iconsignup.png";
 import { validatePassword } from "../Utils/passwordHelper";
 import { signup } from "../Apis/auth";
 import { useNavigate } from "react-router-dom";
@@ -47,7 +46,6 @@ const SignUpPage = () => {
     }
 
     const response = await signup(formData);
-    console.log(response);
     if (response.data.success) {
       setFormData({
         firstName: "",
@@ -63,7 +61,7 @@ const SignUpPage = () => {
       localStorage.removeItem("signUpformData")
       setTimeout(()=>{
         navigate("/login");
-      },2000)
+      },1500)
 
     } else {
       setApiError(response.data.message);

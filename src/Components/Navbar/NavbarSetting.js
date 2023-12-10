@@ -13,36 +13,36 @@ export const navConfig = {
   ],
   USER: [
     {
-      title: "Place Order",
+      title: "RequestOrder",
       link: "/user/uploadfile",
       class:'bi bi-arrow-90deg-right'
     },
     {
-      title: "My Order",
+      title: "OrderInfo",
       link: "/user/order",
       class:'bi bi-activity'
     },
   ],
   SELF: [
     {
-      title: "Place Order",
+      title: "RequestOrder",
       link: "/user/uploadfile",
       class:'bi bi-arrow-90deg-right'
     },
     {
-      title: "My Order",
+      title: "OrderInfo",
       link: "/user/order",
       class:'bi bi-activity'
     },
   ],
   UNIVERSITY: [
     {
-      title: "Place Order",
+      title: "RequestOrder",
       link: "/user/uploadfile",
       class:'bi bi-arrow-90deg-right'
     },
     {
-      title: "My Order",
+      title: "OrderInfo",
       link: "/user/order",
       class:'bi bi-activity'
     },

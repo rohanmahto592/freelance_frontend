@@ -17,7 +17,7 @@ const Navbar = () => {
   };
   return (
     <div>
-      <nav class="navbar navbar-expand-lg bg-light navbar-light no-gutters shadow-sm ">
+      <nav className="navbar navbar-expand-lg bg-light navbar-light no-gutters shadow-sm ">
         <div class="container-fluid">
           <div
             style={{ width: "150px", height: "80px" }}
@@ -26,7 +26,7 @@ const Navbar = () => {
             <img width={"100%"} height={"100%"} src={logo} alt="logo" />
           </div>
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -34,12 +34,11 @@ const Navbar = () => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
           <div
-            class="navbar-collapse  collapse"
+            className="collapse navbar-collapse"
             id="navbarSupportedContent"
-            role="navigation"
           >
             <ul style={{ fontFamily: "monospace" }} class="navbar-nav ms-auto">
               <button
@@ -49,7 +48,7 @@ const Navbar = () => {
                 onClick={() => navigate("/")}
               >
                 Home
-                <i style={{ marginLeft: "5px" }} class="bi bi-house"></i>
+                
               </button>
               {navHeaders?.map((navItem) => (
                 <button
@@ -59,7 +58,7 @@ const Navbar = () => {
                   onClick={() => navigate(navItem.link)}
                 >
                   {navItem.title}
-                  <i style={{ marginLeft: "5px" }} class={navItem?.class}></i>
+                 
                 </button>
               ))}
 
@@ -70,10 +69,7 @@ const Navbar = () => {
                 onClick={() => navigate("/contactus")}
               >
                 Contact
-                <i
-                  style={{ marginLeft: "5px" }}
-                  class="bi bi-person-bounding-box"
-                ></i>
+               
               </button>
 
               <button
@@ -82,11 +78,8 @@ const Navbar = () => {
                 class=" btn btn-link text-decoration-none"
                 onClick={() => navigate("/about")}
               >
-                About Us
-                <i
-                  style={{ marginLeft: "5px" }}
-                  class="bi bi-person-lines-fill"
-                ></i>
+                AboutUs
+               
               </button>
               {!isLoggedIn && (
                 <>
@@ -97,10 +90,7 @@ const Navbar = () => {
                     onClick={() => navigate("/login")}
                   >
                     Login
-                    <i
-                      style={{ marginLeft: "5px" }}
-                      class="bi bi-box-arrow-in-left"
-                    ></i>
+                   
                   </button>
                 </>
               )}
@@ -113,10 +103,7 @@ const Navbar = () => {
                     onClick={() => logout()}
                   >
                     Logout
-                    <i
-                      style={{ marginLeft: "5px" }}
-                      class="bi bi-box-arrow-in-left"
-                    ></i>
+                    
                   </button>
                   
                 </>

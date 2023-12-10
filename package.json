@@ -13,6 +13,7 @@
     "react-bootstrap": "^2.8.0",
     "react-card-slider-component": "^1.0.9",
     "react-dom": "^18.2.0",
+    "react-idle-timer": "^5.7.2",
     "react-loader-spinner": "^5.3.4",
     "react-router-dom": "^6.14.0",
     "react-scripts": "5.0.1",

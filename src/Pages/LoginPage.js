@@ -52,7 +52,7 @@ const LoginPage = () => {
       localStorage.removeItem("loginFormData");
       setTimeout(()=>{
         navigate(redirect);
-      },2000)
+      },1500)
     } else {
       setApiError(response.data.message);
       setShowToast(true);
