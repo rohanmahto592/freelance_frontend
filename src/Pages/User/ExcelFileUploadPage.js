@@ -541,7 +541,7 @@ const ExcelFileUploadPage = () => {
                   style={{ marginTop: "auto", marginBottom: "24px" }}
                 >
                   <input
-                    style={{ background: "#000A99" }}
+                    
                     className="form-control btn btn-primary"
                     type="button"
                     onClick={addItem}
@@ -623,30 +623,31 @@ const ExcelFileUploadPage = () => {
             <table
               style={{
                 width: "100%",
-                fontFamily: "initial",
+                fontFamily:'sans-serif',
+                letterSpacing:'1px',
                 borderRadius: "5px",
               }}
               class="table table-bordered table-striped border border-1 rounded"
             >
-              <thead>
+              <thead >
                 <tr>
-                  <th rowspan="2">S.No</th>
-                  <th rowspan="2">File Name</th>
-                  <th rowspan="2">Created At</th>
-                  <th colspan="3">Initial File</th>
-                  <th colspan="5">Processed File</th>
-                  <th rowspan="2">Doc File</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}} rowspan="2">S.No</th>
+                  <th style={{backgroundColor:'#5B7CFD ',color:'#E9F8FD'}} rowspan="2">File Name</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}} rowspan="2">Created At</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}colspan="3">Initial File</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}colspan="5">Processed File</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}} rowspan="2">Doc File</th>
                   {/* <th rowSpan="2">Action</th> */}
                 </tr>
                 <tr>
-                  <th>Size</th>
-                  <th>File Count</th>
-                  <th>View</th>
-                  <th>Size</th>
-                  <th> Dispatched Count</th>
-                  <th> ShipRocket_Delivery Count</th>
-                  <th> IndianPost_Delivery Count</th>
-                  <th>View</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>Size</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>File Count</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>View</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>Size</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}> Dispatched Count</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}> ShipRocket_Delivery Count</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}> IndianPost_Delivery Count</th>
+                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>View</th>
                 </tr>
               </thead>
               <tbody>
@@ -687,7 +688,7 @@ const ExcelFileUploadPage = () => {
                           style={{
                             outline: "none",
                             border: "none",
-                            backgroundColor: "white",
+                            backgroundColor: "#E9F8FD",
                           }}
                         >
                           <svg
@@ -721,7 +722,7 @@ const ExcelFileUploadPage = () => {
                           style={{
                             outline: "none",
                             border: "none",
-                            backgroundColor: "white",
+                            backgroundColor: "#E9F8FD",
                           }}
                         >
                           <svg
@@ -750,7 +751,7 @@ const ExcelFileUploadPage = () => {
                             style={{
                               outline: "none",
                               border: "none",
-                              backgroundColor: "white",
+                              backgroundColor: "#E9F8FD",
                             }}
                           >
                             <svg
@@ -802,11 +803,11 @@ const ExcelFileUploadPage = () => {
                 style={{
                   fontFamily: "comic sans ms",
                   padding: "1px 10px",
-                  color: "slateblue",
+                  color: "",
                   borderRadius: "5px",
                   border: "2px solid slateblue",
                   margin: "5px",
-                  backgroundColor: "white",
+                  backgroundColor:'white'
                 }}
                 key={page}
                 onClick={() => handlePageChange(page)}

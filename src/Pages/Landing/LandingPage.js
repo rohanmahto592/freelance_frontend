@@ -6,7 +6,8 @@ import instagram from "../../Assets/Images/instagram.png";
 import facebook from "../../Assets/Images/facebook.png";
 import twitter from "../../Assets/Images/twitter.png";
 import { createFeedback, getAllFeedbacks } from "../../Apis/feedback";
-import Toast from "../../Components/Toast";
+import ScrollAnimation from 'react-animate-on-scroll';
+import "animate.css/animate.min.css";
 import "./landingPage.css";
 import CardSlider from "../../Components/CardSlider/CardSlider";
 import { Link, useNavigate } from "react-router-dom";
@@ -110,6 +111,7 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
+        <ScrollAnimation animateIn="fadeIn">
         <div className="row m-2">
           <div className="col-sm-12">
             <p style={{ textAlign: "center" }} className="heading2-text fs-1">
@@ -148,6 +150,8 @@ const LandingPage = () => {
             </div>
           ))}
         </div>
+        </ScrollAnimation>
+        <ScrollAnimation animateIn="fadeIn" duration={3} >
         <div className="row m-2">
           <div className="col-sm-12">
             <p style={{ textAlign: "center" }} className="heading2-text fs-1">
@@ -187,6 +191,7 @@ const LandingPage = () => {
             </div>
           ))}
         </div>
+        </ScrollAnimation>
       </div>
       {feedbacks && feedbacks.length > 0 && (
         <div style={{ width: "90%", margin: "auto", padding: "12px 0px" }}>
