@@ -92,6 +92,15 @@ const Navbar = () => {
                     Login
                    
                   </button>
+                  <button
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse.show"
+                    class=" btn btn-link text-decoration-none"
+                    onClick={() => navigate("/signup")}
+                  >
+                    Register
+                   
+                  </button>
                 </>
               )}
               {isLoggedIn && (
