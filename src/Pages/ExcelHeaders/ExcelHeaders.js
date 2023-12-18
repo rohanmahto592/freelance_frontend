@@ -15,7 +15,7 @@ const ExcelHeaders = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [orderType, setOrderType] = useState(null);
+  const [orderType, setOrderType] = useState('FARE');
   const [isHeaderAdded, setHeaderAdded] = useState(false);
   useEffect(() => {
     fetchHeaders(orderType ? orderType : "FARE");
