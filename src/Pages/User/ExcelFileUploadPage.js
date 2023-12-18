@@ -13,12 +13,9 @@ import {
 } from "../../Utils/excelFileUploadHelper";
 import ProcessingLoader from "../../Components/ProcessingLoader/ProcessingLoader";
 import "../../css/ExcelFile.css";
-import folder from "../../Assets/Images/folder.png";
 import Toast from "../../Components/Toast";
-import docIcon from "../../Assets/Images/doc.png";
 import { fetchColleges, fetchItems } from "../../Apis/adminDashboard";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
-import { Alert } from "react-bootstrap";
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",

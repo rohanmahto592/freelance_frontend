@@ -11,6 +11,7 @@ const SignUpPage = () => {
   const [showToast, setToast] = useState(false);
   const [receivedCollege, setReceivedCollege] = useState(null);
   const [isError, setIsError] = useState(false);
+  const [isSignUpProgress, setSignUpProgress] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -29,7 +30,7 @@ const SignUpPage = () => {
         setIsError(true);
       }
     });
-    const storedData = localStorage.getItem('signUpformData');
+    const storedData = localStorage.getItem("signUpformData");
     if (storedData) {
       setFormData(JSON.parse(storedData));
     }
@@ -40,13 +41,16 @@ const SignUpPage = () => {
   };
 
   const handleSignup = async (event) => {
+
     event.preventDefault();
+    setSignUpProgress(true);
     if (formData.userType === "UNIVERSITY" && !formData.universityName) {
       return;
     }
 
     const response = await signup(formData);
     if (response.data.success) {
+      setSignUpProgress(false);
       setFormData({
         firstName: "",
         lastName: "",
@@ -58,12 +62,12 @@ const SignUpPage = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
-      localStorage.removeItem("signUpformData")
-      setTimeout(()=>{
+      localStorage.removeItem("signUpformData");
+      setTimeout(() => {
         navigate("/login");
-      },1500)
-
+      }, 1500);
     } else {
+      setSignUpProgress(false);
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(true);
@@ -165,7 +169,11 @@ const SignUpPage = () => {
                       class="form-select"
                       aria-label="Select your university"
                       name="universityName"
-                      value={formData.userType==='SELF'? "": formData.universityName}
+                      value={
+                        formData.userType === "SELF"
+                          ? ""
+                          : formData.universityName
+                      }
                       onChange={handleInputChange}
                       disabled={formData.userType === "SELF"}
                       required={formData.userType === "UNIVERSITY"}
@@ -224,19 +232,39 @@ const SignUpPage = () => {
               </div>
               <div className="row my-2">
                 <div style={{ margin: "auto" }} className="col-sm-6 ">
-                  <input
-                    style={{ background: "#000A99" }}
-                    className="form-control btn btn-primary"
-                    type="submit"
-                  />
+                  {!isSignUpProgress ? (
+                    <input
+                      style={{ background: "#000A99" }}
+                      className="form-control btn btn-primary"
+                      type="submit"
+                    />
+                  ) : (
+                    <button style={{ background: "#000A99",width:'100%' }} class="form-control btn btn-primary" type="button" disabled>
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Registering...
+                    </button>
+                  )}
                 </div>
               </div>
             </form>
-            <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center'}} class="pt-4 text-center ">
-            <p style={{fontFamily:'sans-serif',letterSpacing:'1px'}}>Already have an account? </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              class="pt-4 text-center "
+            >
+              <p style={{ fontFamily: "sans-serif", letterSpacing: "1px" }}>
+                Already have an account?{" "}
+              </p>
               <button
-              style={{ background: "#000A99",marginTop: "-15px" }}
-               
+                style={{ background: "#000A99", marginTop: "-15px" }}
                 className=" btn btn-primary"
                 onClick={() => navigate("/login")}
               >
