@@ -381,8 +381,8 @@ const ExcelFileUploadPage = () => {
   return (
     <>
     <div className="d-flex justify-content-center align-items-center m-4 flex-wrap">
-    <a href={admitDepositFileDummy} class="btn btn-link">Admit/Deposit Dummy ExcelSheet <i style={{paddingLeft:'5px',color:'orange'}} class="bi bi-download"></i></a>
-    <a href={DPMdummy} class="btn btn-link"> DirectPrintMail Dummy ExcelSheet <i style={{paddingLeft:'5px',color:'orange'}} class="bi bi-download"></i></a>
+    <a href={admitDepositFileDummy} class="btn btn-link">Admit/Deposit Template ExcelSheet <i style={{paddingLeft:'5px',color:'orange'}} class="bi bi-download"></i></a>
+    <a href={DPMdummy} class="btn btn-link"> DirectPrintMail Template ExcelSheet <i style={{paddingLeft:'5px',color:'orange'}} class="bi bi-download"></i></a>
     </div>
     <main class="d-flex justify-content-center align-items-center m-4 ">
       <div className="container ">
