@@ -19,9 +19,22 @@ const Countries = () => {
       setCountryList(response.data.message);
     });
   }, [isError,isCountryDeleted,isCountryAdded]);
+  function checkCountryAlreadyInList(country){
+    return countryList.some((Country) => Country.name.toLowerCase().trim() === country.toLowerCase().trim());
+  }
   const handleCountrySubmit = async (event) => {
     event.preventDefault();
     if (!country) {
+      return;
+    }
+    if(checkCountryAlreadyInList(country))
+    {
+      setApiError(
+        `${country} is already present in the Country List`
+      );
+      setToast(true);
+      setIsError(true);
+
       return;
     }
     const response = await nonServicableCountries(country);
@@ -29,7 +42,7 @@ const Countries = () => {
     setToast(true);
     if(response.data.success)
     {
-      setIsCountryAdded(true);
+      setIsCountryAdded(!isCountryAdded);
     }
     response?.data?.success ? setIsError(false) : setIsError(true);
   };
@@ -41,7 +54,7 @@ const Countries = () => {
     setToast(true);
     if(response.data.success)
     {
-      setCountryDeleted(true);
+      setCountryDeleted(!isCountryDeleted);
     }
     response?.data?.success ? setIsError(false) : setIsError(true);
   };

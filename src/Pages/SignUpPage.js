@@ -178,9 +178,10 @@ const SignUpPage = () => {
                       disabled={formData.userType === "SELF"}
                       required={formData.userType === "UNIVERSITY"}
                     >
-                      <option selected>Select university</option>
+                      <option>Select university</option>
                       {receivedCollege?.map((college, index) => (
                         <option
+                          selected={index===1}
                           key={index}
                           value={college.Name + ", " + college.Address}
                         >

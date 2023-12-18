@@ -143,6 +143,8 @@ const Stock = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
+      fetchAllStockItems();
+      setShowModal(false);
     } else {
       setApiError(response.data.message);
       setShowToast(true);

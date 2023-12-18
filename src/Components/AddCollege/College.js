@@ -50,7 +50,7 @@ const College = () => {
     }
     const response = await addColleges(college,address);
     if (response.data.success) {
-      setCollegeAdded(true);
+      setCollegeAdded(!isCollegeAdded);
     }
     setApiError(response.data.message);
     setShowToast(true);
@@ -74,7 +74,7 @@ const College = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
-      setCollegeDeleted(true);
+      setCollegeDeleted(!isCollegeDeleted);
     } else {
       setApiError(response.data.message);
       setShowToast(true);

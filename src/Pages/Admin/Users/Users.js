@@ -18,6 +18,7 @@ const Users = () => {
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [activeTab, setActiveTab] = useState("tabs-1");
+  const[userDeleted,setUserDeleted]=useState(false);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const Users = () => {
         setNonVerifiedUsers(response.data.message);
       });
     }
-  }, [activeTab]);
+  }, [activeTab,userDeleted]);
   const handleOpenModal = (userId) => {
     setUserId(userId);
     setShowModal(true);
@@ -70,6 +71,7 @@ const Users = () => {
         setApiError(response.data.message);
         setShowToast(true);
         setIsError(false);
+        setUserDeleted(!userDeleted);
       } else {
         setApiError(response.data.message);
         setShowToast(true);
@@ -135,6 +137,7 @@ const Users = () => {
                   <th>Last Name</th>
                   <th>Email</th>
                   <th>User Type</th>
+                  <th>University Name</th>
                   <th>Verified</th>
                   <th>Action</th>
                 </tr>
@@ -146,6 +149,7 @@ const Users = () => {
                     <td>{user?.lastName}</td>
                     <td>{user?.email}</td>
                     <td>{user?.userType}</td>
+                    <td>{user?.universityName||'NULL'}</td>
                     <td>
                       <img
                         style={{ width: "3vh", height: "3vh" }}
@@ -180,6 +184,7 @@ const Users = () => {
                   <th>Last Name</th>
                   <th>Email</th>
                   <th>User Type</th>
+                  <th>University Name</th>
                   <th>Verified</th>
                   <th>Action</th>
                 </tr>
@@ -191,6 +196,7 @@ const Users = () => {
                     <td>{user?.lastName}</td>
                     <td>{user?.email}</td>
                     <td>{user?.userType}</td>
+                    <td>{user.universityName||'NULL'}</td>
                     <td>
                       <img
                         style={{ width: "3vh", height: "3vh" }}
