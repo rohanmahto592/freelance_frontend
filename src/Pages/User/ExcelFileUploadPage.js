@@ -16,6 +16,8 @@ import "../../css/ExcelFile.css";
 import Toast from "../../Components/Toast";
 import { fetchColleges, fetchItems } from "../../Apis/adminDashboard";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
+import admitDepositFileDummy from '../../SampleExcelFiles/Admit-Deposit Dummy ExcelSheet.xlsx'
+import DPMdummy from '../../SampleExcelFiles/DPM Dummy ExcelSheet.xlsx'
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
@@ -47,7 +49,6 @@ const ExcelFileUploadPage = () => {
   const [component, setComponent] = useState(null);
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
-    console.log(universityName);
     const response = university.filter((name) => {
       const Name = name.Name + ", " + name.Address;
       if (Name === universityName) {
@@ -81,7 +82,6 @@ const ExcelFileUploadPage = () => {
   useEffect(() => {
     try {
       getExcelFile().then((response) => {
-        console.log(response);
         if (!response.data.success) {
           setApiError(response.data.message);
           setShowToast(true);
@@ -220,7 +220,6 @@ const ExcelFileUploadPage = () => {
     }
     setProcessing(true);
     const response = await uploadExcelFile(form);
-    console.log(response);
     if (!response.data.success) {
       setApiError(response.data.message);
       setShowToast(true);
@@ -277,16 +276,11 @@ const ExcelFileUploadPage = () => {
   }
 
   const renderItemsForUniversity = (university) => {
-    console.log(university);
     const uniItems = items.filter((item) => item.university === university);
     setUniversityItems(uniItems);
   };
 
   const addItem = () => {
-    // const itemWithUni = `${formData.currentItem} (${
-    //   formData.university.split(",")[0]
-    // })`;
-    console.log(formData);
     if (!formData.currentItem || !formData.currentItemQuantity) return;
 
     const isQuantityAboveStockLimit = universityItems.filter((item) => {
@@ -347,7 +341,6 @@ const ExcelFileUploadPage = () => {
   };
   const closeModal = () => {
     setShowModal(false);
-    //setComponent(null);
     setModalTitle(null);
   };
   const fetchFileData = async (excelId, type) => {
@@ -386,8 +379,14 @@ const ExcelFileUploadPage = () => {
     }
   };
   return (
-    <main class="d-flex justify-content-center align-items-center m-4  ">
+    <>
+    <div className="d-flex justify-content-center align-items-center m-4 flex-wrap">
+    <a href={admitDepositFileDummy} class="btn btn-link">Admit/Deposit Dummy ExcelSheet <i style={{paddingLeft:'5px',color:'orange'}} class="bi bi-download"></i></a>
+    <a href={DPMdummy} class="btn btn-link"> DirectPrintMail Dummy ExcelSheet <i style={{paddingLeft:'5px',color:'orange'}} class="bi bi-download"></i></a>
+    </div>
+    <main class="d-flex justify-content-center align-items-center m-4 ">
       <div className="container ">
+
         <form
           className="row border border-1 rounded p-4"
           onSubmit={handleSubmit}
@@ -460,14 +459,18 @@ const ExcelFileUploadPage = () => {
                 disabled={formData.orderType === "ADMIT/DEPOSIT"}
                 class="form-select"
                 aria-label="Select university"
-                value={formData.orderType === "ADMIT/DEPOSIT"?"":formData.university}
+                value={
+                  formData.orderType === "ADMIT/DEPOSIT"
+                    ? ""
+                    : formData.university
+                }
                 name="university"
                 onChange={handleInputChange}
                 required={
                   formData.orderType === "FARE" || formData.orderType === "DPM"
                 }
               >
-                <option selected="true" style={{display:'none'}}></option>
+                <option selected="true" style={{ display: "none" }}></option>
                 {receivedCollege?.map((college, index) => (
                   <option
                     key={index}
@@ -538,7 +541,6 @@ const ExcelFileUploadPage = () => {
                   style={{ marginTop: "auto", marginBottom: "24px" }}
                 >
                   <input
-                    
                     className="form-control btn btn-primary"
                     type="button"
                     onClick={addItem}
@@ -620,31 +622,80 @@ const ExcelFileUploadPage = () => {
             <table
               style={{
                 width: "100%",
-                fontFamily:'sans-serif',
-                letterSpacing:'1px',
+                fontFamily: "sans-serif",
+                letterSpacing: "1px",
                 borderRadius: "5px",
               }}
               class="table table-bordered table-striped border border-1 rounded"
             >
-              <thead >
+              <thead>
                 <tr>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}} rowspan="2">S.No</th>
-                  <th style={{backgroundColor:'#5B7CFD ',color:'#E9F8FD'}} rowspan="2">File Name</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}} rowspan="2">Created At</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}colspan="3">Initial File</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}colspan="5">Processed File</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}} rowspan="2">Doc File</th>
+                  <th
+                    style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}
+                    rowspan="2"
+                  >
+                    S.No
+                  </th>
+                  <th
+                    style={{ backgroundColor: "#5B7CFD ", color: "#E9F8FD" }}
+                    rowspan="2"
+                  >
+                    File Name
+                  </th>
+                  <th
+                    style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}
+                    rowspan="2"
+                  >
+                    Created At
+                  </th>
+                  <th
+                    style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}
+                    colspan="3"
+                  >
+                    Initial File
+                  </th>
+                  <th
+                    style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}
+                    colspan="5"
+                  >
+                    Processed File
+                  </th>
+                  <th
+                    style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}
+                    rowspan="2"
+                  >
+                    Doc File
+                  </th>
                   {/* <th rowSpan="2">Action</th> */}
                 </tr>
                 <tr>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>Size</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>File Count</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>View</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>Size</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}> Dispatched Count</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}> ShipRocket_Delivery Count</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}> IndianPost_Delivery Count</th>
-                  <th style={{backgroundColor:'#5B7CFD',color:'#E9F8FD'}}>View</th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    Size
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    File Count
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    View
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    Size
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    {" "}
+                    Dispatched Count
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    {" "}
+                    ShipRocket_Delivery Count
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    {" "}
+                    IndianPost_Delivery Count
+                  </th>
+                  <th style={{ backgroundColor: "#5B7CFD", color: "#E9F8FD" }}>
+                    View
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -804,7 +855,7 @@ const ExcelFileUploadPage = () => {
                   borderRadius: "5px",
                   border: "2px solid slateblue",
                   margin: "5px",
-                  backgroundColor:'white'
+                  backgroundColor: "white",
                 }}
                 key={page}
                 onClick={() => handlePageChange(page)}
@@ -831,6 +882,7 @@ const ExcelFileUploadPage = () => {
         itemTitle={modalTitle}
       />
     </main>
+    </>
   );
 };
 
