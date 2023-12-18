@@ -175,13 +175,13 @@ const SignUpPage = () => {
                           : formData.universityName
                       }
                       onChange={handleInputChange}
-                      disabled={formData.userType === "SELF"}
-                      required={formData.userType === "UNIVERSITY"}
+                      disabled={formData.userType === "SELF"?true:false}
+                      required={formData.userType === "UNIVERSITY"?true:false}
                     >
-                      <option>Select university</option>
+                      <option  disabled={formData.userType!== "SELF"} >Select university</option>
                       {receivedCollege?.map((college, index) => (
                         <option
-                          selected={index===1}
+                          selected={index===0}
                           key={index}
                           value={college.Name + ", " + college.Address}
                         >

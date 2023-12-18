@@ -470,9 +470,10 @@ const ExcelFileUploadPage = () => {
                   formData.orderType === "FARE" || formData.orderType === "DPM"
                 }
               >
-                <option selected="true" style={{ display: "none" }}></option>
+                <option disabled={formData.orderType === "FARE" || formData.orderType === "DPM"?true:false}>Please select university</option>
                 {receivedCollege?.map((college, index) => (
                   <option
+                    selected={index===0}
                     key={index}
                     value={college.Name + ", " + college.Address}
                   >
