@@ -58,7 +58,7 @@ export const deliveryExcelFile = async (data) => {
     return response;
   } catch (err) {}
 };
-export const fetchFile=async(data)=>{
+export const fetchFile = async (data) => {
   try {
     const response = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/file/getFile`,
@@ -71,4 +71,23 @@ export const fetchFile=async(data)=>{
     );
     return response;
   } catch (err) {}
-}
+};
+export const fetchFileStatus = async (id) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/file/getFileStatus`,
+      { id }
+    );
+    return response;
+  } catch (err) {}
+};
+
+export const deleteUnProcessedFile = async (id) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/file/deleteIdealFile`,
+      { id }
+    );
+    return response;
+  } catch (err) {}
+};
