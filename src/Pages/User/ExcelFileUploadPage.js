@@ -30,6 +30,7 @@ const ExcelFileUploadPage = () => {
     currentItem: null,
     currentItemId: null,
   });
+  const fileId = localStorage.getItem("fileId");
   const [excelFileData, setExcelFileData] = useState(null);
   const [isProcessing, setProcessing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,6 +52,7 @@ const ExcelFileUploadPage = () => {
   const [component, setComponent] = useState(null);
   const [isProcessed, setIsProcessed] = useState(false);
   const [isProcessedAlert, setIsProcessedAlert] = useState(false);
+  const [isApiCallDone, setApiCall] = useState(fileId ? false : true);
   const intervalIdRef = useRef(null);
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
@@ -210,6 +212,7 @@ const ExcelFileUploadPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setApiCall(false);
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
     const form = new FormData();
@@ -230,6 +233,7 @@ const ExcelFileUploadPage = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setProcessing(false);
+      setApiCall(true);
       setIsError(true);
       if (response.data.headerInvalid) {
         setShowModal(true);
@@ -263,6 +267,7 @@ const ExcelFileUploadPage = () => {
   function fetchFileStatus() {
     setTimeout(() => {
       if (intervalIdRef.current) {
+        setApiCall(false);
         clearInterval(intervalIdRef.current);
       }
       const fileId = localStorage.getItem("fileId");
@@ -277,7 +282,8 @@ const ExcelFileUploadPage = () => {
           if (res.data.isProcessed) {
             localStorage.clear("fileId");
             clearInterval(intervalIdRef.current);
-            setIsProcessed(!isProcessed);
+            setIsProcessed(isProcessed);
+            setApiCall(false);
             setIsProcessedAlert(true);
             setApiError(res.data.message);
             setShowToast(true);
@@ -674,7 +680,7 @@ const ExcelFileUploadPage = () => {
                   className="form-control btn btn-primary"
                   type="submit"
                   value="Upload"
-                  disabled={isProcessing}
+                  disabled={!isApiCallDone}
                 />
               </div>
             </div>
