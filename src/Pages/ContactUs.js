@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { contactUs } from "../Apis/contact";
 import Toast from "../Components/Toast";
-
+import loginImage from "../Assets/Images/contactUs.png";
 export const ContactUs = () => {
   const [contactInfo, setContactInfo] = useState({
     name: "",
@@ -38,21 +38,21 @@ export const ContactUs = () => {
   };
 
   return (
-    <div className="container">
-      <section
-        style={{
-          padding: 0,
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
-      >
-        <h2 class="h1-responsive font-weight-bold text-center my-4">
-          Contact Us
-        </h2>
-
-        <div class="row shadow p-3 mb-5 bg-whitesmoke rounded">
-          <div class="col-sm-12 mb-md-0 mb-5">
+    <div class="container">
+      <div class="row m-3  no-gutters shadow-sm ">
+        <div class="col-md-6 d-none d-md-block">
+          <img
+            src={loginImage}
+            class="img-fluid"
+            style={{ minHeight: "100%" }}
+            alt="signup"
+          />
+        </div>
+        <div class="col-md-6 bg-white p-5">
+          <h3 style={{ textAlign: "center", color: "#000A99" }} class="pb-3">
+            Contact Us
+          </h3>
+          <div class="form-style">
             <form
               id="contact-form"
               name="contact-form"
@@ -119,6 +119,7 @@ export const ContactUs = () => {
                   <div class="md-form">
                     <label for="message">Your message</label>
                     <textarea
+                     required
                       type="text"
                       id="message"
                       name="message"
@@ -135,17 +136,17 @@ export const ContactUs = () => {
             <div class="text-center text-md-left">
               <button
                 type="submit"
-                className="btn btn-primary"
-                style={{ width: "100%" }}
+                className="btn"
+                style={{ width: "100%",backgroundColor:'teal',color:'white' }}
                 onClick={handleSubmit}
               >
-                Send
+                Send <span class="bi bi-send"></span>
               </button>
             </div>
             <div class="status"></div>
           </div>
         </div>
-      </section>
+      </div>
       {showToast && (
         <Toast
           message={apiError}
