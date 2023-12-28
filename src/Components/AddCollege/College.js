@@ -67,9 +67,9 @@ const College = () => {
       }
     });
   }, [isCollegeAdded,isCollegeDeleted]);
-  const deleteCollege = async (event, id) => {
+  const deleteCollege = async (event, id,collegeAddress) => {
     event.preventDefault();
-    const response = await DeleteCollege(id);
+    const response = await DeleteCollege(id,collegeAddress);
     if (response.data.success) {
       setApiError(response.data.message);
       setShowToast(true);
@@ -138,7 +138,7 @@ const College = () => {
                       <td>{college.Address}</td>
                       <td>
                         <button
-                          onClick={(event) => deleteCollege(event, college._id)}
+                          onClick={(event) => deleteCollege(event, college._id,college.Name+", "+college.Address)}
                           className="btn btn-outline-danger"
                         >
                           Delete
