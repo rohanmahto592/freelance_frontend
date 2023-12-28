@@ -37,9 +37,9 @@ export const DeleteExcelFile = async (id) => {
 };
 export const ViewDocFile = (doc) => {
   try {
-    const file = new Blob([doc.buffer], { type: "application/msword" });
+    const file = new Blob([doc.buffer], { type: doc.mimetype });
     const fileUrl = URL.createObjectURL(file);
-    FileSaver.saveAs(fileUrl, doc.name);
+    FileSaver.saveAs(fileUrl, doc.originalname);
   } catch (error) {
     console.error(error);
   }

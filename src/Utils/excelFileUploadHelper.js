@@ -2,14 +2,12 @@ import XLSX from "xlsx";
 import { rearrangeObjectKeysAlphabetically } from "./rearrangeAlphabeticalOrder";
 import { fetchFileStatus } from "../Apis/excel";
 export const viewInitialExcelFile = (jsonData, name) => {
-  jsonData = JSON.parse(jsonData);
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, name);
   XLSX.writeFile(workbook, `${name}.xlsx`);
 };
 export const viewProcessedExcelFile = (jsonData, name) => {
-  jsonData = JSON.parse(jsonData);
   let {
     dispatched,
     invalid,

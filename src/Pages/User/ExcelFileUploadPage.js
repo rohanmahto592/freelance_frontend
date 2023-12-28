@@ -388,35 +388,37 @@ const ExcelFileUploadPage = () => {
   const fetchFileData = async (excelId, type) => {
     const response = await fetchFile({ _id: excelId, type: type });
     if (response.data.success) {
-      const row = response.data.message[0];
+      const row = response.data.message;
       if (type === "docFile") {
         ViewDocFile(row.docFile);
       } else if (type === "initialExcelFile") {
-        viewInitialExcelFile(
-          row?.initialExcelFile,
-          row.name
-            ? row.name
-            : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              })}`
-        );
+        row.initialExcelFile &&
+          viewInitialExcelFile(
+            row?.initialExcelFile,
+            row.name
+              ? row.name
+              : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                })}`
+          );
       } else {
-        viewProcessedExcelFile(
-          row.processedExcelFile,
-          row.name
-            ? row.name
-            : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              })}`
-        );
+        row.processedExcelFile &&
+          viewProcessedExcelFile(
+            row.processedExcelFile,
+            row.name
+              ? row.name
+              : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                })}`
+          );
       }
     }
   };
