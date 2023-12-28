@@ -11,6 +11,7 @@ import EditItemModalComponent from "../../../Components/Modal/EditItemModalCompo
 import Toast from "../../../Components/Toast";
 import Form from "../../../Components/EditItemForm/Form";
 import ModalComponent from "../../../Components/Modal/ModalComponent";
+import {RotatingLines} from 'react-loader-spinner'
 const Stock = () => {
   const [stockData, setStockData] = useState({
     itemName: "",
@@ -37,11 +38,13 @@ const Stock = () => {
   const [showModal, setShowModal] = useState(false);
   const [itemId, setItemId] = useState(null);
   const addItemRef=useRef(null);
+  const [isitemLoaded,setIsItemLoaded]=useState(false);
   const itemHandleCloseModal = () => {
     setItemShowModal(false);
   };
   useEffect(() => {
     if (activeTab === "tabs-3") {
+      setIsItemLoaded(true);
       fetchAllStockItems();
     } else if (activeTab === "tabs-4") {
     } else if (activeTab === "tabs-5") {
@@ -136,6 +139,7 @@ const Stock = () => {
       setShowToast(true);
       setIsError(true);
     }
+    setIsItemLoaded(false);
   }
   async function deleteCurrentStockItem() {
     const response = await deleteCurrentItem(itemId);
@@ -162,6 +166,7 @@ const Stock = () => {
     <>
       <div id="table-row" className="row m-3  ">
         <h3 style={{ textAlign: "center" }}>Stocks</h3>
+        {isitemLoaded && <div style={{width:'20px',marginBottom:'5px'}}><RotatingLines width="40"/></div>}
         <ul
           class="nav nav-tabs mb-3"
           id="ex2"

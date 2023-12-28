@@ -8,6 +8,7 @@ import {
 } from "../../../Apis/adminDashboard";
 import Toast from "../../../Components/Toast";
 import ModalComponent from "../../../Components/Modal/ModalComponent";
+import {RotatingLines} from 'react-loader-spinner'
 const Users = () => {
   const [verifiedusers, setVerifiedUsers] = useState(null);
   const [nonverifiedusers, setNonVerifiedUsers] = useState(null);
@@ -19,15 +20,20 @@ const Users = () => {
   const [isError, setIsError] = useState(false);
   const [activeTab, setActiveTab] = useState("tabs-1");
   const[userDeleted,setUserDeleted]=useState(false);
+  const [isdataLoaded,setDataLoaded]=useState(false);
   const modalRef = useRef(null);
 
   useEffect(() => {
     if (activeTab === "tabs-1") {
+      setDataLoaded(true);
       getUsers("true").then((response) => {
+        setDataLoaded(false);
         setVerifiedUsers(response.data.message);
       });
     } else if (activeTab === "tabs-2") {
+      setDataLoaded(true);
       getUsers("false").then((response) => {
+        setDataLoaded(false);
         setNonVerifiedUsers(response.data.message);
       });
     }
@@ -88,6 +94,7 @@ const Users = () => {
   return (
     <> 
     <h3 style={{textAlign:'center',margin:'10px'}}>Users</h3>
+   {isdataLoaded && <RotatingLines  width="40"/>}
       <div id="table-row" className="row m-3 ">
         <ul
           class="nav nav-tabs mb-3"
