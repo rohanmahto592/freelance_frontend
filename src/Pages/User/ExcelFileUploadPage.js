@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import {RotatingLines} from 'react-loader-spinner'
 import {
   uploadExcelFile,
   getExcelFile,
@@ -53,6 +54,7 @@ const ExcelFileUploadPage = () => {
   const [isProcessed, setIsProcessed] = useState(false);
   const [isProcessedAlert, setIsProcessedAlert] = useState(false);
   const [isApiCallDone, setApiCall] = useState(fileId ? false : true);
+  const[isFileFetched,setFileFetched]=useState(false);
   const intervalIdRef = useRef(null);
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
@@ -386,7 +388,9 @@ const ExcelFileUploadPage = () => {
     setModalTitle(null);
   };
   const fetchFileData = async (excelId, type) => {
+    setFileFetched(true);
     const response = await fetchFile({ _id: excelId, type: type });
+    setFileFetched(false);
     if (response.data.success) {
       const row = response.data.message;
       if (type === "docFile") {
@@ -688,7 +692,7 @@ const ExcelFileUploadPage = () => {
             </div>
           </form>
           {isProcessing && <ProcessingLoader />}
-
+          {isFileFetched && <div style={{marginTop:'10px'}}><RotatingLines width="30" /></div>}
           <div className="row mt-3 rounded">
             <div id="table-container" className="col-sm-12 mt-3">
               <table
@@ -817,32 +821,14 @@ const ExcelFileUploadPage = () => {
                         <td>{row.intialExcelFileCount}</td>
                         <td>
                           <button
+                          style={{outline:'none',border:'none'}}
+                          className="btn btn-outline-primary"
                             onClick={() =>
                               fetchFileData(row._id, "initialExcelFile")
                             }
-                            style={{
-                              outline: "none",
-                              border: "none",
-                              backgroundColor: "#E9F8FD",
-                            }}
+                            
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              x="0px"
-                              y="0px"
-                              width="25"
-                              height="25"
-                              viewBox="0 0 48 48"
-                            >
-                              <path
-                                fill="#FFA000"
-                                d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"
-                              ></path>
-                              <path
-                                fill="#FFCA28"
-                                d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"
-                              ></path>
-                            </svg>
+                        <i class="bi bi-cloud-arrow-down-fill"></i>
                           </button>
                         </td>
                         <td>{row.processedFileSize}</td>
@@ -851,61 +837,31 @@ const ExcelFileUploadPage = () => {
                         <td>{row.processedExcelFileIndianPostDeliveryCount}</td>
                         <td>
                           <button
+                          className="btn btn-outline-primary"
                             onClick={() =>
                               fetchFileData(row._id, "processedExcelFile")
                             }
                             style={{
                               outline: "none",
                               border: "none",
-                              backgroundColor: "#E9F8FD",
+                              
                             }}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              x="0px"
-                              y="0px"
-                              width="25"
-                              height="25"
-                              viewBox="0 0 48 48"
-                            >
-                              <path
-                                fill="#FFA000"
-                                d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"
-                              ></path>
-                              <path
-                                fill="#FFCA28"
-                                d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"
-                              ></path>
-                            </svg>
+                            <i class="bi bi-cloud-arrow-down-fill"></i>
                           </button>
                         </td>
                         <td>
                           {row.isDocPresent && (
                             <button
+                            className="btn btn-outline-primary"
                               onClick={() => fetchFileData(row._id, "docFile")}
                               style={{
                                 outline: "none",
                                 border: "none",
-                                backgroundColor: "#E9F8FD",
+                                
                               }}
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                x="0px"
-                                y="0px"
-                                width="25"
-                                height="25"
-                                viewBox="0 0 48 48"
-                              >
-                                <path
-                                  fill="#FFA000"
-                                  d="M38,12H22l-4-4H8c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h31c1.7,0,3-1.3,3-3V16C42,13.8,40.2,12,38,12z"
-                                ></path>
-                                <path
-                                  fill="#FFCA28"
-                                  d="M42.2,18H15.3c-1.9,0-3.6,1.4-3.9,3.3L8,40h31.7c1.9,0,3.6-1.4,3.9-3.3l2.5-14C46.6,20.3,44.7,18,42.2,18z"
-                                ></path>
-                              </svg>
+                           <i class="bi bi-file-earmark-pdf-fill"></i>
                             </button>
                           )}
                         </td>
