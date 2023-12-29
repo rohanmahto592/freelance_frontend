@@ -11,6 +11,7 @@ const CustomizeEmail = () => {
   const [userEmailDetails, setUserEmailDetails] = useState({
     email: null,
     userType: "Admin",
+    name:null,
   });
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -93,7 +94,9 @@ const CustomizeEmail = () => {
       <form className="form-style" onSubmit={AddUserEmail}>
         <div className="container ">
           <div className="row">
-            <div className="col-sm-6 my-2 ">
+          <div className="col-sm-12">
+            <div className="row">
+            <div className="col-sm-6 ">
               <label className="form-label">Enter Email</label>
               <input
                 required
@@ -104,7 +107,20 @@ const CustomizeEmail = () => {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="col-sm-6 my-2 ">
+            <div className="col-sm-6">
+              <label className="form-label">Enter Name</label>
+              <input
+                required
+                className="form-control"
+                type="text"
+                name="name"
+                value={userEmailDetails?.name}
+                onChange={handleInputChange}
+              />
+            </div>
+            </div>
+            </div>
+            <div className="col-sm-12 my-2 ">
               <label className="form-label">Select User Type</label>
               <select
                 class="form-select"
@@ -170,6 +186,7 @@ const CustomizeEmail = () => {
                       <tr>
                         <th>S.No.</th>
                         <th>Email</th>
+                        <th>Name</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -179,6 +196,7 @@ const CustomizeEmail = () => {
                           <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{info?.email}</td>
+                            <td>{info?.name}</td>
                             <td>
                               <button
                                 className="btn btn-outline-danger"

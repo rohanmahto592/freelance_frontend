@@ -37,9 +37,14 @@ export const DeleteExcelFile = async (id) => {
 };
 export const ViewDocFile = (doc) => {
   try {
-    const file = new Blob([doc.buffer], { type: doc.mimetype });
-    const fileUrl = URL.createObjectURL(file);
-    FileSaver.saveAs(fileUrl, doc.originalname);
+    const data = Uint8Array.from(doc.buffer.data);
+    const file = new Blob([data.buffer], { type: doc.mimetype });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = doc.originalname;
+    link.click();
+    URL.revokeObjectURL(url);
   } catch (error) {
     console.error(error);
   }
