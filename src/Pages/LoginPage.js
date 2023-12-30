@@ -148,7 +148,7 @@ const LoginPage = () => {
                 </div>
               </div>
             </form>
-
+            <a href="/forgot-password" style={{float:'right',fontFamily:'sans-serif',textDecoration:'none'}}>Forgot Password?</a><br/>
             <div
               style={{
                 display: "flex",
@@ -156,7 +156,7 @@ const LoginPage = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              class="pt-4 text-center "
+              class="pt-2 text-center "
               onClick={() => navigate("/signup")}
             >
               <p

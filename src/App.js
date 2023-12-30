@@ -12,13 +12,14 @@ import PrivateAdminRoute from "./Components/PrivateAdminRoute";
 import { Adminroutes, UserRoutes } from "./RoutesPath/DirectedRoutes";
 import About from "./Pages/About/About";
 import { ContactUs } from "./Pages/ContactUs";
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/login" element={<LoginPage />} />
-
+      <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
       <Route
         path="/user"
         element={
