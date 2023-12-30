@@ -139,7 +139,7 @@ export const ContactUs = () => {
                   </div>
                 </div>
                 <div className="col-sm-12 my-2">
-                  <button type="submit" className="btn btn-primary w-100">
+                  <button  style={{ background: "#000A99" }} type="submit" className="btn btn-primary w-100">
                     Send <span class="bi bi-send"></span>
                   </button>
                 </div>
