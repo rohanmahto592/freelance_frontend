@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { contactUs } from "../Apis/contact";
 import Toast from "../Components/Toast";
 import loginImage from "../Assets/Images/contactUs.png";
+import { validateEmail } from "../Utils/emailValidator";
 export const ContactUs = () => {
   const [contactInfo, setContactInfo] = useState({
     name: "",
@@ -12,20 +13,28 @@ export const ContactUs = () => {
   const [showToast, setShowToast] = useState(false);
   const [apiError, setApiError] = useState("");
   const [isError, setIsError] = useState(true);
-
+  const [isEmailValid, setEmailValid] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!contactInfo.name || !contactInfo.email || !contactInfo.subject) {
+    if (!isEmailValid) {
+      setApiError("Email validation failed,please revalidate it.");
+      setIsError(true);
+      setShowToast(true);
       return;
     }
-
     const response = await contactUs(contactInfo);
-
-    if (response.success) {
+    if (response.data.success) {
       setApiError("Information Save, We will contact you ASAP");
+      setContactInfo({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+      setIsError(false);
       setShowToast(true);
     } else {
-      setApiError(response.message);
+      setApiError(response.data.message);
       setIsError(true);
       setShowToast(true);
     }
@@ -34,6 +43,13 @@ export const ContactUs = () => {
   const handleOnChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
+    if (name === "email") {
+      if (!validateEmail(value)) {
+        setEmailValid(false);
+      } else {
+        setEmailValid(true);
+      }
+    }
     setContactInfo({ ...contactInfo, [name]: value });
   };
 
@@ -49,16 +65,8 @@ export const ContactUs = () => {
           />
         </div>
         <div class="col-md-6 bg-white p-5">
-          <h3 style={{ textAlign: "center", color: "#000A99" }} class="pb-3">
-            Contact Us
-          </h3>
           <div class="form-style">
-            <form
-              id="contact-form"
-              name="contact-form"
-              action="mail.php"
-              method="POST"
-            >
+            <form onSubmit={handleSubmit}>
               <div class="row  mb-2">
                 <div class="col-md-6">
                   <div class="md-form mb-0">
@@ -119,7 +127,7 @@ export const ContactUs = () => {
                   <div class="md-form">
                     <label for="message">Your message</label>
                     <textarea
-                     required
+                      required
                       type="text"
                       id="message"
                       name="message"
@@ -130,20 +138,13 @@ export const ContactUs = () => {
                     ></textarea>
                   </div>
                 </div>
+                <div className="col-sm-12 my-2">
+                  <button type="submit" className="btn btn-primary w-100">
+                    Send <span class="bi bi-send"></span>
+                  </button>
+                </div>
               </div>
             </form>
-
-            <div class="text-center text-md-left">
-              <button
-                type="submit"
-                className="btn"
-                style={{ width: "100%",backgroundColor:'teal',color:'white' }}
-                onClick={handleSubmit}
-              >
-                Send <span class="bi bi-send"></span>
-              </button>
-            </div>
-            <div class="status"></div>
           </div>
         </div>
       </div>
