@@ -18,7 +18,12 @@ const ForgotPasswordPage = () => {
     if (response?.data.success) {
       sessionStorage.setItem("resetInfo", JSON.stringify(response.data));
       setEmail(null);
-      window.location.reload();
+      setApiError(response.data.message);
+      setIsError(false);
+      setToast(true);
+      setTimeout(() => {
+       window.location.reload();
+      }, 2000);
     }
     else
     {
