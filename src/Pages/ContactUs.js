@@ -56,6 +56,7 @@ export const ContactUs = () => {
   return (
     <div class="container">
       <div class="row m-3  no-gutters shadow-sm ">
+      
         <div class="col-md-6 d-none d-md-block">
           <img
             src={loginImage}
@@ -65,6 +66,7 @@ export const ContactUs = () => {
           />
         </div>
         <div class="col-md-6 bg-white p-5">
+        <h3 style={{textAlign:'center',color:'#000A99',marginBottom:'10px'}}>Contact Us</h3>
           <div class="form-style">
             <form onSubmit={handleSubmit}>
               <div class="row  mb-2">

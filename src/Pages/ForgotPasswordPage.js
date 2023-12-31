@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { sendForgotPasswordLink, resetPassword } from "../Apis/contact";
 import Toast from "../Components/Toast";
+import forgot from '../Assets/Images/forgot.png'
 import { useNavigate } from "react-router-dom";
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState(null);
@@ -53,8 +54,9 @@ const ForgotPasswordPage = () => {
   return (
     <div>
       <div class="container">
-        <div class="row m-3  no-gutters shadow-sm ">
-          <div class="col-sm-12 bg-white p-5">
+        <div class="row m-3 no-gutters shadow-sm ">
+          <div class="col-sm-6 mx-auto bg-white p-5">
+          <h3 style={{textAlign:'center',color:'#000A99'}}>Forgot Password</h3>
             <div class="form-style">
               <form
                 onSubmit={isOtpSend ? handleResetSubmit : handleForgotSubmit}

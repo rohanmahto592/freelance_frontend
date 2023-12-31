@@ -7,7 +7,9 @@ const Timeline = () => {
    
 <div>
       <section className="page-section" id="about">
+      <h3 style={{textAlign:'center',color:'#000A99'}}>About Us</h3>
             <div className="container">
+                
                 <div className='row'>
                     {
                         AboutContent.map((item)=>(
