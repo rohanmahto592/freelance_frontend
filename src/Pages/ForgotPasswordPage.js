@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { sendForgotPasswordLink, resetPassword } from "../Apis/contact";
 import Toast from "../Components/Toast";
-import forgot from '../Assets/Images/forgot.png'
 import { useNavigate } from "react-router-dom";
+import { validatePassword } from "../Utils/passwordHelper";
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState(null);
   const [otp, setOtp] = useState(null);
@@ -10,6 +10,8 @@ const ForgotPasswordPage = () => {
   const [apiError, setApiError] = useState("");
   const [showToast, setToast] = useState(false);
   const [isError, setIsError] = useState(false);
+  const[isVisible,setVisible]=useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const isOtpSend =
     JSON.parse(sessionStorage.getItem("resetInfo"))?.success || false;
@@ -51,6 +53,11 @@ const ForgotPasswordPage = () => {
       setToast(true);
     }
   };
+   const SetPassword=(event)=>{
+      setPasswordError(validatePassword(event.target.value));
+      setPassword(event.target.value)
+    }
+  
   return (
     <div>
       <div class="container">
@@ -87,7 +94,7 @@ const ForgotPasswordPage = () => {
                       <input
                         id="otp"
                         name="otp"
-                        class="form-control"
+                        class="form-control border rounded-pill "
                         aria-labelledby="otp"
                         required="true"
                         placeholder="Enter your OTP"
@@ -96,15 +103,33 @@ const ForgotPasswordPage = () => {
                       <label for="email" class="form-label">
                         Password
                       </label>
+                      <div className="input-group">
                       <input
+                       type={isVisible?"text":"password"}
                         id="password"
                         name="password"
-                        class="form-control"
+                        class="form-control  border rounded-pill "
                         aria-labelledby="new passwoed"
                         required="true"
                         placeholder="Enter new password"
-                        onChange={(event) => setPassword(event.target.value)}
+                        onChange={(event)=>SetPassword(event) }
                       />
+                      <span class="input-group-append ">
+                      <button
+                      onClick={()=>setVisible(!isVisible)}
+                        style={{marginLeft:'-40px',backgroundColor:'white',color:'teal'}}
+                        class="btn btn-secondary border rounded-pill"
+                        type="button"
+                      >
+                       {isVisible?<i class="bi bi-eye-slash-fill"></i>:<i class="bi bi-eye"></i>}
+                      </button>
+                    </span>
+                    </div>
+                    {passwordError && (
+                    <div class="alert alert-danger mt-2 p-2" role="alert">
+                      {passwordError}
+                    </div>
+                  )}
                     </div>
                   )}
                 </div>
