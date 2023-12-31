@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../Apis/auth";
 import Toast from "../Components/Toast";
 import loginImage from "../Assets/Images/userCred.png";
@@ -148,7 +148,9 @@ const LoginPage = () => {
                 </div>
               </div>
             </form>
-            <a href="/forgot-password" style={{float:'right',fontFamily:'sans-serif',textDecoration:'none'}}>Forgot Password?</a><br/>
+            <NavLink to="/forgot-password">
+            <a  href="#" style={{float:'right',fontFamily:'sans-serif',textDecoration:'none'}}>Forgot Password?</a><br/>
+            </NavLink>
             <div
               style={{
                 display: "flex",
