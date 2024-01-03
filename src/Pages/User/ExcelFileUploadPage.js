@@ -17,7 +17,7 @@ import {
 import ProcessingLoader from "../../Components/ProcessingLoader/ProcessingLoader";
 import "../../css/ExcelFile.css";
 import Toast from "../../Components/Toast";
-import { fetchColleges, fetchItems } from "../../Apis/adminDashboard";
+import { fetchColleges, fetchEventHeaders, fetchItems } from "../../Apis/adminDashboard";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
 import admitDepositFileDummy from "../../SampleExcelFiles/Admit-Deposit Dummy ExcelSheet.xlsx";
 import DPMdummy from "../../SampleExcelFiles/DPM Dummy ExcelSheet.xlsx";
@@ -426,6 +426,24 @@ const ExcelFileUploadPage = () => {
       }
     }
   };
+  const fetchExcelFile=async(type)=>{
+    const response = await fetchEventHeaders(type);
+    if(response.data.success && response.data.message.length>0)
+    {
+      const data=response.data.message;
+      let resp = [{}];
+       data.forEach(obj => resp[0][obj.name.toLowerCase()]='');
+       const sortedArr = resp.map(obj => {
+        const sortedKeys = Object.keys(obj).sort();
+        const sortedObj = {};
+        sortedKeys.forEach(key => {
+          sortedObj[key] = obj[key];
+        });
+        return sortedObj;
+      });
+      viewInitialExcelFile(sortedArr,type==='DPM'?'DPM':'ADMIT_DEPOSIT');
+    }
+  }
   return (
     <>
       {isProcessedAlert && (
@@ -434,21 +452,21 @@ const ExcelFileUploadPage = () => {
         </div>
       )}
       <div className="d-flex justify-content-center align-items-center m-4 flex-wrap">
-        <a href={admitDepositFileDummy} class="btn btn-link">
+        <button className="btn btn-outline-primary mx-1 my-1" onClick={()=>fetchExcelFile('ADMIT/DEPOSIT')}>
           Admit/Deposit Template ExcelSheet{" "}
           <i
             style={{ paddingLeft: "5px", color: "orange" }}
             class="bi bi-download"
           ></i>
-        </a>
-        <a href={DPMdummy} class="btn btn-link">
+        </button>
+        <button onClick={()=>fetchExcelFile('DPM')} class="btn btn-outline-primary mx-1 my-1">
           {" "}
           DirectPrintMail Template ExcelSheet{" "}
           <i
             style={{ paddingLeft: "5px", color: "orange" }}
             class="bi bi-download"
           ></i>
-        </a>
+        </button>
       </div>
       <main class="d-flex justify-content-center align-items-center m-4 ">
         <div className="container ">

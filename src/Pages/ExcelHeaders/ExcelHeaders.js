@@ -56,7 +56,7 @@ const ExcelHeaders = () => {
     const exsistingHeaders = JSON.parse(
       localStorage.getItem(newHeader.orderType)
     );
-    return exsistingHeaders.some((item) => item.name === newHeader.name.toLowerCase().trim());
+    return exsistingHeaders?.some((item) => item.name === newHeader.name.toLowerCase().trim());
   };
 
   const addNewHeader = async (event) => {
