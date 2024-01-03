@@ -448,7 +448,7 @@ const ExcelFileUploadPage = () => {
   }
   return (
     <>
-      {(isProcessedAlert || !localStorage.getItem("fileId")) && (
+      {isProcessedAlert && (
         <div class="alert alert-success" role="alert">
           ExcelSheet data processed!!
         </div>
