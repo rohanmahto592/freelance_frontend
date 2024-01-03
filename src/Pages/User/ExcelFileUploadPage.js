@@ -214,7 +214,6 @@ const ExcelFileUploadPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setApiCall(false);
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
     const form = new FormData();
@@ -230,6 +229,7 @@ const ExcelFileUploadPage = () => {
       form.append("university", formData.university);
     }
     setProcessing(true);
+    setApiCall(false);
     const response = await uploadExcelFile(form);
     if (!response.data.success) {
       setApiError(response.data.message);
@@ -293,7 +293,7 @@ const ExcelFileUploadPage = () => {
         });
       }
     };
-    intervalIdRef.current = setInterval(callAPI, 2 * 60 * 1000);
+    intervalIdRef.current = setInterval(callAPI, 1 * 60 * 1000);
   }
 
   const DeleteExcelFileData = async (id) => {
