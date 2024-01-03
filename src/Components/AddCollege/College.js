@@ -16,11 +16,12 @@ const College = () => {
   const[isCollegeDeleted,setCollegeDeleted]=useState(false);
 
   const checkIfCollegeAlreadyExsisted=(collegeList,college="",address="")=>{
+
     for(let i=0;i<collegeList?.length;i++)
     {
       const CollegeAddress=(collegeList[i].Name+collegeList[i].Address).toLowerCase().trim();
       const currentCollegeAddress=(college+address).toLowerCase().trim();
-      if(CollegeAddress.includes(currentCollegeAddress))
+      if(CollegeAddress===currentCollegeAddress)
       {
         return {state:true,collegeAddress:`${college} ${address} already present`}
        

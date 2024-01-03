@@ -113,7 +113,7 @@ const Stock = () => {
     {
       const Item=(items[i].itemName).toLowerCase().trim();
       const name=(itemName).toLowerCase().trim();
-      if(Item.includes(name))
+      if(Item===name)
       {
         return {state:true,message:`Item with a name ${itemName} already present in the bucket`}
        
