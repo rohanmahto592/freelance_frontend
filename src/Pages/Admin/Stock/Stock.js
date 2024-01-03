@@ -108,11 +108,32 @@ const Stock = () => {
   const handleTabChange = (event) => {
     setActiveTab(event?.target?.href?.split("#")[1]);
   };
+  const findItemAlreadyPresent=(itemName,items)=>{
+    for(let i=0;i<items.length;i++)
+    {
+      const Item=(items[i].itemName).toLowerCase().trim();
+      const name=(itemName).toLowerCase().trim();
+      if(Item.includes(name))
+      {
+        return {state:true,message:`Item with a name ${itemName} already present in the bucket`}
+       
+      }
+    }
+    return {state:false,message:''}
+  }
   const AddItemSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData();
     form.append("file", ItemData.image);
     form.append("item", JSON.stringify(ItemData));
+    const itemPresent=findItemAlreadyPresent(ItemData.name,items);
+    if(itemPresent.state)
+    {
+      setApiError(itemPresent.message);
+      setShowToast(true);
+      setIsError(true);
+      return;
+    }
     const response = await addItem(form);
     if (response.data.success) {
       setItemData({

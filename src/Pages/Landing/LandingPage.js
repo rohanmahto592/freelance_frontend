@@ -72,7 +72,10 @@ const LandingPage = () => {
   useEffect(() => {
     getFeedbacks();
   }, []);
-
+  const logout=()=>{
+    sessionStorage.clear();
+    navigate("/login")
+  }
   return (
     <>
       <div className="container">
@@ -101,7 +104,7 @@ const LandingPage = () => {
                     margin: "2vh",
                   }}
                   class="btn btn-primary"
-                  onClick={()=>navigate("/about")}
+                  onClick={() => navigate("/about")}
                 >
                   Know More
                 </button>
@@ -196,11 +199,13 @@ const LandingPage = () => {
       )}
       {/* carasol */}
       <div className="container">
-      <div class="row justify-content-center">
-    <div class="col-lg-10 col-md-12">
-    {feedbacks && feedbacks.length > 0 && <CardSlider slides={feedbacks} />}
-      </div> 
-      </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            {feedbacks && feedbacks.length > 0 && (
+              <CardSlider slides={feedbacks} />
+            )}
+          </div>
+        </div>
       </div>
       <div style={{ width: "90%", margin: "auto", padding: "12px 0px" }}>
         <p style={{ textAlign: "center" }} className="heading-text fs-1">
@@ -279,10 +284,10 @@ const LandingPage = () => {
       <footer
         className="footer w-100 mt-4"
         style={{
-          backgroundRepeat:'no-repeat',
-          backgroundSize:'cover',
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
           backgroundImage:
-            'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1440 320\'%3E%3Cpath fill=\'%230099ff\' fill-opacity=\'1\' d=\'M0,224L18.5,186.7C36.9,149,74,75,111,80C147.7,85,185,171,222,197.3C258.5,224,295,192,332,197.3C369.2,203,406,245,443,234.7C480,224,517,160,554,128C590.8,96,628,96,665,101.3C701.5,107,738,117,775,106.7C812.3,96,849,64,886,90.7C923.1,117,960,203,997,202.7C1033.8,203,1071,117,1108,112C1144.6,107,1182,181,1218,176C1255.4,171,1292,85,1329,80C1366.2,75,1403,149,1422,186.7L1440,224L1440,320L1421.5,320C1403.1,320,1366,320,1329,320C1292.3,320,1255,320,1218,320C1181.5,320,1145,320,1108,320C1070.8,320,1034,320,997,320C960,320,923,320,886,320C849.2,320,812,320,775,320C738.5,320,702,320,665,320C627.7,320,591,320,554,320C516.9,320,480,320,443,320C406.2,320,369,320,332,320C295.4,320,258,320,222,320C184.6,320,148,320,111,320C73.8,320,37,320,18,320L0,320Z\'%3E%3C/path%3E%3C/svg%3E")',
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230099ff' fill-opacity='1' d='M0,224L18.5,186.7C36.9,149,74,75,111,80C147.7,85,185,171,222,197.3C258.5,224,295,192,332,197.3C369.2,203,406,245,443,234.7C480,224,517,160,554,128C590.8,96,628,96,665,101.3C701.5,107,738,117,775,106.7C812.3,96,849,64,886,90.7C923.1,117,960,203,997,202.7C1033.8,203,1071,117,1108,112C1144.6,107,1182,181,1218,176C1255.4,171,1292,85,1329,80C1366.2,75,1403,149,1422,186.7L1440,224L1440,320L1421.5,320C1403.1,320,1366,320,1329,320C1292.3,320,1255,320,1218,320C1181.5,320,1145,320,1108,320C1070.8,320,1034,320,997,320C960,320,923,320,886,320C849.2,320,812,320,775,320C738.5,320,702,320,665,320C627.7,320,591,320,554,320C516.9,320,480,320,443,320C406.2,320,369,320,332,320C295.4,320,258,320,222,320C184.6,320,148,320,111,320C73.8,320,37,320,18,320L0,320Z'%3E%3C/path%3E%3C/svg%3E\")",
           padding: "10px 0px",
         }}
       >
@@ -298,27 +303,57 @@ const LandingPage = () => {
           }}
         >
           <div className="row">
-            <div style={{color:'gray',fontWeight:'bold',fontFamily:'sans-serif'}} className="col-12">Follow us</div>
+            <div
+              style={{
+                color: "gray",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+              className="col-12"
+            >
+              Follow us
+            </div>
           </div>
           <div className="row mt-2">
-            <div style={{cursor:'pointer'}} className="col-12">
-              <span >
+            <div style={{ cursor: "pointer" }} className="col-12">
+              <span>
                 <img
-                  style={{ width: "30px", height: "30px", margin: "10px",border:'3px solid teal',borderRadius:'50%',borderStyle:'dotted' }}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    margin: "10px",
+                    border: "3px solid teal",
+                    borderRadius: "50%",
+                    borderStyle: "dotted",
+                  }}
                   src={instagram}
                   alt="instagram"
                 />
               </span>
               <span>
                 <img
-                 style={{ width: "30px", height: "30px", margin: "10px",border:'3px solid teal',borderRadius:'50%',borderStyle:'dotted' }}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    margin: "10px",
+                    border: "3px solid teal",
+                    borderRadius: "50%",
+                    borderStyle: "dotted",
+                  }}
                   src={facebook}
                   alt="facebook"
                 />
               </span>
               <span>
                 <img
-                  style={{ width: "30px", height: "30px", margin: "10px",border:'3px solid teal',borderRadius:'50%',borderStyle:'dotted' }}
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    margin: "10px",
+                    border: "3px solid teal",
+                    borderRadius: "50%",
+                    borderStyle: "dotted",
+                  }}
                   src={twitter}
                   alt="twitter"
                 />
@@ -328,30 +363,62 @@ const LandingPage = () => {
           <div className="row mt-2">
             <div className="col-12">
               <span className="m-3">
-                <button
-                  class=" btn btn-secondary"
-                  onClick={() => navigate("/login")}
-                >
-                  LOGIN
-                </button>
+                {" "}
+                {sessionStorage.getItem("isLoggedIn")=='true' ? (
+                  <button
+                    class=" btn btn-secondary"
+                    onClick={logout}
+                  >
+                    LOGOUT
+                  </button>
+                ) : (
+                  <button
+                    class=" btn btn-secondary"
+                    onClick={() => navigate("/login")}
+                  >
+                    LOGIN
+                  </button>
+                )}
               </span>
-              <span className="m-3">
+
+             { !sessionStorage.getItem("isLoggedIn") && <span className="m-3">
                 <button
                   class=" btn btn-secondary "
                   onClick={() => navigate("/signup")}
                 >
                   SIGN UP
                 </button>
-              </span>
+              </span>}
             </div>
           </div>
           <div className="row mt-2">
-            <div style={{display:'flex',flexWrap:'wrap'}} className="col-sm-12 justify-content-center">
-              <Link  style={{textDecoration:'none'}}to="/about">
-              <span style={{fontWeight:'bold',color:'white',fontFamily:'sans-serif'}} className="m-2">About Us</span>
+            <div
+              style={{ display: "flex", flexWrap: "wrap" }}
+              className="col-sm-12 justify-content-center"
+            >
+              <Link style={{ textDecoration: "none" }} to="/about">
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "white",
+                    fontFamily: "sans-serif",
+                  }}
+                  className="m-2"
+                >
+                  About Us
+                </span>
               </Link>
-              <Link  style={{textDecoration:'none'}} to="/contactus">
-              <span style={{fontWeight:'bold',color:'white',fontFamily:'sans-serif'}} className="m-2">Contact Us</span>
+              <Link style={{ textDecoration: "none" }} to="/contactus">
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "white",
+                    fontFamily: "sans-serif",
+                  }}
+                  className="m-2"
+                >
+                  Contact Us
+                </span>
               </Link>
               {/* <span className="m-2">Privacy Policy</span>
               <span className="m-2">Terms and Conditions</span>
