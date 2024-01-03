@@ -274,11 +274,13 @@ const ExcelFileUploadPage = () => {
       }
       const fileId = localStorage.getItem("fileId");
       fileId && deleteUnProcessedFile(fileId);
+      localStorage.clear();
     }, 30 * 60 * 1000);
     const callAPI = () => {
       const fileId = localStorage.getItem("fileId");
       if (!fileId) {
         clearInterval(intervalIdRef.current);
+        window.location.reload();
       } else {
         checkExcelFileStatus(fileId).then((res) => {
           if (res.data.isProcessed) {
@@ -446,7 +448,7 @@ const ExcelFileUploadPage = () => {
   }
   return (
     <>
-      {isProcessedAlert && (
+      {(isProcessedAlert || !localStorage.getItem("fileId")) && (
         <div class="alert alert-success" role="alert">
           ExcelSheet data processed!!
         </div>
