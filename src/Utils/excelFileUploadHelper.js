@@ -5,7 +5,7 @@ export const viewInitialExcelFile = (jsonData, name) => {
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, name);
-  XLSX.writeFile(workbook, `${name}.xlsx`);
+  XLSX.writeFile(workbook, `${name}.xlsx`,{compression:true});
 };
 export const viewProcessedExcelFile = (jsonData, name) => {
   let {
@@ -16,18 +16,18 @@ export const viewProcessedExcelFile = (jsonData, name) => {
     ShipRocket_Delivery,
     IndianPost_Delivery,
   } = jsonData;
-  dispatched = dispatched.map((obj) => rearrangeObjectKeysAlphabetically(obj));
-  invalid = invalid?.map((obj) => rearrangeObjectKeysAlphabetically(obj));
-  non_servicable = non_servicable?.map((obj) =>
-    rearrangeObjectKeysAlphabetically(obj)
-  );
-  duplicates = duplicates?.map((obj) => rearrangeObjectKeysAlphabetically(obj));
-  ShipRocket_Delivery = ShipRocket_Delivery?.map((obj) =>
-    rearrangeObjectKeysAlphabetically(obj)
-  );
-  IndianPost_Delivery = IndianPost_Delivery?.map((obj) =>
-    rearrangeObjectKeysAlphabetically(obj)
-  );
+  // dispatched = dispatched.map((obj) => rearrangeObjectKeysAlphabetically(obj));
+  // invalid = invalid?.map((obj) => rearrangeObjectKeysAlphabetically(obj));
+  // non_servicable = non_servicable?.map((obj) =>
+  //   rearrangeObjectKeysAlphabetically(obj)
+  // );
+  // duplicates = duplicates?.map((obj) => rearrangeObjectKeysAlphabetically(obj));
+  // ShipRocket_Delivery = ShipRocket_Delivery?.map((obj) =>
+  //   rearrangeObjectKeysAlphabetically(obj)
+  // );
+  // IndianPost_Delivery = IndianPost_Delivery?.map((obj) =>
+  //   rearrangeObjectKeysAlphabetically(obj)
+  // );
   const workbook = XLSX.utils.book_new();
   const sheet1 = XLSX.utils.json_to_sheet(dispatched);
   XLSX.utils.book_append_sheet(workbook, sheet1, "Dispatched");
@@ -41,7 +41,7 @@ export const viewProcessedExcelFile = (jsonData, name) => {
   XLSX.utils.book_append_sheet(workbook, sheet5, "ShipRocket_Delivery");
   const sheet6 = XLSX.utils.json_to_sheet(IndianPost_Delivery);
   XLSX.utils.book_append_sheet(workbook, sheet6, "IndianPost_Delivery");
-  XLSX.writeFile(workbook, `processed_${name}.xlsx`);
+  XLSX.writeFile(workbook, `processed_${name}.xlsx`,{compression:true});
 };
 
 export const ExcelWorkbookSheetCount = async (file) => {
