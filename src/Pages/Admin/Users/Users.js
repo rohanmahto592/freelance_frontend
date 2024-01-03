@@ -57,9 +57,11 @@ const Users = () => {
         setApiError(response.data.message);
         setShowToast(true);
         setIsError(false);
-      setTimeout(()=>{
-        window.location.reload()
-      },1500)
+        getUsers("false").then((response) => {
+          setDataLoaded(false);
+          setNonVerifiedUsers(response.data.message);
+        });
+      
       } else {
         setApiError(response.data.message);
         setShowToast(true);
