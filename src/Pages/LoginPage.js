@@ -36,6 +36,7 @@ const LoginPage = () => {
         email: "",
         password: "",
       });
+      localStorage.clear();
       const token = response.headers.authorization.split(" ")[1];
       const userType = response.data.userType;
       sessionStorage.setItem("isAuthenticated", true);
