@@ -18,6 +18,7 @@ const CustomizeEmail = () => {
   const [isError, setIsError] = useState(false);
   const [userType, setuserType] = useState(null);
   const [EmailAdded, setEmailAdded] = useState(false);
+  const[isActionTriggered,setActionTriggered]=useState(false);
   useEffect(() => {
     fetchUserEmails(userType ? userType : "Admin").then((response) => {
       if (response.data.success) {
@@ -28,7 +29,7 @@ const CustomizeEmail = () => {
         setIsError(true);
       }
     });
-  }, [EmailAdded, userType]);
+  }, [EmailAdded, userType,isActionTriggered]);
 
   const handleInputChange = (event) => {
     event.preventDefault();
@@ -43,6 +44,7 @@ const CustomizeEmail = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
+      setActionTriggered(!isActionTriggered);
     } else {
       setApiError(response.data.message);
       setShowToast(true);
@@ -83,6 +85,7 @@ const CustomizeEmail = () => {
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
+      setActionTriggered(!isActionTriggered);
     } else {
       setApiError(response.data.message);
       setShowToast(true);
