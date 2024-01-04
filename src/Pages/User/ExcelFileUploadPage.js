@@ -129,6 +129,16 @@ const ExcelFileUploadPage = () => {
     event.preventDefault();
     const { name, value } = event.target;
     if (value === "FARE") {
+      setFormData({
+        orderType: "FARE",
+        excelfile: null,
+        docfile: null,
+        university: null,
+        currentItemQuantity: 0,
+        currentItem: null,
+        currentItemId: null,
+      })
+      fileInputRef.current.value = "";
       if (items.length === 0) {
         await fetchAllStockItems();
       }
@@ -296,7 +306,7 @@ const ExcelFileUploadPage = () => {
         });
       }
     };
-    intervalIdRef.current = setInterval(callAPI, 1 * 60 * 1000);
+    intervalIdRef.current = setInterval(callAPI,  30 * 1000);
   }
 
   const DeleteExcelFileData = async (id) => {
