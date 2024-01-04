@@ -73,6 +73,13 @@ const ExcelFileUploadPage = () => {
     const newData = data?.slice(startIndex, endIndex);
     setcurrentData(newData);
   }
+  useEffect(()=>{
+    const fileId=localStorage.getItem("fileId");
+    if(fileId)
+    {
+      fetchFileStatus();
+    }
+  },[])
   useEffect(() => {
     fetchColleges().then((response) => {
       if (response?.data?.success) {
@@ -269,6 +276,7 @@ const ExcelFileUploadPage = () => {
       }
     } else {
       localStorage.setItem("fileId", response.data.id);
+      localStorage.setItem("apiCallsCount", '0');
       fetchFileStatus();
       setApiError(response.data.message);
       setShowToast(true);
@@ -278,24 +286,19 @@ const ExcelFileUploadPage = () => {
   };
 
   function fetchFileStatus() {
-    setTimeout(() => {
-      if (intervalIdRef.current) {
-        setApiCall(false);
-        clearInterval(intervalIdRef.current);
-      }
-      const fileId = localStorage.getItem("fileId");
-      fileId && deleteUnProcessedFile(fileId);
-      localStorage.clear();
-    }, 30 * 60 * 1000);
     const callAPI = () => {
       const fileId = localStorage.getItem("fileId");
-      if (!fileId) {
+      const numberofApiCalls=JSON.parse(localStorage.getItem("apiCallsCount"));
+      if (!fileId || numberofApiCalls===20) {
         clearInterval(intervalIdRef.current);
+        localStorage.clear("fileId");
+        localStorage.clear("apiCallsCount");
         window.location.reload();
       } else {
         checkExcelFileStatus(fileId).then((res) => {
           if (res.data.isProcessed) {
             localStorage.clear("fileId");
+            localStorage.clear("apiCallsCount");
             clearInterval(intervalIdRef.current);
             setIsProcessed(isProcessed);
             setApiCall(false);
@@ -303,12 +306,15 @@ const ExcelFileUploadPage = () => {
             setApiError(res.data.message);
             setShowToast(true);
           }
+          else
+          {
+            localStorage.setItem("apiCallsCount", JSON.stringify(numberofApiCalls + 1));
+          }
         });
       }
     };
     intervalIdRef.current = setInterval(callAPI,  30 * 1000);
   }
-
   const DeleteExcelFileData = async (id) => {
     const response = await DeleteExcelFile(id);
     if (!response?.data?.success) {
