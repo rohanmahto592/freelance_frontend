@@ -41,7 +41,6 @@ const SignUpPage = () => {
   };
 
   const handleSignup = async (event) => {
-
     event.preventDefault();
     setSignUpProgress(true);
     if (formData.userType === "UNIVERSITY" && !formData.universityName) {
@@ -81,7 +80,29 @@ const SignUpPage = () => {
       setPasswordError(validatePassword(value));
     }
     setFormData((prev) => {
-      const updatedFormData = { ...prev, [name]: value };
+      let updatedFormData;
+      if (name === "userType") {
+        if (value === "SELF") {
+          updatedFormData = {
+            ...prev,
+            [name]: value,
+            universityName: "",
+          };
+        } else {
+          updatedFormData = {
+            ...prev,
+            [name]: value,
+            universityName: receivedCollege.length
+              ? receivedCollege[0].Name + ", " + receivedCollege[0].Address
+              : "",
+          };
+        }
+      } else {
+        updatedFormData = {
+          ...prev,
+          [name]: value,
+        };
+      }
       localStorage.setItem("signUpformData", JSON.stringify(updatedFormData));
       return updatedFormData; // Return the updated state
     });
@@ -175,13 +196,17 @@ const SignUpPage = () => {
                           : formData.universityName
                       }
                       onChange={handleInputChange}
-                      disabled={formData.userType === "SELF"?true:false}
-                      required={formData.userType === "UNIVERSITY"?true:false}
+                      disabled={formData.userType === "SELF" ? true : false}
+                      required={
+                        formData.userType === "UNIVERSITY" ? true : false
+                      }
                     >
-                      <option  disabled={formData.userType!== "SELF"} >Select university</option>
+                      <option selected disabled={formData.userType !== "SELF"}>
+                        Select university
+                      </option>
                       {receivedCollege?.map((college, index) => (
                         <option
-                          selected={index===0}
+                          selected={index === 0}
                           key={index}
                           value={college.Name + ", " + college.Address}
                         >
@@ -240,7 +265,12 @@ const SignUpPage = () => {
                       type="submit"
                     />
                   ) : (
-                    <button style={{ background: "#000A99",width:'100%' }} class="form-control btn btn-primary" type="button" disabled>
+                    <button
+                      style={{ background: "#000A99", width: "100%" }}
+                      class="form-control btn btn-primary"
+                      type="button"
+                      disabled
+                    >
                       <span
                         class="spinner-border spinner-border-sm"
                         role="status"

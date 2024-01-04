@@ -8,19 +8,20 @@ import {
 } from "../../../Apis/adminDashboard";
 import Toast from "../../../Components/Toast";
 import ModalComponent from "../../../Components/Modal/ModalComponent";
-import {RotatingLines} from 'react-loader-spinner'
+import { RotatingLines } from "react-loader-spinner";
 const Users = () => {
   const [verifiedusers, setVerifiedUsers] = useState(null);
   const [nonverifiedusers, setNonVerifiedUsers] = useState(null);
   const [selectedUserId, setUserId] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedApprovedRows, setSelectedApprovedRows] = useState([]);
+  const [selectedRejectedRows, setSelectedRejectedRows] = useState([]);
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [activeTab, setActiveTab] = useState("tabs-1");
-  const[userDeleted,setUserDeleted]=useState(false);
-  const [isdataLoaded,setDataLoaded]=useState(false);
+  const [userDeleted, setUserDeleted] = useState(false);
+  const [isdataLoaded, setDataLoaded] = useState(false);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -37,22 +38,37 @@ const Users = () => {
         setNonVerifiedUsers(response.data.message);
       });
     }
-  }, [activeTab,userDeleted]);
+  }, [activeTab, userDeleted]);
   const handleOpenModal = (userId) => {
     setUserId(userId);
     setShowModal(true);
   };
 
-  const handleSelectRow = (event, rowData) => {
+  const handleApproveRow = (event, rowData) => {
     if (event.target.checked) {
-      setSelectedRows([...selectedRows, rowData]);
+      setSelectedApprovedRows([...selectedApprovedRows, rowData]);
     } else {
-      setSelectedRows(selectedRows.filter((row) => row !== rowData));
+      setSelectedApprovedRows(
+        selectedApprovedRows.filter((row) => row !== rowData)
+      );
     }
   };
-  const verifyUser = async () => {
-    if (selectedRows.length > 0) {
-      const response = await verifyUsers(selectedRows);
+
+  const handleRejectRow = (event, rowData) => {
+    if (event.target.checked) {
+      setSelectedRejectedRows([...selectedRejectedRows, rowData]);
+    } else {
+      setSelectedRejectedRows(
+        selectedRejectedRows.filter((row) => row !== rowData)
+      );
+    }
+  };
+  const handleSubmit = async () => {
+    if (selectedApprovedRows.length > 0 || selectedRejectedRows.length > 0) {
+      const response = await verifyUsers(
+        selectedApprovedRows,
+        selectedRejectedRows
+      );
       if (response.data.success) {
         setApiError(response.data.message);
         setShowToast(true);
@@ -61,12 +77,13 @@ const Users = () => {
           setDataLoaded(false);
           setNonVerifiedUsers(response.data.message);
         });
-      
       } else {
         setApiError(response.data.message);
         setShowToast(true);
         setIsError(true);
       }
+      setSelectedApprovedRows([]);
+      setSelectedRejectedRows([]);
     }
   };
   const handleCloseModal = () => {
@@ -94,9 +111,9 @@ const Users = () => {
     setActiveTab(event?.target?.href?.split("#")[1]);
   };
   return (
-    <> 
-    <h3 style={{textAlign:'center',margin:'10px'}}>Users</h3>
-   {isdataLoaded && <RotatingLines  width="40"/>}
+    <>
+      <h3 style={{ textAlign: "center", margin: "10px" }}>Users</h3>
+      {isdataLoaded && <RotatingLines width="40" />}
       <div id="table-row" className="row m-3 ">
         <ul
           class="nav nav-tabs mb-3"
@@ -137,7 +154,7 @@ const Users = () => {
             id="tabs-1"
             role="tabpanel"
             aria-labelledby="ex1-tab-1"
-            style={{maxHeight:'400px',overflowY:'auto'}}
+            style={{ maxHeight: "400px", overflowY: "auto" }}
           >
             <table className="table table-striped table-bordered">
               <thead>
@@ -158,7 +175,7 @@ const Users = () => {
                     <td>{user?.lastName}</td>
                     <td>{user?.email}</td>
                     <td>{user?.userType}</td>
-                    <td>{user?.universityName||'NULL'}</td>
+                    <td>{user?.universityName || "NULL"}</td>
                     <td>
                       <img
                         style={{ width: "3vh", height: "3vh" }}
@@ -184,7 +201,7 @@ const Users = () => {
             id="tabs-2"
             role="tabpanel"
             aria-labelledby="ex1-tab-2"
-            style={{maxHeight:'400px',overflowY:'auto'}}
+            style={{ maxHeight: "400px", overflowY: "auto" }}
           >
             <table className="table table-striped table-bordered">
               <thead>
@@ -195,7 +212,8 @@ const Users = () => {
                   <th>User Type</th>
                   <th>University Name</th>
                   <th>Verified</th>
-                  <th>Action</th>
+                  <th>Approve</th>
+                  <th>Reject</th>
                 </tr>
               </thead>
               <tbody>
@@ -205,7 +223,7 @@ const Users = () => {
                     <td>{user?.lastName}</td>
                     <td>{user?.email}</td>
                     <td>{user?.userType}</td>
-                    <td>{user.universityName||'NULL'}</td>
+                    <td>{user.universityName || "NULL"}</td>
                     <td>
                       <img
                         style={{ width: "3vh", height: "3vh" }}
@@ -215,9 +233,18 @@ const Users = () => {
                     </td>
                     <th>
                       <input
-                        style={{marginLeft:'50%'}}
+                        disabled={selectedRejectedRows.includes(user._id)}
+                        style={{ marginLeft: "50%" }}
                         type="checkbox"
-                        onChange={(event) => handleSelectRow(event, user._id)}
+                        onChange={(event) => handleApproveRow(event, user._id)}
+                      />
+                    </th>
+                    <th>
+                      <input
+                        disabled={selectedApprovedRows.includes(user._id)}
+                        style={{ marginLeft: "50%" }}
+                        type="checkbox"
+                        onChange={(event) => handleRejectRow(event, user._id)}
                       />
                     </th>
                   </tr>
@@ -227,7 +254,7 @@ const Users = () => {
             {nonverifiedusers && nonverifiedusers.length > 0 && (
               <div className="d-grid gap-2 col-3 mx-auto">
                 <button
-                  onClick={() => verifyUser()}
+                  onClick={() => handleSubmit()}
                   className="btn btn-outline-primary "
                 >
                   Submit
@@ -253,7 +280,7 @@ const Users = () => {
         title="User Action"
         body="Are you really want to delete the user?"
       />
-      <hr/>
+      <hr />
     </>
   );
 };

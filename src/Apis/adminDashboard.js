@@ -12,10 +12,10 @@ export const getUsers = async (check) => {
 
   return response;
 };
-export const verifyUsers = async (selectedRows) => {
+export const verifyUsers = async (approvedUserIds, rejectedUserIds) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/verifyusers`,
-    selectedRows,
+    { approvedUserIds, rejectedUserIds },
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -103,11 +103,14 @@ export const addColleges = async (college, address) => {
   );
 };
 export const fetchColleges = async () => {
-  return await axios.get(`${process.env.REACT_APP_BASE_URL}/admin/getColleges`, {
-    headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-    },
-  });
+  return await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/admin/getColleges`,
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
 };
 
 export const addEventHeader = async (name) => {
@@ -147,11 +150,11 @@ export const deleteExcelHeader = async (id) => {
   );
   return response;
 };
-export const DeleteCollege = async (id,collegeAddress) => {
+export const DeleteCollege = async (id, collegeAddress) => {
   const response = await axios.delete(
     `${process.env.REACT_APP_BASE_URL}/admin/deletecollege`,
     {
-      params: { id: id,address:collegeAddress },
+      params: { id: id, address: collegeAddress },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
@@ -193,12 +196,12 @@ export const fetchInvalidCountries = async () => {
     }
   );
   return response;
-}
-export const fetchExcelSheet=async(id)=>{
-  const response=await axios.get(
+};
+export const fetchExcelSheet = async (id) => {
+  const response = await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/get/excelsheetinfo`,
     {
-      params:{id:id},
+      params: { id: id },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
@@ -217,7 +220,7 @@ export const fetchOrders = async (id) => {
     }
   );
   return response;
-}
+};
 export const deleteNonServicableCountry = async (id) => {
   const response = await axios.delete(
     `${process.env.REACT_APP_BASE_URL}/admin/deleteCountry`,
@@ -230,8 +233,8 @@ export const deleteNonServicableCountry = async (id) => {
   );
   return response;
 };
-export const fetchAllUsers=async()=>{
-  const response=await axios.get(
+export const fetchAllUsers = async () => {
+  const response = await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/get/fetchAllUsers`,
     {
       headers: {
@@ -241,20 +244,19 @@ export const fetchAllUsers=async()=>{
   );
   return response;
 };
-export const fetchUserEmails=async(type)=>{
-  const response=await axios.get(
+export const fetchUserEmails = async (type) => {
+  const response = await axios.get(
     `${process.env.REACT_APP_BASE_URL}/admin/getUserEmails`,
     {
-      params:{type},
+      params: { type },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
     }
   );
   return response;
-
-}
-export const addUserEmail=async(userData)=>{
+};
+export const addUserEmail = async (userData) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/addUserEmail`,
     { userData },
@@ -265,9 +267,8 @@ export const addUserEmail=async(userData)=>{
     }
   );
   return response;
-
-}
-export const deleteUserEmail=async(id)=>{
+};
+export const deleteUserEmail = async (id) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/deleteUserEmail`,
     { id },
@@ -278,4 +279,4 @@ export const deleteUserEmail=async(id)=>{
     }
   );
   return response;
-}
+};
