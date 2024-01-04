@@ -163,7 +163,7 @@ const ExcelFileUploadPage = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-  const createExcelHeaderComponent = (Headers, orderType) => {
+  const createExcelHeaderComponent = (Headers, missingFields) => {
     return (
       <table style={{ width: "100%" }}>
         <tr>
@@ -186,7 +186,7 @@ const ExcelFileUploadPage = () => {
             Title
           </th>
         </tr>
-        {Headers.map((item, index) => (
+        {missingFields.map((item, index) => (
           <tr key={index}>
             <td
               style={{
@@ -199,12 +199,13 @@ const ExcelFileUploadPage = () => {
             </td>
             <td
               style={{
+                fontFamily:'sans-serif',
                 padding: "5px",
                 border: "2px solid #dddddd",
                 textAlign: "center",
               }}
             >
-              {item.name}
+              {item}
             </td>
           </tr>
         ))}
@@ -242,17 +243,17 @@ const ExcelFileUploadPage = () => {
         setComponent(
           createExcelHeaderComponent(
             response.data.Headers,
-            response.data.orderType
+            response.data.missingFields
           )
         );
         setModalTitle(
           <div
-            style={{ fontSize: "15px", letterSpacing: "1px" }}
+            style={{ fontSize: "15px", letterSpacing: "1px"}}
             class="alert alert-danger"
             role="alert"
           >
             Required Headers are not present for {response.data.orderType},check
-            from the given list.
+            from the missing list.
           </div>
         );
       }
