@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {RotatingLines} from 'react-loader-spinner'
+import { RotatingLines } from "react-loader-spinner";
 import {
   uploadExcelFile,
   getExcelFile,
@@ -17,7 +17,11 @@ import {
 import ProcessingLoader from "../../Components/ProcessingLoader/ProcessingLoader";
 import "../../css/ExcelFile.css";
 import Toast from "../../Components/Toast";
-import { fetchColleges, fetchEventHeaders, fetchItems } from "../../Apis/adminDashboard";
+import {
+  fetchColleges,
+  fetchEventHeaders,
+  fetchItems,
+} from "../../Apis/adminDashboard";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
 import admitDepositFileDummy from "../../SampleExcelFiles/Admit-Deposit Dummy ExcelSheet.xlsx";
 import DPMdummy from "../../SampleExcelFiles/DPM Dummy ExcelSheet.xlsx";
@@ -30,6 +34,7 @@ const ExcelFileUploadPage = () => {
     currentItemQuantity: 0,
     currentItem: null,
     currentItemId: null,
+    address: null,
   });
   const fileId = localStorage.getItem("fileId");
   const [excelFileData, setExcelFileData] = useState(null);
@@ -54,7 +59,7 @@ const ExcelFileUploadPage = () => {
   const [isProcessed, setIsProcessed] = useState(false);
   const [isProcessedAlert, setIsProcessedAlert] = useState(false);
   const [isApiCallDone, setApiCall] = useState(fileId ? false : true);
-  const[isFileFetched,setFileFetched]=useState(false);
+  const [isFileFetched, setFileFetched] = useState(false);
   const intervalIdRef = useRef(null);
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
@@ -73,13 +78,12 @@ const ExcelFileUploadPage = () => {
     const newData = data?.slice(startIndex, endIndex);
     setcurrentData(newData);
   }
-  useEffect(()=>{
-    const fileId=localStorage.getItem("fileId");
-    if(fileId)
-    {
+  useEffect(() => {
+    const fileId = localStorage.getItem("fileId");
+    if (fileId) {
       fetchFileStatus();
     }
-  },[])
+  }, []);
   useEffect(() => {
     fetchColleges().then((response) => {
       if (response?.data?.success) {
@@ -144,7 +148,8 @@ const ExcelFileUploadPage = () => {
         currentItemQuantity: 0,
         currentItem: null,
         currentItemId: null,
-      })
+        address: null,
+      });
       fileInputRef.current.value = "";
       if (items.length === 0) {
         await fetchAllStockItems();
@@ -216,7 +221,7 @@ const ExcelFileUploadPage = () => {
             </td>
             <td
               style={{
-                fontFamily:'sans-serif',
+                fontFamily: "sans-serif",
                 padding: "5px",
                 border: "2px solid #dddddd",
                 textAlign: "center",
@@ -243,6 +248,9 @@ const ExcelFileUploadPage = () => {
         return;
       }
       form.append("items", JSON.stringify(itemsWithUniversity));
+
+      sessionStorage.getItem("userType") === "SELF" &&
+        form.append("address", formData.address);
     } else if (formData.orderType === "DPM") {
       form.append("university", formData.university);
     }
@@ -265,7 +273,7 @@ const ExcelFileUploadPage = () => {
         );
         setModalTitle(
           <div
-            style={{ fontSize: "15px", letterSpacing: "1px"}}
+            style={{ fontSize: "15px", letterSpacing: "1px" }}
             class="alert alert-danger"
             role="alert"
           >
@@ -276,7 +284,7 @@ const ExcelFileUploadPage = () => {
       }
     } else {
       localStorage.setItem("fileId", response.data.id);
-      localStorage.setItem("apiCallsCount", '0');
+      localStorage.setItem("apiCallsCount", "0");
       fetchFileStatus();
       setApiError(response.data.message);
       setShowToast(true);
@@ -288,8 +296,10 @@ const ExcelFileUploadPage = () => {
   function fetchFileStatus() {
     const callAPI = () => {
       const fileId = localStorage.getItem("fileId");
-      const numberofApiCalls=JSON.parse(localStorage.getItem("apiCallsCount"));
-      if (!fileId || numberofApiCalls===20) {
+      const numberofApiCalls = JSON.parse(
+        localStorage.getItem("apiCallsCount")
+      );
+      if (!fileId || numberofApiCalls === 20) {
         clearInterval(intervalIdRef.current);
         localStorage.clear("fileId");
         localStorage.clear("apiCallsCount");
@@ -305,15 +315,16 @@ const ExcelFileUploadPage = () => {
             setIsProcessedAlert(true);
             setApiError(res.data.message);
             setShowToast(true);
-          }
-          else
-          {
-            localStorage.setItem("apiCallsCount", JSON.stringify(numberofApiCalls + 1));
+          } else {
+            localStorage.setItem(
+              "apiCallsCount",
+              JSON.stringify(numberofApiCalls + 1)
+            );
           }
         });
       }
     };
-    intervalIdRef.current = setInterval(callAPI,  30 * 1000);
+    intervalIdRef.current = setInterval(callAPI, 30 * 1000);
   }
   const DeleteExcelFileData = async (id) => {
     const response = await DeleteExcelFile(id);
@@ -445,24 +456,23 @@ const ExcelFileUploadPage = () => {
       }
     }
   };
-  const fetchExcelFile=async(type)=>{
+  const fetchExcelFile = async (type) => {
     const response = await fetchEventHeaders(type);
-    if(response.data.success && response.data.message.length>0)
-    {
-      const data=response.data.message;
+    if (response.data.success && response.data.message.length > 0) {
+      const data = response.data.message;
       let resp = [{}];
-       data.forEach(obj => resp[0][obj.name.toLowerCase()]='');
-       const sortedArr = resp.map(obj => {
+      data.forEach((obj) => (resp[0][obj.name.toLowerCase()] = ""));
+      const sortedArr = resp.map((obj) => {
         const sortedKeys = Object.keys(obj).sort();
         const sortedObj = {};
-        sortedKeys.forEach(key => {
+        sortedKeys.forEach((key) => {
           sortedObj[key] = obj[key];
         });
         return sortedObj;
       });
-      viewInitialExcelFile(sortedArr,type==='DPM'?'DPM':'ADMIT_DEPOSIT');
+      viewInitialExcelFile(sortedArr, type === "DPM" ? "DPM" : "ADMIT_DEPOSIT");
     }
-  }
+  };
   return (
     <>
       {isProcessedAlert && (
@@ -471,14 +481,20 @@ const ExcelFileUploadPage = () => {
         </div>
       )}
       <div className="d-flex justify-content-center align-items-center m-4 flex-wrap">
-        <button className="btn btn-outline-primary mx-1 my-1" onClick={()=>fetchExcelFile('ADMIT/DEPOSIT')}>
+        <button
+          className="btn btn-outline-primary mx-1 my-1"
+          onClick={() => fetchExcelFile("ADMIT/DEPOSIT")}
+        >
           Admit/Deposit Template ExcelSheet{" "}
           <i
             style={{ paddingLeft: "5px", color: "orange" }}
             class="bi bi-download"
           ></i>
         </button>
-        <button onClick={()=>fetchExcelFile('DPM')} class="btn btn-outline-primary mx-1 my-1">
+        <button
+          onClick={() => fetchExcelFile("DPM")}
+          class="btn btn-outline-primary mx-1 my-1"
+        >
           {" "}
           DirectPrintMail Template ExcelSheet{" "}
           <i
@@ -583,15 +599,35 @@ const ExcelFileUploadPage = () => {
                   >
                     Please select university
                   </option>
-                  {receivedCollege?.map((college, index) => (
-                    <option
-                      selected={index === 0}
-                      key={index}
-                      value={college.Name + ", " + college.Address}
-                    >
-                      {college.Name + ", " + college.Address}
-                    </option>
-                  ))}
+                  {receivedCollege?.map((college, index) => {
+                    if (
+                      sessionStorage.getItem("userType") === "SELF" &&
+                      college.Name.toLowerCase() === "self"
+                    ) {
+                      return (
+                        <option
+                          selected={index === 0}
+                          key={index}
+                          value={college.Name + ", " + college.Address}
+                        >
+                          {college.Name + ", " + college.Address}
+                        </option>
+                      );
+                    } else if (
+                      sessionStorage.getItem("userType") !== "SELF" &&
+                      college.Name.toLowerCase() !== "self"
+                    ) {
+                      return (
+                        <option
+                          selected={index === 0}
+                          key={index}
+                          value={college.Name + ", " + college.Address}
+                        >
+                          {college.Name + ", " + college.Address}
+                        </option>
+                      );
+                    }
+                  })}
                 </select>
               </div>
             </div>
@@ -613,6 +649,20 @@ const ExcelFileUploadPage = () => {
               universityItems &&
               universityItems.length > 0 && (
                 <>
+                  {sessionStorage.getItem("userType") === "SELF" && (
+                    <div className="col-sm-12  mt-2 mb-4">
+                      <label className="form-label">Enter Address</label>
+                      <input
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        type="text"
+                        required
+                        placeholder="Enter complete address"
+                      ></input>
+                    </div>
+                  )}
                   <div className="col-sm-4  mt-2 mb-4">
                     <label className="form-label">Items</label>
                     <div class="dropdown">
@@ -669,15 +719,32 @@ const ExcelFileUploadPage = () => {
                   <table
                     style={{
                       width: "100%",
-                      border: "5px solid #f2f2f2",
+
                       borderRadius: "5px",
                     }}
-                    class="table table-bordered border border-3"
+                    class="table table-striped table-bordered"
                   >
-                    <thead style={{ fontFamily: "monospace" }}>
+                    <thead style={{ fontFamily: "sans-serif" }}>
                       <tr>
-                        <th>College</th>
-                        <th>Items</th>
+                        <th
+                          style={{
+                            backgroundColor: "slateblue",
+                            color: "white",
+                          }}
+                          scope="col"
+                        >
+                          <i class="bi bi-eyedropper"></i>College
+                        </th>
+                        <th
+                          style={{
+                            backgroundColor: "slateblue",
+                            color: "white",
+                          }}
+                          scole="col"
+                        >
+                          {" "}
+                          <i class="bi bi-diagram-3"></i>Items
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -687,7 +754,7 @@ const ExcelFileUploadPage = () => {
                           {itemsWithUniversity[uni].map((item, index) => (
                             <td
                               key={index}
-                              className="col-sm-2"
+                              className="col-sm-3"
                               style={{
                                 borderRadius: "4px",
                                 display: "inline-block",
@@ -729,7 +796,11 @@ const ExcelFileUploadPage = () => {
             </div>
           </form>
           {isProcessing && <ProcessingLoader />}
-          {isFileFetched && <div style={{marginTop:'10px'}}><RotatingLines width="30" /></div>}
+          {isFileFetched && (
+            <div style={{ marginTop: "10px" }}>
+              <RotatingLines width="30" />
+            </div>
+          )}
           <div className="row mt-3 rounded">
             <div id="table-container" className="col-sm-12 mt-3">
               <table
@@ -858,14 +929,13 @@ const ExcelFileUploadPage = () => {
                         <td>{row.intialExcelFileCount}</td>
                         <td>
                           <button
-                          style={{outline:'none',border:'none'}}
-                          className="btn btn-outline-primary"
+                            style={{ outline: "none", border: "none" }}
+                            className="btn btn-outline-primary"
                             onClick={() =>
                               fetchFileData(row._id, "initialExcelFile")
                             }
-                            
                           >
-                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                            <i class="bi bi-cloud-arrow-down-fill"></i>
                           </button>
                         </td>
                         <td>{row.processedFileSize}</td>
@@ -874,14 +944,13 @@ const ExcelFileUploadPage = () => {
                         <td>{row.processedExcelFileIndianPostDeliveryCount}</td>
                         <td>
                           <button
-                          className="btn btn-outline-primary"
+                            className="btn btn-outline-primary"
                             onClick={() =>
                               fetchFileData(row._id, "processedExcelFile")
                             }
                             style={{
                               outline: "none",
                               border: "none",
-                              
                             }}
                           >
                             <i class="bi bi-cloud-arrow-down-fill"></i>
@@ -890,15 +959,14 @@ const ExcelFileUploadPage = () => {
                         <td>
                           {row.isDocPresent && (
                             <button
-                            className="btn btn-outline-primary"
+                              className="btn btn-outline-primary"
                               onClick={() => fetchFileData(row._id, "docFile")}
                               style={{
                                 outline: "none",
                                 border: "none",
-                                
                               }}
                             >
-                           <i class="bi bi-file-earmark-pdf-fill"></i>
+                              <i class="bi bi-file-earmark-pdf-fill"></i>
                             </button>
                           )}
                         </td>

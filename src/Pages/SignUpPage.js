@@ -204,7 +204,9 @@ const SignUpPage = () => {
                       <option selected disabled={formData.userType !== "SELF"}>
                         Select university
                       </option>
-                      {receivedCollege?.map((college, index) => (
+                      {receivedCollege?.map((college, index) =>{
+                        if(formData.userType!=='SELF' && college.Name.toLowerCase()!=='self')
+                        { return (
                         <option
                           selected={index === 0}
                           key={index}
@@ -212,7 +214,8 @@ const SignUpPage = () => {
                         >
                           {college.Name + ", " + college.Address}
                         </option>
-                      ))}
+                      )}
+                        })}
                     </select>
                   </div>
                 </div>
