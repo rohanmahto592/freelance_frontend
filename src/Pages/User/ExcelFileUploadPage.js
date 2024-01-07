@@ -303,6 +303,9 @@ const ExcelFileUploadPage = () => {
         clearInterval(intervalIdRef.current);
         localStorage.clear("fileId");
         localStorage.clear("apiCallsCount");
+        setApiError("Failed to process the ExcelSheet.Please retry after sometime!!");
+        setShowToast(true);
+        setIsError(true);
         window.location.reload();
       } else {
         checkExcelFileStatus(fileId).then((res) => {
@@ -320,6 +323,10 @@ const ExcelFileUploadPage = () => {
               "apiCallsCount",
               JSON.stringify(numberofApiCalls + 1)
             );
+            setApiError(res.data.message);
+            setShowToast(true);
+            setIsError(false);
+
           }
         });
       }
