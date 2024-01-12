@@ -22,20 +22,27 @@ const Users = () => {
   const [activeTab, setActiveTab] = useState("tabs-1");
   const [userDeleted, setUserDeleted] = useState(false);
   const [isdataLoaded, setDataLoaded] = useState(false);
+  const [InActiveUsers, setInActiveUsers] = useState(null);
   const modalRef = useRef(null);
 
   useEffect(() => {
     if (activeTab === "tabs-1") {
       setDataLoaded(true);
-      getUsers("true").then((response) => {
+      getUsers({ isVerified: true, isInactive: false }).then((response) => {
         setDataLoaded(false);
         setVerifiedUsers(response.data.message);
       });
     } else if (activeTab === "tabs-2") {
       setDataLoaded(true);
-      getUsers("false").then((response) => {
+      getUsers({ isVerified: false, isInactive: false }).then((response) => {
         setDataLoaded(false);
         setNonVerifiedUsers(response.data.message);
+      });
+    } else if (activeTab === "tabs-3") {
+      setDataLoaded(true);
+      getUsers({ isVerified: true, isInactive: true }).then((response) => {
+        setDataLoaded(false);
+        setInActiveUsers(response.data.message);
       });
     }
   }, [activeTab, userDeleted]);
@@ -147,6 +154,19 @@ const Users = () => {
               Unauthorized
             </a>
           </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="tab-3"
+              data-bs-toggle="tab"
+              href="#tabs-3"
+              role="tab"
+              aria-controls="tabs-3"
+              aria-selected="false"
+            >
+              Inactive Users
+            </a>
+          </li>
         </ul>
         <div class="tab-content" id="ex1-content">
           <div
@@ -247,6 +267,57 @@ const Users = () => {
                         onChange={(event) => handleRejectRow(event, user._id)}
                       />
                     </th>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {nonverifiedusers && nonverifiedusers.length > 0 && (
+              <div className="d-grid gap-2 col-3 mx-auto">
+                <button
+                  onClick={() => handleSubmit()}
+                  className="btn btn-outline-primary "
+                >
+                  Submit
+                </button>
+              </div>
+            )}
+          </div>
+          <div
+            class="tab-pane fade"
+            id="tabs-3"
+            role="tabpanel"
+            aria-labelledby="ex1-tab-3"
+            style={{ maxHeight: "400px", overflowY: "auto" }}
+          >
+            <table className="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>User Type</th>
+                  <th style={{color:'red'}}>Deleted University Name</th>
+                  <th>Verified</th>
+                  <th style={{color:'red'}}>isInactive</th>
+                </tr>
+              </thead>
+              <tbody>
+                {InActiveUsers?.map((user, index) => (
+                  <tr key={index}>
+                    <td>{user?.firstName}</td>
+                    <td>{user?.lastName}</td>
+                    <td >{user?.email}</td>
+                    <td>{user?.userType}</td>
+
+                    <td>{user.universityName || "NULL"}</td>
+                    <td>
+                      <img
+                        style={{ width: "3vh", height: "3vh" }}
+                        src={verified}
+                        alt="cross"
+                      />
+                    </td>
+                    <td style={{fontWeight:'bold'}}>{user.isInactive && "True"}</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,9 +1,9 @@
 import axios from "axios";
-export const getUsers = async (check) => {
-  const response = await axios.get(
+export const getUsers = async (data) => {
+  const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/admin/getusers`,
+    {data},
     {
-      params: { verified: check },
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
