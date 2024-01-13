@@ -306,7 +306,9 @@ const ExcelFileUploadPage = () => {
         setApiError("Failed to process the ExcelSheet.Please retry after sometime!!");
         setShowToast(true);
         setIsError(true);
-        window.location.reload();
+        setTimeout(()=>{
+          window.location.reload();
+        },2000)
       } else {
         checkExcelFileStatus(fileId).then((res) => {
           if (res.data.isProcessed) {
@@ -317,6 +319,7 @@ const ExcelFileUploadPage = () => {
             setApiCall(false);
             setIsProcessedAlert(true);
             setApiError(res.data.message);
+            setIsError(false);
             setShowToast(true);
           } else {
             localStorage.setItem(
@@ -325,7 +328,7 @@ const ExcelFileUploadPage = () => {
             );
             setApiError(res.data.message);
             setShowToast(true);
-            setIsError(false);
+            setIsError(true);
 
           }
         });
