@@ -47,6 +47,7 @@ const Stock = () => {
       setIsItemLoaded(true);
       fetchAllStockItems();
     } else if (activeTab === "tabs-4") {
+      getItemNames();
     } else if (activeTab === "tabs-5") {
       getItemNames();
     }
@@ -111,7 +112,7 @@ const Stock = () => {
   const findItemAlreadyPresent=(itemName,items)=>{
     for(let i=0;i<items.length;i++)
     {
-      const Item=(items[i].itemName).toLowerCase().trim();
+      const Item=(items[i].name).toLowerCase().trim();
       const name=(itemName).toLowerCase().trim();
       if(Item===name)
       {
@@ -126,7 +127,7 @@ const Stock = () => {
     const form = new FormData();
     form.append("file", ItemData.image);
     form.append("item", JSON.stringify(ItemData));
-    const itemPresent=findItemAlreadyPresent(ItemData.name,items);
+    const itemPresent=findItemAlreadyPresent(ItemData.name,itemNames);
     if(itemPresent.state)
     {
       setApiError(itemPresent.message);

@@ -571,7 +571,6 @@ const ExcelFileUploadPage = () => {
                   name="docFile"
                   accept=".doc,.docx"
                   onChange={handleInputChange}
-                  disabled={formData.orderType !== "DPM"}
                 />
               </div>
             </div>
