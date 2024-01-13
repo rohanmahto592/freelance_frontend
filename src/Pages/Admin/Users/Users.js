@@ -80,7 +80,7 @@ const Users = () => {
         setApiError(response.data.message);
         setShowToast(true);
         setIsError(false);
-        getUsers("false").then((response) => {
+        getUsers({ isVerified: false, isInactive: false }).then((response) => {
           setDataLoaded(false);
           setNonVerifiedUsers(response.data.message);
         });
