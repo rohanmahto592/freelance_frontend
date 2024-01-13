@@ -38,7 +38,7 @@ const Users = () => {
         setDataLoaded(false);
         setNonVerifiedUsers(response.data.message);
       });
-    } else if (activeTab === "tabs-3") {
+    } else if (activeTab === "tabs-6") {
       setDataLoaded(true);
       getUsers({ isVerified: true, isInactive: true }).then((response) => {
         setDataLoaded(false);
@@ -157,11 +157,11 @@ const Users = () => {
           <li class="nav-item" role="presentation">
             <a
               class="nav-link"
-              id="tab-3"
+              id="tab-6"
               data-bs-toggle="tab"
-              href="#tabs-3"
+              href="#tabs-6"
               role="tab"
-              aria-controls="tabs-3"
+              aria-controls="tabs-6"
               aria-selected="false"
             >
               Inactive Users
@@ -284,9 +284,9 @@ const Users = () => {
           </div>
           <div
             class="tab-pane fade"
-            id="tabs-3"
+            id="tabs-6"
             role="tabpanel"
-            aria-labelledby="ex1-tab-3"
+            aria-labelledby="ex1-tab-6"
             style={{ maxHeight: "400px", overflowY: "auto" }}
           >
             <table className="table table-striped table-bordered">
