@@ -81,7 +81,12 @@ export const fetchFileStatus = async (id) => {
   try {
     const response = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/file/getFileStatus`,
-      { id }
+      { id },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
     );
     return response;
   } catch (err) {}
@@ -91,7 +96,12 @@ export const deleteUnProcessedFile = async (id) => {
   try {
     const response = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/file/deleteIdealFile`,
-      { id }
+      { id },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
     );
     return response;
   } catch (err) {}
