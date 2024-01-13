@@ -42,11 +42,13 @@ const SignUpPage = () => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
-    setSignUpProgress(true);
-    if (formData.userType === "UNIVERSITY" && !formData.universityName) {
+    if (formData.userType === "UNIVERSITY" && (!formData.universityName || formData.universityName==='-1')) {
+      setApiError("Please select university");
+      setShowToast(true);
+      setIsError(true);
       return;
     }
-
+    setSignUpProgress(true);
     const response = await signup(formData);
     if (response.data.success) {
       setSignUpProgress(false);
@@ -81,22 +83,12 @@ const SignUpPage = () => {
     }
     setFormData((prev) => {
       let updatedFormData;
-      if (name === "userType") {
-        if (value === "SELF") {
+      if (name === "userType" && (value === "SELF" || value==='GENERIC')) {
           updatedFormData = {
             ...prev,
             [name]: value,
             universityName: "",
           };
-        } else {
-          updatedFormData = {
-            ...prev,
-            [name]: value,
-            universityName: receivedCollege.length
-              ? receivedCollege[0].Name + ", " + receivedCollege[0].Address
-              : "",
-          };
-        }
       } else {
         updatedFormData = {
           ...prev,
@@ -191,17 +183,20 @@ const SignUpPage = () => {
                       aria-label="Select your university"
                       name="universityName"
                       value={
-                        formData.userType === "SELF"
+                        formData.userType === "SELF" || formData.userType==="GENERIC"
                           ? ""
                           : formData.universityName
                       }
                       onChange={handleInputChange}
-                      disabled={formData.userType === "SELF" ? true : false}
+                      disabled={formData.userType === "SELF" || formData.userType==="GENERIC" ? true : false}
                       required={
                         formData.userType === "UNIVERSITY" ? true : false
                       }
                     >
-                      <option selected disabled={formData.userType !== "SELF"}>
+                      {formData.userType==='GENERIC'?<option selected>
+                        Select university
+                      </option>:<>
+                      <option value="-1" selected>
                         Select university
                       </option>
                       {receivedCollege?.map((college, index) =>{
@@ -215,7 +210,7 @@ const SignUpPage = () => {
                           {college.Name + ", " + college.Address}
                         </option>
                       )}
-                        })}
+                        })}</>}
                     </select>
                   </div>
                 </div>
