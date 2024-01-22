@@ -23,8 +23,8 @@ import {
   fetchItems,
 } from "../../Apis/adminDashboard";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
-import admitDepositFileDummy from "../../SampleExcelFiles/Admit-Deposit Dummy ExcelSheet.xlsx";
-import DPMdummy from "../../SampleExcelFiles/DPM Dummy ExcelSheet.xlsx";
+// import ReactRouterPrompt from "react-router-prompt";
+import { useBlocker } from "react-router-dom";
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
@@ -61,6 +61,31 @@ const ExcelFileUploadPage = () => {
   const [isApiCallDone, setApiCall] = useState(fileId ? false : true);
   const [isFileFetched, setFileFetched] = useState(false);
   const intervalIdRef = useRef(null);
+  const [state, setState] = useState(false);
+
+  let blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      state && currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    const handleTabClose = (event) => {
+      if (state) event.preventDefault();
+    };
+
+    const closed = () => {
+      localStorage.setItem("closed", "true");
+    };
+
+    window.addEventListener("beforeunload", handleTabClose);
+    window.addEventListener("unload", closed);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+      window.addEventListener("unload", closed);
+    };
+  }, [state]);
+
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
     const response = university.filter((name) => {
@@ -237,6 +262,7 @@ const ExcelFileUploadPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setState(true);
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
     const form = new FormData();
@@ -486,6 +512,29 @@ const ExcelFileUploadPage = () => {
   };
   return (
     <>
+      {/* <ReactRouterPrompt
+        when={state}
+        beforeConfirm={async () => {
+          console.log("confrim");
+        }}
+        beforeCancel={() => console.log("cancel")}
+      >
+        {({ isActive, onConfirm, onCancel }) =>
+          isActive && (
+            <div className="lightbox">
+              <div className="container">
+                <p>Do you really want to leave?</p>
+                <button type="button" onClick={onCancel}>
+                  Cancel
+                </button>
+                <button type="submit" onClick={onConfirm}>
+                  Ok
+                </button>
+              </div>
+            </div>
+          )
+        }
+      </ReactRouterPrompt> */}
       {isProcessedAlert && (
         <div class="alert alert-success" role="alert">
           ExcelSheet data processed!!
@@ -1040,6 +1089,14 @@ const ExcelFileUploadPage = () => {
           itemTitle={modalTitle}
         />
       </main>
+
+      {blocker.state === "blocked" ? (
+        <div>
+          <p>Are you sure you want to leave?</p>
+          <button onClick={() => blocker.proceed()}>Proceed</button>
+          <button onClick={() => blocker.reset()}>Cancel</button>
+        </div>
+      ) : null}
     </>
   );
 };
