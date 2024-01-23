@@ -286,8 +286,6 @@ const ExcelFileUploadPage = () => {
    const excelSheetStatus= formData.orderType!=='FARE'? await processExcelSheetBatch(formData):{success:true}
    if(excelSheetStatus?.success)
    {
-    console.log(" i m in");
-    return;
     const response = await uploadExcelFile(form);
     if (!response.data.success) {
       setApiError(response.data.message);
