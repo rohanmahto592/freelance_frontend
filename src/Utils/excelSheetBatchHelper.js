@@ -2,12 +2,11 @@ import { convertSheetToJson } from "./excelFileUploadHelper";
 import { uploadJsonData } from "../Apis/excel";
 
 export const processExcelSheetBatch = async (formData) => {
-    console.log(" i m first")
   const { orderType, excelfile } = formData;
   const jsonConvertedStatus = await convertSheetToJson(excelfile);
   if (jsonConvertedStatus.success) {
     const { jsonData } = jsonConvertedStatus;
-   const response= await sendDataInBatches(jsonData, 200, orderType);
+   const response= await sendDataInBatches(jsonData, 500, orderType);
    return response;
   }
   else
