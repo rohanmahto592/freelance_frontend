@@ -1,5 +1,4 @@
 import XLSX from "xlsx";
-import { rearrangeObjectKeysAlphabetically } from "./rearrangeAlphabeticalOrder";
 import { fetchFileStatus } from "../Apis/excel";
 export const viewInitialExcelFile = (jsonData, name) => {
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
@@ -7,6 +6,27 @@ export const viewInitialExcelFile = (jsonData, name) => {
   XLSX.utils.book_append_sheet(workbook, worksheet, name);
   XLSX.writeFile(workbook, `${name}.xlsx`,{compression:true});
 };
+export const convertSheetToJson=(excelFile)=>{
+  return new Promise((resolve, reject) => {
+    if (excelFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet);
+        resolve({ success: true, jsonData: json });
+      };
+      reader.onerror = (e) => {
+        reject(e);
+      };
+      reader.readAsBinaryString(excelFile);
+    } else {
+      resolve({ success: false, jsonData: [] });
+    }
+  });
+}
 export const viewProcessedExcelFile = (jsonData, name) => {
   let {
     dispatched,
@@ -16,18 +36,6 @@ export const viewProcessedExcelFile = (jsonData, name) => {
     ShipRocket_Delivery,
     IndianPost_Delivery,
   } = jsonData;
-  // dispatched = dispatched.map((obj) => rearrangeObjectKeysAlphabetically(obj));
-  // invalid = invalid?.map((obj) => rearrangeObjectKeysAlphabetically(obj));
-  // non_servicable = non_servicable?.map((obj) =>
-  //   rearrangeObjectKeysAlphabetically(obj)
-  // );
-  // duplicates = duplicates?.map((obj) => rearrangeObjectKeysAlphabetically(obj));
-  // ShipRocket_Delivery = ShipRocket_Delivery?.map((obj) =>
-  //   rearrangeObjectKeysAlphabetically(obj)
-  // );
-  // IndianPost_Delivery = IndianPost_Delivery?.map((obj) =>
-  //   rearrangeObjectKeysAlphabetically(obj)
-  // );
   const workbook = XLSX.utils.book_new();
   const sheet1 = XLSX.utils.json_to_sheet(dispatched);
   XLSX.utils.book_append_sheet(workbook, sheet1, "Dispatched");

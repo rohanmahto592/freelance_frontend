@@ -23,8 +23,9 @@ import {
   fetchItems,
 } from "../../Apis/adminDashboard";
 import EditItemModalComponent from "../../Components/Modal/EditItemModalComponent";
-// import ReactRouterPrompt from "react-router-prompt";
 import { useBlocker } from "react-router-dom";
+import CreateExcelHeader from "../../Components/CreateExcelHeader";
+import { processExcelSheetBatch } from "../../Utils/excelSheetBatchHelper";
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
@@ -210,55 +211,55 @@ const ExcelFileUploadPage = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-  const createExcelHeaderComponent = (Headers, missingFields) => {
-    return (
-      <table style={{ width: "100%" }}>
-        <tr>
-          <th
-            style={{
-              padding: "5px",
-              border: "2px solid #dddddd",
-              textAlign: "center",
-            }}
-          >
-            S.NO
-          </th>
-          <th
-            style={{
-              padding: "5px",
-              border: "2px solid #dddddd",
-              textAlign: "center",
-            }}
-          >
-            Title
-          </th>
-        </tr>
-        {missingFields.map((item, index) => (
-          <tr key={index}>
-            <td
-              style={{
-                padding: "5px",
-                border: "2px solid #dddddd",
-                textAlign: "center",
-              }}
-            >
-              {index + 1}
-            </td>
-            <td
-              style={{
-                fontFamily: "sans-serif",
-                padding: "5px",
-                border: "2px solid #dddddd",
-                textAlign: "center",
-              }}
-            >
-              {item}
-            </td>
-          </tr>
-        ))}
-      </table>
-    );
-  };
+  // const createExcelHeaderComponent = (missingFields) => {
+  //   return (
+  //     <table style={{ width: "100%" }}>
+  //       <tr>
+  //         <th
+  //           style={{
+  //             padding: "5px",
+  //             border: "2px solid #dddddd",
+  //             textAlign: "center",
+  //           }}
+  //         >
+  //           S.NO
+  //         </th>
+  //         <th
+  //           style={{
+  //             padding: "5px",
+  //             border: "2px solid #dddddd",
+  //             textAlign: "center",
+  //           }}
+  //         >
+  //           Title
+  //         </th>
+  //       </tr>
+  //       {missingFields.map((item, index) => (
+  //         <tr key={index}>
+  //           <td
+  //             style={{
+  //               padding: "5px",
+  //               border: "2px solid #dddddd",
+  //               textAlign: "center",
+  //             }}
+  //           >
+  //             {index + 1}
+  //           </td>
+  //           <td
+  //             style={{
+  //               fontFamily: "sans-serif",
+  //               padding: "5px",
+  //               border: "2px solid #dddddd",
+  //               textAlign: "center",
+  //             }}
+  //           >
+  //             {item}
+  //           </td>
+  //         </tr>
+  //       ))}
+  //     </table>
+  //   );
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -282,6 +283,11 @@ const ExcelFileUploadPage = () => {
     }
     setProcessing(true);
     setApiCall(false);
+   const excelSheetStatus= formData.orderType!=='FARE'? await processExcelSheetBatch(formData):{success:true}
+   if(excelSheetStatus?.success)
+   {
+    console.log(" i m in");
+    return;
     const response = await uploadExcelFile(form);
     if (!response.data.success) {
       setApiError(response.data.message);
@@ -291,11 +297,7 @@ const ExcelFileUploadPage = () => {
       setIsError(true);
       if (response.data.headerInvalid) {
         setShowModal(true);
-        setComponent(
-          createExcelHeaderComponent(
-            response.data.Headers,
-            response.data.missingFields
-          )
+        setComponent(<CreateExcelHeader missingFields={response.data.missingFields}/>
         );
         setModalTitle(
           <div
@@ -317,6 +319,11 @@ const ExcelFileUploadPage = () => {
       setProcessing(false);
       setIsError(false);
     }
+  }
+  else
+  {
+    console.log("failed to process the excelSheet");
+  }
   };
 
   function fetchFileStatus() {

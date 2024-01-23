@@ -1,5 +1,17 @@
 import axios from "axios";
-import FileSaver from "file-saver";
+
+export const uploadJsonData=async(jsonData,orderType)=>{
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASE_URL}/processJsonExcelData`,
+    {data:JSON.stringify(jsonData),orderType:orderType},
+    {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response;
+}
 export const uploadExcelFile = async (data) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/processExcel`,
