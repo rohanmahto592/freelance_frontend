@@ -499,8 +499,17 @@ const ExcelFileUploadPage = () => {
         }
       </ReactRouterPrompt> */}
       {isProcessedAlert && (
-        <div class="alert alert-success" role="alert">
-          ExcelSheet data processed!!
+        <div
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            letterSpacing: "2px",
+            fontFamily: "sans-serif",
+          }}
+          class="alert alert-success"
+          role="alert"
+        >
+          <span>ExcelSheet data processed!!</span>
         </div>
       )}
       <div className="d-flex justify-content-center align-items-center m-4 flex-wrap">
