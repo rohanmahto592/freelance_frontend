@@ -57,21 +57,21 @@ const ExcelFileUploadPage = () => {
   const [modalTitle, setModalTitle] = useState("");
   const itemModalRef = useRef(null);
   const [component, setComponent] = useState(null);
-  const [isProcessed, setIsProcessed] = useState(false);
+  const [isProcessed, setIsProcessed] = useState(true);
   const [isProcessedAlert, setIsProcessedAlert] = useState(false);
   const [isApiCallDone, setApiCall] = useState(fileId ? false : true);
   const [isFileFetched, setFileFetched] = useState(false);
   const intervalIdRef = useRef(null);
-  const [state, setState] = useState(false);
+  const [blockNavigation, setBlockNavigation] = useState(false);
 
   let blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      state && currentLocation.pathname !== nextLocation.pathname
+      blockNavigation && currentLocation.pathname !== nextLocation.pathname
   );
 
   useEffect(() => {
     const handleTabClose = (event) => {
-      if (state) event.preventDefault();
+      if (blockNavigation) event.preventDefault();
     };
 
     const closed = () => {
@@ -85,7 +85,7 @@ const ExcelFileUploadPage = () => {
       window.removeEventListener("beforeunload", handleTabClose);
       window.addEventListener("unload", closed);
     };
-  }, [state]);
+  }, [blockNavigation]);
 
   function checkIsUniversity(university) {
     let universityName = sessionStorage.getItem("universityName");
@@ -258,7 +258,7 @@ const ExcelFileUploadPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setState(true);
+    setBlockNavigation(true);
     setIsProcessed(false);
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
@@ -316,6 +316,7 @@ const ExcelFileUploadPage = () => {
         setApiError(response.data.message);
         setIsProcessed(true);
         setIsProcessedAlert(true);
+        setBlockNavigation(false);
         sessionStorage.removeItem("fileId");
         setShowToast(true);
         setProcessing(false);
