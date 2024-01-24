@@ -4,9 +4,9 @@ export const viewInitialExcelFile = (jsonData, name) => {
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, name);
-  XLSX.writeFile(workbook, `${name}.xlsx`,{compression:true});
+  XLSX.writeFile(workbook, `${name}.xlsx`, { compression: true });
 };
-export const convertSheetToJson=(excelFile)=>{
+export const convertSheetToJson = (excelFile) => {
   return new Promise((resolve, reject) => {
     if (excelFile) {
       const reader = new FileReader();
@@ -15,7 +15,7 @@ export const convertSheetToJson=(excelFile)=>{
         const workbook = XLSX.read(data, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json(worksheet);
+        const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
         resolve({ success: true, jsonData: json });
       };
       reader.onerror = (e) => {
@@ -26,7 +26,7 @@ export const convertSheetToJson=(excelFile)=>{
       resolve({ success: false, jsonData: [] });
     }
   });
-}
+};
 export const viewProcessedExcelFile = (jsonData, name) => {
   let {
     dispatched,
@@ -49,7 +49,7 @@ export const viewProcessedExcelFile = (jsonData, name) => {
   XLSX.utils.book_append_sheet(workbook, sheet5, "ShipRocket_Delivery");
   const sheet6 = XLSX.utils.json_to_sheet(IndianPost_Delivery);
   XLSX.utils.book_append_sheet(workbook, sheet6, "IndianPost_Delivery");
-  XLSX.writeFile(workbook, `processed_${name}.xlsx`,{compression:true});
+  XLSX.writeFile(workbook, `processed_${name}.xlsx`, { compression: true });
 };
 
 export const ExcelWorkbookSheetCount = async (file) => {

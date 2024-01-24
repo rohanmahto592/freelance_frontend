@@ -1,9 +1,14 @@
 import axios from "axios";
 
-export const uploadJsonData=async(jsonData,orderType)=>{
+export const uploadJsonData = async (
+  jsonData,
+  orderType,
+  university,
+  fileId
+) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/processJsonExcelData`,
-    {data:JSON.stringify(jsonData),orderType:orderType},
+    { data: JSON.stringify(jsonData), orderType, university, fileId },
     {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -11,7 +16,7 @@ export const uploadJsonData=async(jsonData,orderType)=>{
     }
   );
   return response;
-}
+};
 export const uploadExcelFile = async (data) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASE_URL}/processExcel`,

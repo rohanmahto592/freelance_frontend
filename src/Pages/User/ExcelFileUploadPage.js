@@ -104,12 +104,7 @@ const ExcelFileUploadPage = () => {
     const newData = data?.slice(startIndex, endIndex);
     setcurrentData(newData);
   }
-  useEffect(() => {
-    const fileId = localStorage.getItem("fileId");
-    if (fileId) {
-      fetchFileStatus();
-    }
-  }, []);
+
   useEffect(() => {
     fetchColleges().then((response) => {
       if (response?.data?.success) {
@@ -264,6 +259,7 @@ const ExcelFileUploadPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setState(true);
+    setIsProcessed(false);
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
     const form = new FormData();
@@ -283,91 +279,53 @@ const ExcelFileUploadPage = () => {
     }
     setProcessing(true);
     setApiCall(false);
-   const excelSheetStatus= formData.orderType!=='FARE'? await processExcelSheetBatch(formData):{success:true}
-   if(excelSheetStatus?.success)
-   {
-    const response = await uploadExcelFile(form);
-    if (!response.data.success) {
-      setApiError(response.data.message);
-      setShowToast(true);
-      setProcessing(false);
-      setApiCall(true);
-      setIsError(true);
-      if (response.data.headerInvalid) {
-        setShowModal(true);
-        setComponent(<CreateExcelHeader missingFields={response.data.missingFields}/>
-        );
-        setModalTitle(
-          <div
-            style={{ fontSize: "15px", letterSpacing: "1px" }}
-            class="alert alert-danger"
-            role="alert"
-          >
-            Required Headers are not present for {response.data.orderType},check
-            from the missing list.
-          </div>
-        );
+    const excelSheetStatus =
+      formData.orderType !== "FARE"
+        ? await processExcelSheetBatch(formData)
+        : { success: true };
+    if (excelSheetStatus?.success) {
+      excelSheetStatus?.jsonData &&
+        form.append("jsonData", JSON.stringify(excelSheetStatus.jsonData));
+      excelSheetStatus?.fileId &&
+        form.append("fileId", excelSheetStatus.fileId);
+
+      const response = await uploadExcelFile(form);
+      if (!response.data.success) {
+        setApiError(response.data.message);
+        setShowToast(true);
+        setProcessing(false);
+        setApiCall(true);
+        setIsError(true);
+        if (response.data.headerInvalid) {
+          setShowModal(true);
+          setComponent(
+            <CreateExcelHeader missingFields={response.data.missingFields} />
+          );
+          setModalTitle(
+            <div
+              style={{ fontSize: "15px", letterSpacing: "1px" }}
+              class="alert alert-danger"
+              role="alert"
+            >
+              Required Headers are not present for {response.data.orderType}
+              ,check from the missing list.
+            </div>
+          );
+        }
+      } else {
+        setApiError(response.data.message);
+        setIsProcessed(true);
+        setIsProcessedAlert(true);
+        sessionStorage.removeItem("fileId");
+        setShowToast(true);
+        setProcessing(false);
+        setIsError(false);
       }
     } else {
-      localStorage.setItem("fileId", response.data.id);
-      localStorage.setItem("apiCallsCount", "0");
-      fetchFileStatus();
-      setApiError(response.data.message);
-      setShowToast(true);
-      setProcessing(false);
-      setIsError(false);
+      console.log("failed to process the excelSheet");
     }
-  }
-  else
-  {
-    console.log("failed to process the excelSheet");
-  }
   };
 
-  function fetchFileStatus() {
-    const callAPI = () => {
-      const fileId = localStorage.getItem("fileId");
-      const numberofApiCalls = JSON.parse(
-        localStorage.getItem("apiCallsCount")
-      );
-      if (!fileId || numberofApiCalls === 20) {
-        clearInterval(intervalIdRef.current);
-        localStorage.clear("fileId");
-        localStorage.clear("apiCallsCount");
-        setApiError(
-          "Failed to process the ExcelSheet.Please retry after sometime!!"
-        );
-        setShowToast(true);
-        setIsError(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } else {
-        checkExcelFileStatus(fileId).then((res) => {
-          if (res.data.isProcessed) {
-            localStorage.clear("fileId");
-            localStorage.clear("apiCallsCount");
-            clearInterval(intervalIdRef.current);
-            setIsProcessed(isProcessed);
-            setApiCall(false);
-            setIsProcessedAlert(true);
-            setApiError(res.data.message);
-            setIsError(false);
-            setShowToast(true);
-          } else {
-            localStorage.setItem(
-              "apiCallsCount",
-              JSON.stringify(numberofApiCalls + 1)
-            );
-            setApiError(res.data.message);
-            setShowToast(true);
-            setIsError(false);
-          }
-        });
-      }
-    };
-    intervalIdRef.current = setInterval(callAPI, 30 * 1000);
-  }
   const DeleteExcelFileData = async (id) => {
     const response = await DeleteExcelFile(id);
     if (!response?.data?.success) {
@@ -854,7 +812,7 @@ const ExcelFileUploadPage = () => {
                   className="form-control btn btn-primary"
                   type="submit"
                   value="Upload"
-                  disabled={!isApiCallDone}
+                  disabled={!isProcessed}
                 />
               </div>
             </div>
