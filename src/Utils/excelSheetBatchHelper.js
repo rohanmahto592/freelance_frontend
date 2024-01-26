@@ -12,7 +12,7 @@ export const processExcelSheetBatch = async (formData) => {
       orderType,
       university
     );
-    return response;
+    return { ...response, orignalJson: jsonData };
   } else {
     return { success: false, message: "failed to convert the sheet to JSON" };
   }

@@ -26,6 +26,11 @@ import EditItemModalComponent from "../../Components/Modal/EditItemModalComponen
 import { useBlocker } from "react-router-dom";
 import CreateExcelHeader from "../../Components/CreateExcelHeader";
 import { processExcelSheetBatch } from "../../Utils/excelSheetBatchHelper";
+import axios from "axios";
+const { putObjectUrl } = require("../../Utils/awsS3Utils");
+const { Chance } = require("chance");
+const chance = new Chance();
+
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
     orderType: "ADMIT/DEPOSIT",
@@ -256,40 +261,79 @@ const ExcelFileUploadPage = () => {
   //   );
   // };
 
+  const uploadFileToAwsS3 = async (data, location, type) => {
+    const date = new Date();
+
+    const excelFileName =
+      type === "excel" && formData.excelfile.name?.split(".")[0];
+
+    let filePath =
+      type === "excel"
+        ? `${type}/${location}/${excelFileName}-${date}${chance.string({
+            length: 12,
+          })}.json`
+        : `docFile/${date}-${formData.docfile.name}`;
+
+    const fileUrl = await putObjectUrl(filePath);
+
+    await axios.put(fileUrl, data);
+
+    return filePath;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setBlockNavigation(true);
     setIsProcessed(false);
     const isRequiredFieldsPresent = handleRequiredFieldsOnSubmit();
     if (!isRequiredFieldsPresent) return;
-    const form = new FormData();
-    form.append("files", formData.excelfile);
-    form.append("files", formData.docfile);
-    form.append("orderType", formData.orderType);
+    const payload = {};
+    payload.orderType = formData.orderType;
+    payload.fileName =
+      formData.excelfile?.name || `FARE ${new Date().toString()}`;
+
     if (formData.orderType === "FARE") {
       if (Object.keys(itemsWithUniversity).length === 0) {
         return;
       }
-      form.append("items", JSON.stringify(itemsWithUniversity));
+      payload.items = JSON.stringify(itemsWithUniversity);
 
       sessionStorage.getItem("userType") === "SELF" &&
-        form.append("address", formData.address);
+        (payload.address = formData.address);
     } else if (formData.orderType === "DPM") {
-      form.append("university", formData.university);
+      payload.university = formData.university;
     }
     setProcessing(true);
     setApiCall(false);
+
     const excelSheetStatus =
       formData.orderType !== "FARE"
         ? await processExcelSheetBatch(formData)
         : { success: true };
+
     if (excelSheetStatus?.success) {
       excelSheetStatus?.jsonData &&
-        form.append("jsonData", JSON.stringify(excelSheetStatus.jsonData));
-      excelSheetStatus?.fileId &&
-        form.append("fileId", excelSheetStatus.fileId);
+        (payload.proccessedExcelFilePath = await uploadFileToAwsS3(
+          excelSheetStatus.jsonData,
+          "processed",
+          "excel"
+        ));
+      excelSheetStatus?.fileId && (payload.fileId = excelSheetStatus.fileId);
 
-      const response = await uploadExcelFile(form);
+      if (formData.orderType !== "FARE" && formData.excelfile) {
+        payload.initialExcelFileSize = formData.excelfile.length;
+        payload.initialExcelFilePath = await uploadFileToAwsS3(
+          excelSheetStatus.orignalJson,
+          "initial",
+          "excel"
+        );
+      }
+
+      if (formData.docfile) {
+        payload.docFilePath = await uploadFileToAwsS3(null, null, "doc");
+      }
+
+      const response = await uploadExcelFile(payload);
       if (!response.data.success) {
         setApiError(response.data.message);
         setShowToast(true);

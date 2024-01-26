@@ -1,10 +1,11 @@
 import XLSX from "xlsx";
 import { fetchFileStatus } from "../Apis/excel";
 export const viewInitialExcelFile = (jsonData, name) => {
+  console.log(jsonData, name);
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, name);
-  XLSX.writeFile(workbook, `${name}.xlsx`, { compression: true });
+  XLSX.writeFile(workbook, name, { compression: true });
 };
 export const convertSheetToJson = (excelFile) => {
   return new Promise((resolve, reject) => {
