@@ -113,7 +113,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/order",
+        path: "/admin/order",
         element: (
           <PrivateAdminRoute>
             <Order />

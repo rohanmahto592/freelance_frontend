@@ -26,10 +26,7 @@ import EditItemModalComponent from "../../Components/Modal/EditItemModalComponen
 import { useBlocker } from "react-router-dom";
 import CreateExcelHeader from "../../Components/CreateExcelHeader";
 import { processExcelSheetBatch } from "../../Utils/excelSheetBatchHelper";
-import axios from "axios";
-const { putObjectUrl } = require("../../Utils/awsS3Utils");
-const { Chance } = require("chance");
-const chance = new Chance();
+import { uploadFileToAwsS3 } from "../../Utils/uploadFileToS3";
 
 const ExcelFileUploadPage = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +45,7 @@ const ExcelFileUploadPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setcurrentData] = useState(null);
   const [totalPages, settotalPages] = useState(0);
-  const [perPage, setperPage] = useState(5);
+  const [perPage] = useState(10);
   const [showToast, setShowToast] = useState(false);
   const [apiError, setApiError] = useState("");
   const [isError, setIsError] = useState(true);
@@ -143,7 +140,7 @@ const ExcelFileUploadPage = () => {
       setShowToast(true);
       setProcessing(false);
     }
-  }, [isProcessed]);
+  }, []);
 
   const handleRequiredFieldsOnSubmit = () => {
     if (formData.orderType === "ADMIT/DEPOST" || formData.orderType === "DPM") {
@@ -261,26 +258,6 @@ const ExcelFileUploadPage = () => {
   //   );
   // };
 
-  const uploadFileToAwsS3 = async (data, location, type) => {
-    const date = new Date();
-
-    const excelFileName =
-      type === "excel" && formData.excelfile.name?.split(".")[0];
-
-    let filePath =
-      type === "excel"
-        ? `${type}/${location}/${excelFileName}-${date}${chance.string({
-            length: 12,
-          })}.json`
-        : `docFile/${date}-${formData.docfile.name}`;
-
-    const fileUrl = await putObjectUrl(filePath);
-
-    await axios.put(fileUrl, data);
-
-    return filePath;
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setBlockNavigation(true);
@@ -290,7 +267,7 @@ const ExcelFileUploadPage = () => {
     const payload = {};
     payload.orderType = formData.orderType;
     payload.fileName =
-      formData.excelfile?.name || `FARE ${new Date().toString()}`;
+      formData.excelfile?.name.replace(/\s/g, "") || `FARE${new Date().toDateString()}.`.replace(/\s/g, "");
 
     if (formData.orderType === "FARE") {
       if (Object.keys(itemsWithUniversity).length === 0) {
@@ -314,6 +291,7 @@ const ExcelFileUploadPage = () => {
     if (excelSheetStatus?.success) {
       excelSheetStatus?.jsonData &&
         (payload.proccessedExcelFilePath = await uploadFileToAwsS3(
+          formData,
           excelSheetStatus.jsonData,
           "processed",
           "excel"
@@ -323,6 +301,7 @@ const ExcelFileUploadPage = () => {
       if (formData.orderType !== "FARE" && formData.excelfile) {
         payload.initialExcelFileSize = formData.excelfile.length;
         payload.initialExcelFilePath = await uploadFileToAwsS3(
+          formData,
           excelSheetStatus.orignalJson,
           "initial",
           "excel"
@@ -330,7 +309,7 @@ const ExcelFileUploadPage = () => {
       }
 
       if (formData.docfile) {
-        payload.docFilePath = await uploadFileToAwsS3(null, null, "doc");
+        payload.docFilePath = await uploadFileToAwsS3(formData,null, null, "doc");
       }
 
       const response = await uploadExcelFile(payload);
@@ -343,7 +322,7 @@ const ExcelFileUploadPage = () => {
         if (response.data.headerInvalid) {
           setShowModal(true);
           setComponent(
-            <CreateExcelHeader missingFields={response.data.missingFields} />
+            <CreateExcelHeader missingFields={response?.data?.missingFields} />
           );
           setModalTitle(
             <div
@@ -367,7 +346,14 @@ const ExcelFileUploadPage = () => {
         setIsError(false);
       }
     } else {
-      console.log("failed to process the excelSheet");
+      setApiError("Failed to Process the ExcelSheet");
+        setIsProcessed(true);
+        setIsProcessedAlert(true);
+        setBlockNavigation(false);
+        sessionStorage.removeItem("fileId");
+        setShowToast(true);
+        setProcessing(false);
+        setIsError(true);
     }
   };
 
@@ -476,13 +462,7 @@ const ExcelFileUploadPage = () => {
             row?.initialExcelFile,
             row.name
               ? row.name
-              : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}`
+              : `FARE`
           );
       } else {
         row.processedExcelFile &&
@@ -490,13 +470,7 @@ const ExcelFileUploadPage = () => {
             row.processedExcelFile,
             row.name
               ? row.name
-              : `FARE ${new Date(row.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}`
+              : `FARE`
           );
       }
     }
