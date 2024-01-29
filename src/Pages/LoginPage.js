@@ -47,7 +47,7 @@ const LoginPage = () => {
       sessionStorage.setItem("universityName", response.data.universityName);
       sessionStorage.setItem(
         "userName",
-        response.data.firstName + " " + response.data.lastName
+        `${response.data.firstName} ${response.data.lastName}`
       );
       response?.data?.userId &&
         sessionStorage.setItem("userDeliveryId", response.data.userId);

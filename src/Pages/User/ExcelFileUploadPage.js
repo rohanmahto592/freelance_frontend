@@ -311,7 +311,7 @@ const ExcelFileUploadPage = () => {
       if (formData.docfile) {
         payload.docFilePath = await uploadFileToAwsS3(formData,null, null, "doc");
       }
-
+      payload.userName=JSON.parse(sessionStorage.getItem("userName"));
       const response = await uploadExcelFile(payload);
       if (!response.data.success) {
         setApiError(response.data.message);
