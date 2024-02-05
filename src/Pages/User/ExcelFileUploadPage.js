@@ -40,7 +40,7 @@ const ExcelFileUploadPage = () => {
     currentItemId: null,
     address: null,
   });
-  const fileId = localStorage.getItem("fileId");
+  const fileId = sessionStorage.getItem("fileId");
   const [excelFileData, setExcelFileData] = useState(null);
   const [isProcessing, setProcessing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,7 +79,7 @@ const ExcelFileUploadPage = () => {
 
     const closed = () => {
       if (blockNavigation) {
-        const fileId = localStorage.getItem("fileId");
+        const fileId = sessionStorage.getItem("fileId");
         fileId && deleteExcelOrders(fileId);
       }
     };
