@@ -123,3 +123,18 @@ export const deleteUnProcessedFile = async (id) => {
     return response;
   } catch (err) {}
 };
+
+export const deleteExcelOrders = async (id) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/file/deleteExcelOrders`,
+      { fileId: id },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (err) {}
+};

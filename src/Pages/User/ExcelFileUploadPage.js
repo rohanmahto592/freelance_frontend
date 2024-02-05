@@ -7,6 +7,7 @@ import {
   ViewDocFile,
   fetchFile,
   deleteUnProcessedFile,
+  deleteExcelOrders,
 } from "../../Apis/excel";
 import {
   viewInitialExcelFile,
@@ -77,7 +78,10 @@ const ExcelFileUploadPage = () => {
     };
 
     const closed = () => {
-      localStorage.setItem("closed", "true");
+      if (blockNavigation) {
+        const fileId = localStorage.getItem("fileId");
+        fileId && deleteExcelOrders(fileId);
+      }
     };
 
     window.addEventListener("beforeunload", handleTabClose);
@@ -267,7 +271,8 @@ const ExcelFileUploadPage = () => {
     const payload = {};
     payload.orderType = formData.orderType;
     payload.fileName =
-      formData.excelfile?.name.replace(/\s/g, "") || `FARE${new Date().toDateString()}.`.replace(/\s/g, "");
+      formData.excelfile?.name.replace(/\s/g, "") ||
+      `FARE${new Date().toDateString()}.`.replace(/\s/g, "");
 
     if (formData.orderType === "FARE") {
       if (Object.keys(itemsWithUniversity).length === 0) {
@@ -309,9 +314,14 @@ const ExcelFileUploadPage = () => {
       }
 
       if (formData.docfile) {
-        payload.docFilePath = await uploadFileToAwsS3(formData,null, null, "doc");
+        payload.docFilePath = await uploadFileToAwsS3(
+          formData,
+          null,
+          null,
+          "doc"
+        );
       }
-      payload.userName=JSON.parse(sessionStorage.getItem("userName"));
+      payload.userName = sessionStorage.getItem("userName");
       const response = await uploadExcelFile(payload);
       if (!response.data.success) {
         setApiError(response.data.message);
@@ -347,13 +357,13 @@ const ExcelFileUploadPage = () => {
       }
     } else {
       setApiError("Failed to Process the ExcelSheet");
-        setIsProcessed(true);
-        setIsProcessedAlert(true);
-        setBlockNavigation(false);
-        sessionStorage.removeItem("fileId");
-        setShowToast(true);
-        setProcessing(false);
-        setIsError(true);
+      setIsProcessed(true);
+      setIsProcessedAlert(true);
+      setBlockNavigation(false);
+      sessionStorage.removeItem("fileId");
+      setShowToast(true);
+      setProcessing(false);
+      setIsError(true);
     }
   };
 
@@ -460,17 +470,13 @@ const ExcelFileUploadPage = () => {
         row.initialExcelFile &&
           viewInitialExcelFile(
             row?.initialExcelFile,
-            row.name
-              ? row.name
-              : `FARE`
+            row.name ? row.name : `FARE`
           );
       } else {
         row.processedExcelFile &&
           viewProcessedExcelFile(
             row.processedExcelFile,
-            row.name
-              ? row.name
-              : `FARE`
+            row.name ? row.name : `FARE`
           );
       }
     }
