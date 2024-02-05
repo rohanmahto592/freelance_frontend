@@ -126,13 +126,16 @@ export const deleteUnProcessedFile = async (id) => {
 
 export const deleteExcelOrders = async (id) => {
   try {
-    const response = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/file/deleteExcelOrders`,
-      { fileId: id },
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/deleteExcelOrders`,
       {
+        method: 'POST',
+        keepalive: true,
+        body: JSON.stringify({ fileId: id }),
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
+        }
       }
     );
     return response;

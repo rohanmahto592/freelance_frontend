@@ -77,10 +77,11 @@ const ExcelFileUploadPage = () => {
       if (blockNavigation) event.preventDefault();
     };
 
-    const closed = () => {
+    const closed = async () => {
       if (blockNavigation) {
         const fileId = sessionStorage.getItem("fileId");
-        fileId && deleteExcelOrders(fileId);
+        sessionStorage.removeItem("fileId");
+        fileId && await deleteExcelOrders(fileId);
       }
     };
 
