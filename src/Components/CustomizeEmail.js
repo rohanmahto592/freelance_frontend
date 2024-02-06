@@ -8,17 +8,19 @@ import Toast from "./Toast";
 import { validateEmail } from "../Utils/emailValidator";
 const CustomizeEmail = () => {
   const [Emails, setEmails] = useState([]);
+  const [deliverySelected, setDeliverySelected] = useState(null);
   const [userEmailDetails, setUserEmailDetails] = useState({
     email: null,
     userType: "Admin",
-    name:null,
+    name: null,
+    modeOfDelivery: "ShipRocket_Delivery",
   });
   const [apiError, setApiError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
   const [userType, setuserType] = useState(null);
   const [EmailAdded, setEmailAdded] = useState(false);
-  const[isActionTriggered,setActionTriggered]=useState(false);
+  const [isActionTriggered, setActionTriggered] = useState(false);
   useEffect(() => {
     fetchUserEmails(userType ? userType : "Admin").then((response) => {
       if (response.data.success) {
@@ -29,11 +31,21 @@ const CustomizeEmail = () => {
         setIsError(true);
       }
     });
-  }, [EmailAdded, userType,isActionTriggered]);
+  }, [EmailAdded, userType, isActionTriggered]);
 
   const handleInputChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
+    if (name === "modeOfDelivery" && value === "-1") {
+      return;
+    }
+    if (name === "userType") {
+      if (value === "Delivery") {
+        setDeliverySelected(true);
+      } else {
+        setDeliverySelected(false);
+      }
+    }
     setUserEmailDetails({ ...userEmailDetails, [name]: value });
   };
 
@@ -68,20 +80,29 @@ const CustomizeEmail = () => {
   const AddUserEmail = async (event) => {
     event.preventDefault();
     if (!validateEmail(userEmailDetails?.email)) {
-        setApiError("Not a valid Email");
-        setShowToast(true);
-        setIsError(true);
-        return;
-    }
-    if (checkIfEmailExist(userEmailDetails)) {
-      setApiError("Email with user type already exist");
+      setApiError("Not a valid Email");
       setShowToast(true);
       setIsError(true);
       return;
     }
+    if (checkIfEmailExist(userEmailDetails)) {
+      setApiError("Email along with usertype already exist");
+      setShowToast(true);
+      setIsError(true);
+      return;
+    }
+    if (userEmailDetails.userType === "Admin") {
+      userEmailDetails.modeOfDelivery = "";
+    }
+    if (
+      userEmailDetails.userType === "Delivery" &&
+      !userEmailDetails.modeOfDelivery.length
+    ) {
+      return;
+    }
     const response = await addUserEmail(userEmailDetails);
     if (response.data.success) {
-      setEmailAdded(true);
+      setEmailAdded(!EmailAdded);
       setApiError(response.data.message);
       setShowToast(true);
       setIsError(false);
@@ -97,31 +118,31 @@ const CustomizeEmail = () => {
       <form className="form-style" onSubmit={AddUserEmail}>
         <div className="container ">
           <div className="row">
-          <div className="col-sm-12">
-            <div className="row">
-            <div className="col-sm-6 ">
-              <label className="form-label">Enter Email</label>
-              <input
-                required
-                className="form-control"
-                type="text"
-                name="email"
-                value={userEmailDetails?.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="col-sm-6">
-              <label className="form-label">Enter Name</label>
-              <input
-                required
-                className="form-control"
-                type="text"
-                name="name"
-                value={userEmailDetails?.name}
-                onChange={handleInputChange}
-              />
-            </div>
-            </div>
+            <div className="col-sm-12">
+              <div className="row">
+                <div className="col-sm-6 ">
+                  <label className="form-label">Enter Email</label>
+                  <input
+                    required
+                    className="form-control"
+                    type="text"
+                    name="email"
+                    value={userEmailDetails?.email}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="col-sm-6">
+                  <label className="form-label">Enter Name</label>
+                  <input
+                    required
+                    className="form-control"
+                    type="text"
+                    name="name"
+                    value={userEmailDetails?.name}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
             </div>
             <div className="col-sm-12 my-2 ">
               <label className="form-label">Select User Type</label>
@@ -139,6 +160,29 @@ const CustomizeEmail = () => {
                 <option value="Delivery">Delivery</option>
               </select>
             </div>
+            {deliverySelected && (
+              <div className="col-sm-12 my-2 ">
+                <label className="form-label">Select Mode Of Delivery</label>
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  name="modeOfDelivery"
+                  required={deliverySelected}
+                  onChange={handleInputChange}
+                  value={userEmailDetails.modeOfDelivery}
+                >
+                  <option selected value="-1">
+                    please select
+                  </option>
+                  <option selected value="ShipRocket_Delivery">
+                    ShipRocket_Delivery
+                  </option>
+                  <option value="IndianPost_Delivery">
+                    IndianPost_Delivery
+                  </option>
+                </select>
+              </div>
+            )}
             <div className="col-sm-12 my-2">
               <button type="submit" className="btn btn-primary w-100">
                 Add Email
@@ -190,6 +234,7 @@ const CustomizeEmail = () => {
                         <th>S.No.</th>
                         <th>Email</th>
                         <th>Name</th>
+                        {userType === "Delivery" && <th>Mode Of Delivery</th>}
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -200,6 +245,9 @@ const CustomizeEmail = () => {
                             <td>{index + 1}</td>
                             <td>{info?.email}</td>
                             <td>{info?.name}</td>
+                            {userType === "Delivery" && (
+                              <td>{info?.modeOfDelivery}</td>
+                            )}
                             <td>
                               <button
                                 className="btn btn-outline-danger"
