@@ -41,6 +41,7 @@ const sendDataInBatches = async (data, batchSize, orderType, university) => {
     IndianPost_Delivery: [],
   };
   let fileId;
+  let status={};
   while (startIndex < totalObjects) {
     const batch = data.slice(startIndex, endIndex);
     fileId = sessionStorage.getItem("fileId");
@@ -51,6 +52,7 @@ const sendDataInBatches = async (data, batchSize, orderType, university) => {
       endIndex = endIndex + batchSize;
       !fileId && sessionStorage.setItem("fileId", response.data.fileId);
     } else {
+      status={...response.data};
       isAllBatchProcessed = false;
       console.log("failed to process the batch");
       break;
@@ -65,5 +67,5 @@ const sendDataInBatches = async (data, batchSize, orderType, university) => {
       fileId,
     };
   }
-  return { success: false, message: "failed to process the sheet in batches" };
+  return { success: false, data:status, message: "failed to process the sheet in batches" };
 };

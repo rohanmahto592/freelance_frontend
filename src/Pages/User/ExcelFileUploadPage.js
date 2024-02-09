@@ -293,7 +293,6 @@ const ExcelFileUploadPage = () => {
       formData.orderType !== "FARE"
         ? await processExcelSheetBatch(formData)
         : { success: true };
-
     if (excelSheetStatus?.success) {
       excelSheetStatus?.jsonData &&
         (payload.proccessedExcelFilePath = await uploadFileToAwsS3(
@@ -358,8 +357,22 @@ const ExcelFileUploadPage = () => {
       }
     } else {
       setApiError("Failed to Process the ExcelSheet");
+      setShowModal(true);
+      setComponent(
+        <CreateExcelHeader missingFields={excelSheetStatus?.data?.missingFields} />
+      );
+      setModalTitle(
+        <div
+          style={{ fontSize: "15px", letterSpacing: "1px" }}
+          class="alert alert-danger"
+          role="alert"
+        >
+          Required Headers are not present for {excelSheetStatus.data.orderType}
+          ,check from the missing list.
+        </div>
+      );
       setIsProcessed(true);
-      setIsProcessedAlert(true);
+      setIsProcessedAlert(false);
       setBlockNavigation(false);
       sessionStorage.removeItem("fileId");
       setShowToast(true);
